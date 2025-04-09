@@ -2,6 +2,7 @@ import React from "react";
 import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 
+
 const Home = () => {
   return (
     <>
@@ -56,5 +57,7 @@ const Home = () => {
     </>
   );
 };
+
+
 
 export default Home;
