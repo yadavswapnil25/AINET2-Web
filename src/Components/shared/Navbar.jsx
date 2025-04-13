@@ -10,11 +10,6 @@ import { AiFillYoutube } from "react-icons/ai";
 import { FaPinterest } from "react-icons/fa6";
 
 
-
-
-
-
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
