@@ -6,8 +6,10 @@ import bg2 from "/bg2.png";
 
 import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
-import { MdLocationOn } from "react-icons/md";
-import { FaCalendar, FaUser, FaUniversity } from "react-icons/fa";
+import { MdLocationOn, MdCalendarToday } from "react-icons/md";
+import { FaCalendar } from "react-icons/fa";
+
+
 
 const Home = () => {
 
@@ -38,14 +40,14 @@ const Home = () => {
         heading={"HIGHLIGHTS"}
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
-      <div className="w-full h-auto p-[34px] pt-[46px]  ">
+      <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]  ">
         {/* Section 1 */}
         <div
-          className="relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover"
+          className="relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${bg1})` }}
         >
           {/* First Half */}
-          <div className="w-full flex h-full justify-around md:h-[auto] z-1 relative p-4 md:p-14 md:pb-0 flex-col md:flex-row">
+          <div className="w-full flex h-full justify-around md:h-[auto]  relative p-4 md:p-14 md:pb-0 flex-col md:flex-row">
             <div className="w-full md:[55%]">
               <h3 className="font-bold text-white tracking-wider text-3xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-20 ">
                 A vibrant community of English Language Education professionals
@@ -165,9 +167,9 @@ const Home = () => {
         </div>
 
 
-        {/* Section 3  Members Area */}
+      {/* Section 3  Members Area */}
+      
 
-       
       </div>
     </>
   );
