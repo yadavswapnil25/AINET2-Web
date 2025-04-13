@@ -163,6 +163,11 @@ const Home = () => {
             
           </div>
         </div>
+
+
+      {/* Section 3  Members Area */}
+      
+
       </div>
     </>
   );
