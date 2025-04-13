@@ -8,6 +8,7 @@ import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
 import { MdLocationOn, MdCalendarToday } from "react-icons/md";
 import { FaCalendar } from "react-icons/fa";
+import MembersArea from "../Components/specific/Home/MembersArea";
 
 
 
@@ -168,7 +169,7 @@ const Home = () => {
 
 
       {/* Section 3  Members Area */}
-      
+      <MembersArea/>
 
       </div>
     </>
