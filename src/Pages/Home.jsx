@@ -3,12 +3,11 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
+
 import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
-import { MdLocationOn, MdCalendarToday } from "react-icons/md";
-import { FaCalendar } from "react-icons/fa";
-
-
+import { MdLocationOn } from "react-icons/md";
+import { FaCalendar, FaUser, FaUniversity } from "react-icons/fa";
 
 const Home = () => {
 
@@ -17,20 +16,21 @@ const Home = () => {
       title: "International Conference 2025, 21th AINET Internat.",
       location: "North South University, Dhaka, Bangladesh",
       date: "25th MARCH, 2025",
-     
+
     },
     {
       title: "AINET Seminar",
       location: "Barishal University, Barishal",
       date: "5th APRIL, 2025",
-      
+
     },
     {
       title: "International Conference 2025, 22th AINET Internat.",
       location: "North South University, Saudi, UAE",
       date: "2nd AUGEST,2025",
-     
+
     },
+
   ];
   return (
     <>
@@ -138,36 +138,36 @@ const Home = () => {
 
           <div className="w-full h-1/2  flex flex-col md:flex-row sm:flex-row mt-6 gap-8">
 
-          {eventsData.map((event, index) => (
-        <div
-          key={index}
-          className={`relative flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
-        >
-          <h2 className="text-2xl font-semibold mb-4">{event.title}</h2>
-          <p className="flex items-center text-black mb-1 text-base font-medium">
-            <MdLocationOn className="mr-2 text-xl" />
-            {event.location}
-          </p>
-          <p className="flex items-center text-black text-base font-medium">
-            <FaCalendar className="mr-2 text-xl" />
-            {event.date}
-          </p>
+            {eventsData.map((event, index) => (
+              <div
+                key={index}
+                className={`relative flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
+              >
+                <h2 className="text-2xl font-semibold mb-4">{event.title}</h2>
+                <p className="flex items-center text-black mb-1 text-base font-medium">
+                  <MdLocationOn className="mr-2 text-xl" />
+                  {event.location}
+                </p>
+                <p className="flex items-center text-black text-base font-medium">
+                  <FaCalendar className="mr-2 text-xl" />
+                  {event.date}
+                </p>
 
-        
-            <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer">
-              <img src="./arrowright.svg" alt="arrowright" />
-            </button>
-       
-        </div>
-      ))}
-            
+
+                <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer">
+                  <img src="./arrowright.svg" alt="arrowright" />
+                </button>
+
+              </div>
+            ))}
+
           </div>
         </div>
 
 
-      {/* Section 3  Members Area */}
-      
+        {/* Section 3  Members Area */}
 
+       
       </div>
     </>
   );
