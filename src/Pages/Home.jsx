@@ -6,8 +6,31 @@ import bg2 from "/bg2.png";
 import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
 import { MdLocationOn, MdCalendarToday } from "react-icons/md";
+import { FaCalendar } from "react-icons/fa";
+
 
 const Home = () => {
+
+  const eventsData = [
+    {
+      title: "International Conference 2025, 21th AINET Internat.",
+      location: "North South University, Dhaka, Bangladesh",
+      date: "25th MARCH, 2025",
+     
+    },
+    {
+      title: "AINET Seminar",
+      location: "Barishal University, Barishal",
+      date: "5th APRIL, 2025",
+      
+    },
+    {
+      title: "International Conference 2025, 22th AINET Internat.",
+      location: "North South University, Saudi, UAE",
+      date: "2nd AUGEST,2025",
+     
+    },
+  ];
   return (
     <>
       <Highlight
@@ -113,48 +136,30 @@ const Home = () => {
           <h2 className="text-3xl w-full font-medium mt-10">UPCOMING EVENTS</h2>
 
           <div className="w-full h-1/2  flex flex-col md:flex-row sm:flex-row mt-6 gap-8">
-            {/* Card 1 */}
-            <div className="flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow">
-              <h2 className="text-2xl font-semibold mb-4">
-                International Conference 2025, 21th AINET Internat.
-              </h2>
-              <p className="flex items-center text-black mb-1">
-                <MdLocationOn className=" mr-2 text-xl" />
-                North South University, Dhaka, Bangladesh
-              </p>
-              <p className="flex items-center text-black">
-                <MdCalendarToday className=" mr-2 text-xl" />
-                25th MARCH, 2025
-              </p>
-            </div>
 
-            {/* Card 2 */}
-            <div className="flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow">
-              <h2 className="text-2xl font-semibold mb-4">AINET Seminar</h2>
-              <p className="flex items-center text-black mb-1">
-                <MdLocationOn className=" mr-2 text-xl" />
-                Barishal University, Barishal
-              </p>
-              <p className="flex items-center text-black">
-                <MdCalendarToday className=" mr-2 text-xl" />
-                5th APRIL, 2025
-              </p>
-            </div>
+          {eventsData.map((event, index) => (
+        <div
+          key={index}
+          className={`relative flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
+        >
+          <h2 className="text-2xl font-semibold mb-4">{event.title}</h2>
+          <p className="flex items-center text-black mb-1 text-base font-medium">
+            <MdLocationOn className="mr-2 text-xl" />
+            {event.location}
+          </p>
+          <p className="flex items-center text-black text-base font-medium">
+            <FaCalendar className="mr-2 text-xl" />
+            {event.date}
+          </p>
 
-            {/* Card 3 */}
-            <div className="flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow">
-              <h2 className="text-2xl font-semibold mb-4">
-                International Conference 2025, 22th AINET Internat.
-              </h2>
-              <p className="flex items-center text-black mb-1">
-                <MdLocationOn className="mr-2 text-xl" />
-                North South University, Saudi, UAE
-              </p>
-              <p className="flex items-center text-black">
-                <MdCalendarToday className=" mr-2 text-xl" />
-                Date not mentioned
-              </p>
-            </div>
+        
+            <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer">
+              <img src="./arrowright.svg" alt="arrowright" />
+            </button>
+       
+        </div>
+      ))}
+            
           </div>
         </div>
       </div>
