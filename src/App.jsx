@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Navbar from "./Components/shared/Navbar";
-import Footer from "./Pages/Footer";
+import Footer from "./Components/shared/Footer";
 
 const App = () => {
   return (
