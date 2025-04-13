@@ -82,7 +82,7 @@ const searchRef = useRef(null);
             </button>
 
             <button className=" px-9 py-2 text-lg font-semibold bg-[#FFFFFF] border-[2px] border-[#A6AEBF] rounded-4xl text-[#A6AEBF] cursor-pointer btnshadow hover:scale-[1.03]">
-            LOG IN
+            <Link to="/Login">LOG IN</Link>
             </button>
             </div>
             <div
