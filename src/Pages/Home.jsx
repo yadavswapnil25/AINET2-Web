@@ -9,6 +9,7 @@ import { MdLocationOn, MdCalendarToday } from "react-icons/md";
 import { FaCalendar } from "react-icons/fa";
 
 
+
 const Home = () => {
 
   const eventsData = [
@@ -166,5 +167,7 @@ const Home = () => {
     </>
   );
 };
+
+
 
 export default Home;
