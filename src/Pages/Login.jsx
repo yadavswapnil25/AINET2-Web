@@ -1,135 +1,160 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { FaUser, FaUniversity, FaCheck } from 'react-icons/fa';
+import { TbCirclePercentageFilled } from 'react-icons/tb';
+import {IoIosArrowDropright } from "react-icons/io";
 import bg3 from "/bg3.png";
 
-import { FaUser, FaUniversity } from "react-icons/fa";
-import { TbCirclePercentageFilled } from "react-icons/tb";
+export default function MembershipPlans({ discountPercentage = 50 }) {
+    const [planType, setPlanType] = useState('individual');
 
-function Login() {
-    const [selectedType, setSelectedType] = useState("individual");
+    const planFeatures = [
+        "Membership Privileges",
+        "Member Rights",
+        "Membership Terms"
+    ];
 
-    const handleChange = (e) => {
-        setSelectedType(e.target.value);
+    const handlePlanTypeChange = (type) => {
+        setPlanType(type);
     };
-    return (
-        <>
-            <div
-                className="relative mt-12 p-14 w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover"
-                style={{ backgroundImage: `url(${bg3})` }}
-            >
-                <div className="p-6 min-h-screen">
 
-                    {/* Radio Buttons */}
-                    <div className=" min-h-screen">
-                        {/* Main Flex Container */}
-                        <div className="flex items-center justify-between mb-15 mr-20">
-                            {/* Left Side Text */}
-                            <div className="text-5xl font-semibold">Select Plan</div>
+    // Plan card component to avoid repeating code
+    const PlanCard = ({ title, price, currency, duration, accessType }) => (
+        <div className="bg-yellow-50 p-8 rounded-lg shadow-sm">
+            <div className="flex justify-between mb-2">
+                {planType === 'individual' ?
+                    <FaUser className="text-gray-900 text-3xl" /> :
+                    <FaUniversity className="text-gray-900 text-2xl" />
+                }
+                <div className="bg-[#C5D3E8] text-black font-bold text-lg py-2 px-5 rounded-md flex items-center">
+                    <TbCirclePercentageFilled className="mr-1 text-black " />
+                    {discountPercentage}% OFF
+                </div>
+            </div>
 
-                            {/* Right Side Radio Buttons */}
-                            <div className="flex items-center text-xl gap-10 ">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <FaUser />
-                                    <span>Individual</span>
-                                    <input
-                                        type="radio"
-                                        name="type"
-                                        value="individual"
-                                        checked={selectedType === "individual"}
-                                        onChange={handleChange}
-                                        className="accent-black ml-2 scale-125"
-                                    />
-                                </label>
+            <h3 className="text-2xl font-semibold mb-5 mt-5">{planType === 'individual' ? 'Individual' : 'Institutional'} {title}</h3>
+            <div className="text-4xl font-bold mb-4">{currency} {price}</div>
 
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <FaUniversity />
-                                    <span>Institutional</span>
-                                    <input
-                                        type="radio"
-                                        name="type"
-                                        value="institutional"
-                                        checked={selectedType === "institutional"}
-                                        onChange={handleChange}
-                                        className="accent-black ml-2 scale-125"
-                                    />
-                                </label>
-                            </div>
+            <ul className="space-y-2 mb-6">
+                <li className="flex items-center gap-2">
+                    <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
+                        <FaCheck className="text-white text-xs" />
+                    </div>
+                    <span>{duration} year Membership</span>
+                </li>
+                <li className="flex items-center gap-2">
+                    <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
+                        <FaCheck className="text-white text-xs" />
+                    </div>
+                    <span>{accessType}</span>
+                </li>
+
+                {planFeatures.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                        <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
+                            <FaCheck className="text-white text-xs" />
                         </div>
+                        <span>{feature}</span>
+                    </li>
+                ))}
+            </ul>
 
-                        {/* Cards */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                            {selectedType === "individual" ? (
-                                <>
-                                    <div className="bg-white p-4 rounded-xl shadow">
-                                        <div className="flex items-center justify-between rounded-xl  w-full max-w-md mx-auto">
-                                            <div className="flex items-center gap-2 text-black text-2xl">
-                                                <FaUser />
-                                            </div>
-                                            <div className="flex items-center gap-2 text-black text-xl font-semibold rounded-xl p-2 bg-[#C5D3E8]">
-                                                <TbCirclePercentageFilled />
-                                                <span>50% OFF</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="bg-white p-4 rounded-xl shadow"> <div className="flex items-center justify-between rounded-xl  w-full max-w-md mx-auto">
-                                        <div className="flex items-center gap-2 text-black text-2xl">
-                                            <FaUser />
-                                        </div>
-                                        <div className="flex items-center gap-2 text-black text-xl font-semibold rounded-xl p-2 bg-[#C5D3E8]">
-                                            <TbCirclePercentageFilled />
-                                            <span>50% OFF</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div className="bg-white p-4 rounded-xl shadow"> <div className="flex items-center justify-between rounded-xl  w-full max-w-md mx-auto">
-                                        <div className="flex items-center gap-2 text-black text-2xl">
-                                            <FaUser />
-                                        </div>
-                                        <div className="flex items-center gap-2 text-black text-xl font-semibold rounded-xl p-2 bg-[#C5D3E8]">
-                                            <TbCirclePercentageFilled />
-                                            <span>50% OFF</span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="bg-white p-4 rounded-xl shadow"> <div className="flex items-center justify-between rounded-xl  w-full max-w-md mx-auto">
-                                        <div className="flex items-center gap-2 text-black text-2xl">
-                                            <FaUser />
-                                        </div>
-                                        <div className="flex items-center gap-2 text-black text-xl font-semibold rounded-xl p-2 bg-[#C5D3E8]">
-                                            <TbCirclePercentageFilled />
-                                            <span>50% OFF</span>
-                                        </div>
-                                    </div></div>
-                                    <div className="bg-white p-4 rounded-xl shadow"> <div className="flex items-center justify-between rounded-xl  w-full max-w-md mx-auto">
-                                        <div className="flex items-center gap-2 text-black text-2xl">
-                                            <FaUser />
-                                        </div>
-                                        <div className="flex items-center gap-2 text-black text-xl font-semibold rounded-xl p-2 bg-[#C5D3E8]">
-                                            <TbCirclePercentageFilled />
-                                            <span>50% OFF</span>
-                                        </div>
-                                    </div></div>
-                                    <div className="bg-white p-4 rounded-xl shadow"> <div className="flex items-center justify-between rounded-xl  w-full max-w-md mx-auto">
-                                        <div className="flex items-center gap-2 text-black text-2xl">
-                                            <FaUser />
-                                        </div>
-                                        <div className="flex items-center gap-2 text-black text-xl font-semibold rounded-xl p-2 bg-[#C5D3E8]">
-                                            <TbCirclePercentageFilled />
-                                            <span>50% OFF</span>
-                                        </div>
-                                    </div></div>
-                                </>
-                            )}
+            <button className="bg-green-100 hover:bg-green-200 transition-colors w-full py-3 rounded-full flex items-center justify-center relative">
+                <span className="font-medium mr-2">PAY NOW</span>
+                <img src="/arrow_pay.svg" alt="arrow_white" className='absolute left-1'/>
+            </button>
+        </div>
+    );
+
+    // Individual plan data
+    const individualPlans = [
+        {
+            title: "Annual",
+            price: "500.00",
+            currency: "₹",
+            duration: "1",
+            accessType: "Indian Access only"
+        },
+        {
+            title: "Long Term",
+            price: "1200.00",
+            currency: "₹",
+            duration: "3",
+            accessType: "Indian Access only"
+        },
+        {
+            title: "Overseas",
+            price: "20.00",
+            currency: "$",
+            duration: "1",
+            accessType: "Global Access"
+        }
+    ];
+
+    // Institutional plan data (with different values)
+    const institutionalPlans = [
+        {
+            title: "Annual",
+            price: "5000.00",
+            currency: "₹",
+            duration: "1",
+            accessType: "Multi-user Access"
+        },
+        {
+            title: "Long Term",
+            price: "12000.00",
+            currency: "₹",
+            duration: "3",
+            accessType: "Multi-user Access"
+        },
+        {
+            title: "Enterprise",
+            price: "200.00",
+            currency: "$",
+            duration: "1",
+            accessType: "Global Enterprise Access"
+        }
+    ];
+
+    // Select which plans to show based on selected plan type
+    const plansToShow = planType === 'individual' ? individualPlans : institutionalPlans;
+
+    return (
+        <div className="relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center p-14 " style={{ backgroundImage: `url(${bg3})` }}>
+            <div className="flex justify-between items-center mb-6 pt-4 pb-4 mr-6">
+                <h1 className="text-5xl font-bold text-gray-900">Select Plan</h1>
+
+                <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => handlePlanTypeChange('individual')}>
+                        <FaUser className="text-gray-900" />
+                        <span className="text-2xl">Individual</span>
+                        <div className={`w-5 h-5 rounded-full border-2 border-gray-900 flex items-center justify-center ${planType === 'individual' ? 'bg-gray-900' : 'bg-transparent'}`}>
+                            {planType === 'individual' && <div className="w-2 h-2 rounded-full bg-white"></div>}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => handlePlanTypeChange('institutional')}>
+                        <FaUniversity className="text-gray-900" />
+                        <span className="text-2xl">Institutional</span>
+                        <div className={`w-5 h-5 rounded-full border-2 border-gray-900 flex items-center justify-center ${planType === 'institutional' ? 'bg-gray-900' : 'bg-transparent'}`}>
+                            {planType === 'institutional' && <div className="w-2 h-2 rounded-full bg-white"></div>}
                         </div>
                     </div>
                 </div>
-
             </div>
 
-        </>
-    )
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Dynamically render plan cards based on selected plan type */}
+                {plansToShow.map((plan, index) => (
+                    <PlanCard
+                        key={index}
+                        title={plan.title}
+                        price={plan.price}
+                        currency={plan.currency}
+                        duration={plan.duration}
+                        accessType={plan.accessType}
+                    />
+                ))}
+            </div>
+        </div>
+    );
 }
-
-export default Login
