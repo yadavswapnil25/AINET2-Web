@@ -48,6 +48,7 @@ const MembersArea = () => {
           <button className="w-[340px] bg-[#ffffff] text-[#A6AEBF] font-bold py-3 p-4 rounded-[30px]">
             ALREADY A MEMBER? LOG IN
           </button>
+
         </div>
       </div>
     </>
@@ -55,3 +56,5 @@ const MembersArea = () => {
 };
 
 export default MembersArea;
+
+

@@ -9,31 +9,25 @@ import upcoming from "/upcoming.png";
 import { MdLocationOn, MdCalendarToday } from "react-icons/md";
 import { FaCalendar } from "react-icons/fa";
 import MembersArea from "../Components/specific/Home/MembersArea";
-
-
+import CommunityVoicesSlider from "../Components/specific/Home/Slider";
 
 const Home = () => {
-
   const eventsData = [
     {
       title: "International Conference 2025, 21th AINET Internat.",
       location: "North South University, Dhaka, Bangladesh",
       date: "25th MARCH, 2025",
-
     },
     {
       title: "AINET Seminar",
       location: "Barishal University, Barishal",
       date: "5th APRIL, 2025",
-
     },
     {
       title: "International Conference 2025, 22th AINET Internat.",
       location: "North South University, Saudi, UAE",
       date: "2nd AUGEST,2025",
-
     },
-
   ];
   return (
     <>
@@ -140,7 +134,6 @@ const Home = () => {
           <h2 className="text-3xl w-full font-medium mt-10">UPCOMING EVENTS</h2>
 
           <div className="w-full h-1/2  flex flex-col md:flex-row sm:flex-row mt-6 gap-8">
-
             {eventsData.map((event, index) => (
               <div
                 key={index}
@@ -156,26 +149,22 @@ const Home = () => {
                   {event.date}
                 </p>
 
-
                 <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer">
                   <img src="./arrowright.svg" alt="arrowright" />
                 </button>
-
               </div>
             ))}
-
           </div>
         </div>
 
+        {/* Section 3  Members Area */}
+        <MembersArea />
 
-      {/* Section 3  Members Area */}
-      <MembersArea/>
-
+        {/* Section 5 */}
+        <CommunityVoicesSlider />
       </div>
     </>
   );
 };
-
-
 
 export default Home;
