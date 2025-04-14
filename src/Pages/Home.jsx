@@ -10,6 +10,7 @@ import { MdLocationOn, MdCalendarToday } from "react-icons/md";
 import { FaCalendar } from "react-icons/fa";
 import MembersArea from "../Components/specific/Home/MembersArea";
 import CommunityVoicesSlider from "../Components/specific/Home/Slider";
+import Partners from "../Components/specific/Home/Partners";
 
 const Home = () => {
   const eventsData = [
@@ -162,6 +163,9 @@ const Home = () => {
 
         {/* Section 5 */}
         <CommunityVoicesSlider />
+
+        {/* Section 6 */}
+        <Partners />
       </div>
     </>
   );
