@@ -11,6 +11,9 @@ import { FaCalendar } from "react-icons/fa";
 import MembersArea from "../Components/specific/Home/MembersArea";
 import CommunityVoicesSlider from "../Components/specific/Home/Slider";
 import Partners from "../Components/specific/Home/Partners";
+import Gallery from "../Components/specific/Home/Gallery";
+import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
+import Archives from "../Components/specific/Home/Archives";
 
 const Home = () => {
   const eventsData = [
@@ -47,7 +50,7 @@ const Home = () => {
             <div className="w-full md:[55%]">
               <h3 className="font-bold text-white tracking-wider text-3xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-20 ">
                 A vibrant community of English Language Education professionals
-                & stakeholders which aims to Develop. Together
+                & stakeholders which aims to <br /> Develop. Together
               </h3>
             </div>
             <div className="w-full md-w-[45%] flex justify-end pt-4">
@@ -68,10 +71,10 @@ const Home = () => {
               </p>
 
               <div className="flex gap-4">
-                <button className="uppercase bg-[#FFF8DE] rounded-4xl p-4 w-[305px] font-xl font-bold">
+                <button className="uppercase bg-[#FFF8DE] rounded-4xl p-4 w-[305px] font-xl font-bold btnshadow cursor-pointer">
                   Join The Community
                 </button>
-                <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[175px] font-xl font-bold">
+                <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[175px] font-xl font-bold btnshadow cursor-pointer">
                   READ MORE
                 </button>
               </div>
@@ -125,7 +128,7 @@ const Home = () => {
                 Landscape" <br />
                 19 - 21 February 2025 - Canadian University, Dubai
               </p>
-              <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[305px] font-xl font-bold cursor-pointer">
+              <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer">
                 REGISTER NOW
               </button>
             </div>
@@ -166,6 +169,16 @@ const Home = () => {
 
         {/* Section 6 */}
         <Partners />
+
+
+        {/* Section 7 */}
+        <Gallery />
+
+        {/* Section 8 */}
+        <NewsletterSignup/>
+
+        {/* Section 9 */}
+        <Archives/>
       </div>
     </>
   );

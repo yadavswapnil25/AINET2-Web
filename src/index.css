@@ -12,7 +12,9 @@ body {
     box-shadow: 2px 4px 4px 0px #00000040;
 
 }
-
+button{
+  cursor: pointer;
+}
 .clippath{
     clip-path: polygon(0 0%, 100% 0%, 82% 100%, 0% 100%);
 }
