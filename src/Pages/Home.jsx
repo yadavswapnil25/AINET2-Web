@@ -39,7 +39,7 @@ const Home = () => {
         heading={"HIGHLIGHTS"}
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
-      <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]  ">
+      <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]">
         {/* Section 1 */}
         <div
           className="relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
