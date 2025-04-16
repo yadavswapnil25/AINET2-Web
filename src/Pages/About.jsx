@@ -1,6 +1,8 @@
 import React from 'react'
 import Highlight from '../Components/shared/Highlight'
 import AboutDetails from '../Components/specific/About/AboutDetails'
+import AinetNews from '../Components/specific/About/AinetNews'
+import AinetTeam from '../Components/specific/About/AinetTeam'
 
 
 const About = () => {
@@ -12,6 +14,13 @@ const About = () => {
     {/* Section 1 */}
     <AboutDetails/>
     </div>
+
+    {/* Section 2 */}
+    <AinetTeam/>
+   
+
+    {/* Section 3 */}
+    <AinetNews/>
     </>
 
   )
