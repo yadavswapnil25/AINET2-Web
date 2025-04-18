@@ -5,6 +5,7 @@ import Navbar from "./Components/shared/Navbar";
 import Footer from "./Components/shared/Footer";
 import Login from "./Pages/Login";
 import About from "./Pages/About";
+import MembershipArea from "./Pages/MembershipArea";
 
 const App = () => {
   return (
@@ -13,7 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/Login" element={<Login/>} />
+        <Route path="/MembershipArea" element={<MembershipArea/>} />
       </Routes>
       <Footer />
     </>

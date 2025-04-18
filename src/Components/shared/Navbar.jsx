@@ -110,7 +110,7 @@ const Navbar = () => {
                 JOIN US
               </button>
               <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#FFFFFF] border border-[#A6AEBF] rounded-full text-[#A6AEBF] cursor-pointer hover:bg-gray-100 transition-all duration-300">
-                <Link to="/Login">LOG IN</Link>
+                <Link to="/MembershipArea">LOG IN</Link>
               </button>
             </div>
             
