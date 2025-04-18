@@ -166,7 +166,7 @@ const Navbar = () => {
             </div>
             
             <Link to="/publications" className="hover:text-[#A6AEBF] transition-colors">Publications</Link>
-            <Link to="/ainet-adda" className="hover:text-[#A6AEBF] transition-colors">AINET Adda</Link>
+            <Link to="/BlogsSection1" className="hover:text-[#A6AEBF] transition-colors">AINET Adda</Link>
             <Link to="/affiliates" className="hover:text-[#A6AEBF] transition-colors">Affiliates</Link>
             
             <div className="relative group" 
