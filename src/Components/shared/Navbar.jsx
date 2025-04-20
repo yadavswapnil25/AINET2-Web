@@ -317,7 +317,7 @@ const Navbar = () => {
               
               {mobileDropdown === 'more' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/more/item1" className="block py-2" onClick={() => setIsOpen(false)}>Item 1</Link>
+                  <Link to="/ContactUs" className="block py-2" onClick={() => setIsOpen(false)}>Contact Us</Link>
                   <Link to="/more/item2" className="block py-2" onClick={() => setIsOpen(false)}>Item 2</Link>
                 </div>
               )}
