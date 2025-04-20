@@ -269,8 +269,8 @@ const Navbar = () => {
             </div>
             
             <Link to="/publications" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Publications</Link>
-            <Link to="/ainet-adda" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>AINET Adda</Link>
-            <Link to="/affiliates" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Affiliates</Link>
+            <Link to="/BlogsSection1" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>AINET Adda</Link>
+            <Link to="/BlogsSection2" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Affiliates</Link>
             
             <div className="py-3 border-b border-gray-200">
               <button 
