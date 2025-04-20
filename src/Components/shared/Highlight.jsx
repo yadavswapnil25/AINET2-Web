@@ -7,7 +7,9 @@ const Highlight = ({ heading, subheading }) => {
         <span className="pr-4 w-[165px] clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10">
           {heading}
         </span>
+        <div className="flex w-full justify-between">
         <span className="marquee-animation text-black items-center text-center w-full z-0">{subheading}</span>
+        </div>
       </div>
     </>
   );

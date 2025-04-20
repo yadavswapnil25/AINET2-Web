@@ -159,7 +159,7 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'initiatives' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/initiatives/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
+                  <Link to="/" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
                   <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
@@ -167,7 +167,7 @@ const Navbar = () => {
             
             <Link to="/publications" className="hover:text-[#A6AEBF] transition-colors">Publications</Link>
             <Link to="/BlogsSection1" className="hover:text-[#A6AEBF] transition-colors">AINET Adda</Link>
-            <Link to="/affiliates" className="hover:text-[#A6AEBF] transition-colors">Affiliates</Link>
+            <Link to="/BlogsSection2" className="hover:text-[#A6AEBF] transition-colors">Affiliates</Link>
             
             <div className="relative group" 
                 onMouseEnter={() => toggleDropdown('resources')} 
@@ -208,7 +208,7 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'more' && (
                 <div className="absolute right-0 bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/more/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
+                  <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
                   <Link to="/more/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
@@ -218,7 +218,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden z-50" 
+          className="md:hidden z-50 mr-5" 
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >

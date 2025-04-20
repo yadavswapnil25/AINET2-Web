@@ -27,14 +27,14 @@ button{
 
 @keyframes scroll-left-to-right {
     0% {
-      transform: translateX(-100%);
+      transform: translateX(100%);
     }
     100% {
-      transform: translateX(100%);
+      transform: translateX(-100%);
     }
   }
   .marquee-animation {
-    animation: scroll-left-to-right 16s linear infinite;
+    animation: scroll-left-to-right 20s linear infinite;
     display: inline-block;
     white-space: nowrap;
   }
