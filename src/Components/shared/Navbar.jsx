@@ -110,7 +110,7 @@ const Navbar = () => {
                 JOIN US
               </button>
               <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#FFFFFF] border border-[#A6AEBF] rounded-full text-[#A6AEBF] cursor-pointer hover:bg-gray-100 transition-all duration-300">
-                <Link to="/Login">LOG IN</Link>
+                <Link to="/MembershipArea">LOG IN</Link>
               </button>
             </div>
             
@@ -159,15 +159,15 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'initiatives' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/initiatives/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
+                  <Link to="/" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
                   <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
             </div>
             
             <Link to="/publications" className="hover:text-[#A6AEBF] transition-colors">Publications</Link>
-            <Link to="/ainet-adda" className="hover:text-[#A6AEBF] transition-colors">AINET Adda</Link>
-            <Link to="/affiliates" className="hover:text-[#A6AEBF] transition-colors">Affiliates</Link>
+            <Link to="/BlogsSection1" className="hover:text-[#A6AEBF] transition-colors">AINET Adda</Link>
+            <Link to="/BlogsSection2" className="hover:text-[#A6AEBF] transition-colors">Affiliates</Link>
             
             <div className="relative group" 
                 onMouseEnter={() => toggleDropdown('resources')} 
@@ -208,8 +208,8 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'more' && (
                 <div className="absolute right-0 bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/more/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
-                  <Link to="/more/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
+                  <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Annual form</Link>
                 </div>
               )}
             </div>
@@ -218,7 +218,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden z-50" 
+          className="md:hidden z-50 mr-5" 
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
@@ -269,8 +269,8 @@ const Navbar = () => {
             </div>
             
             <Link to="/publications" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Publications</Link>
-            <Link to="/ainet-adda" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>AINET Adda</Link>
-            <Link to="/affiliates" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Affiliates</Link>
+            <Link to="/BlogsSection1" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>AINET Adda</Link>
+            <Link to="/BlogsSection2" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Affiliates</Link>
             
             <div className="py-3 border-b border-gray-200">
               <button 
@@ -317,8 +317,8 @@ const Navbar = () => {
               
               {mobileDropdown === 'more' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/more/item1" className="block py-2" onClick={() => setIsOpen(false)}>Item 1</Link>
-                  <Link to="/more/item2" className="block py-2" onClick={() => setIsOpen(false)}>Item 2</Link>
+                  <Link to="/ContactUs" className="block py-2" onClick={() => setIsOpen(false)}>Contact Us</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block py-2" onClick={() => setIsOpen(false)}>Annual form</Link>
                 </div>
               )}
             </div>

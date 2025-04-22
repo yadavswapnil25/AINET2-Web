@@ -3,6 +3,7 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
+import bg3 from "/bg3.png";
 
 import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
@@ -14,6 +15,7 @@ import Partners from "../Components/specific/Home/Partners";
 import Gallery from "../Components/specific/Home/Gallery";
 import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
 import Archives from "../Components/specific/Home/Archives";
+import MembershipPlans from "../Components/shared/MembershipPlans"
 
 const Home = () => {
   const eventsData = [
@@ -164,21 +166,25 @@ const Home = () => {
         {/* Section 3  Members Area */}
         <MembersArea />
 
+        {/* Section 4 - Membership Plans */}
+        <div className="mt-12">
+          <MembershipPlans />
+        </div>
+
         {/* Section 5 */}
         <CommunityVoicesSlider />
 
         {/* Section 6 */}
         <Partners />
 
-
         {/* Section 7 */}
         <Gallery />
 
         {/* Section 8 */}
-        <NewsletterSignup/>
+        <NewsletterSignup />
 
         {/* Section 9 */}
-        <Archives/>
+        <Archives />
       </div>
     </>
   );
