@@ -9,6 +9,7 @@ import MembershipArea from "./Pages/MembershipArea";
 import BlogsSection1 from "./Components/specific/Blogs/BlogsSection1";
 import BlogsSection2 from "./Components/specific/Blogs/BlogsSection2";
 import ContactUs from "./Pages/ContactUs";
+import MembershipFormforIndividualAnnual from "./Components/specific/Forms/MembershipFormforIndividualAnnual";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/BlogsSection1" element={<BlogsSection1/>} />
         <Route path="/BlogsSection2" element={<BlogsSection2/>} />
         <Route path="/ContactUs" element={<ContactUs/>} />
+        <Route path="/MembershipFormforIndividualAnnual" element={<MembershipFormforIndividualAnnual/>} />
       </Routes>
       <Footer />
     </>

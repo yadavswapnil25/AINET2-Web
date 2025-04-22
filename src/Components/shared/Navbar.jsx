@@ -209,7 +209,7 @@ const Navbar = () => {
               {dropdownOpen === 'more' && (
                 <div className="absolute right-0 bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
                   <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
-                  <Link to="/more/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Annual form</Link>
                 </div>
               )}
             </div>
@@ -318,7 +318,7 @@ const Navbar = () => {
               {mobileDropdown === 'more' && (
                 <div className="mt-2 pl-4 space-y-2">
                   <Link to="/ContactUs" className="block py-2" onClick={() => setIsOpen(false)}>Contact Us</Link>
-                  <Link to="/more/item2" className="block py-2" onClick={() => setIsOpen(false)}>Item 2</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block py-2" onClick={() => setIsOpen(false)}>Annual form</Link>
                 </div>
               )}
             </div>
