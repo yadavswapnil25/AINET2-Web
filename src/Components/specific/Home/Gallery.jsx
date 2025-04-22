@@ -5,6 +5,7 @@ import galleryBan2 from "/galleryBan2.png"
 import galleryBan3 from "/galleryBan3.png"
 import galleryBan4 from "/galleryBan4.png"
 import galleryBan5 from "/galleryBan5.png"
+import { Link } from 'react-router-dom';
 
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -45,9 +46,9 @@ export default function Gallery() {
     <div className="mt-12 relative w-full  rounded-[25px] overflow-hidden z-1 flex flex-col p-4  md:p-14 ">
       <div className="flex justify-between items-center mb-4 border-b  pb-2">
         <h2 className="text-xl font-bold tracking-wide">OUR GALLERY</h2>
-        <a href="#" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
+        <Link to="/gallery" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
           View All <FaChevronRight className="h-4 w-4 ml-1" />
-        </a>
+        </Link>
       </div>
 
       <div className="space-y-4 ">
