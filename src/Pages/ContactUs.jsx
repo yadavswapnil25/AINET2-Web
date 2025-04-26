@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fa';
 import { FaPhone } from 'react-icons/fa6';
 import { RiInstagramFill } from 'react-icons/ri';
+import Highlight from '../Components/shared/Highlight';
 
 export default function ContactUs() {
     const [formData, setFormData] = useState({
@@ -35,6 +36,8 @@ export default function ContactUs() {
     };
 
     return (
+        <>
+        <Highlight  heading={"HIGHLIGHTS"} subheading={"Registration for 8th AINET International Conference 2025"}/>
         <div className="max-w-5xl mx-auto p-4 bg-white">
             {/* Header */}
             <div className="mb-6 text-center">
@@ -203,5 +206,6 @@ export default function ContactUs() {
 
 
         </div>
+        </>
     );
 }

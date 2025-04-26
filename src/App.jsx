@@ -12,6 +12,7 @@ import Home from "./Pages/Home";
 import MembershipArea from "./Pages/MembershipArea";
 import Publication from "./Pages/Publication";
 import AinetOccasionalPaperDetailed from "./Pages/AinetOccasionalPaperDetailed";
+import TeacherResearch from "./Pages/TeacherResearch";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/publications" element={<Publication/>} />
         <Route path="/publications/occasional-papers" element={<AinetOccasionalPaperDetailed/>} />
+        <Route path="/teacherResearch" element={<TeacherResearch/>} />
 
       </Routes>
       <Footer />
