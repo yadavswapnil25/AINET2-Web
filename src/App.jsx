@@ -10,6 +10,7 @@ import ContactUs from "./Pages/ContactUs";
 import GalleryPage from "./Pages/Gallery";
 import Home from "./Pages/Home";
 import MembershipArea from "./Pages/MembershipArea";
+import MembershipFormforIndividualOverseas from "./Components/specific/Forms/MembershipFormforIndividualOverseas";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/MembershipFormforIndividualAnnual" element={<MembershipFormforIndividualAnnual />} />
         <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/MembershipFormforIndividualOverseas" element={<MembershipFormforIndividualOverseas />} />
       </Routes>
       <Footer />
     </>
