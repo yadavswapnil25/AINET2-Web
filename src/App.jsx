@@ -15,6 +15,7 @@ import MembershipArea from "./Pages/MembershipArea";
 import Publication from "./Pages/Publication";
 import TeacherResearch from "./Pages/TeacherResearch";
 import ArchivesConference from "./Pages/ArchivesConference";
+import MembershipFormForIndividualOverseas from "./Components/specific/Forms/MembershipFormforIndividualOverseas";
 
 const App = () => {
   return (
@@ -29,11 +30,12 @@ const App = () => {
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/MembershipFormforIndividualAnnual" element={<MembershipFormforIndividualAnnual />} />
         <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/publications" element={<Publication/>} />
-        <Route path="/publications/occasional-papers" element={<AinetOccasionalPaperDetailed/>} />
-        <Route path="/teacherResearch" element={<TeacherResearch/>} />
-        <Route  path="/archives" element={<Archives/>} />
-        <Route  path="/archives-conference" element={<ArchivesConference/>} />
+        <Route path="/publications" element={<Publication />} />
+        <Route path="/publications/occasional-papers" element={<AinetOccasionalPaperDetailed />} />
+        <Route path="/teacherResearch" element={<TeacherResearch />} />
+        <Route path="/archives" element={<Archives />} />
+        <Route path="/archives-conference" element={<ArchivesConference />} />
+        <Route path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas />} />
 
       </Routes>
       <Footer />
