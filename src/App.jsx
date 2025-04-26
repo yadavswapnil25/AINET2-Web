@@ -15,6 +15,7 @@ import MembershipArea from "./Pages/MembershipArea";
 import Publication from "./Pages/Publication";
 import TeacherResearch from "./Pages/TeacherResearch";
 import ArchivesConference from "./Pages/ArchivesConference";
+import MembershipFormForIndividualOverseas from "./Components/specific/Forms/MembershipFormforIndividualOverseas";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/teacherResearch" element={<TeacherResearch/>} />
         <Route  path="/archives" element={<Archives/>} />
         <Route  path="/archives-conference" element={<ArchivesConference/>} />
+        <Route  path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas/>} />
 
       </Routes>
       <Footer />
