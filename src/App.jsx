@@ -11,6 +11,9 @@ import GalleryPage from "./Pages/Gallery";
 import Home from "./Pages/Home";
 import MembershipArea from "./Pages/MembershipArea";
 import TeacherResearch from "./Pages/TeacherResearch";
+import Publication from "./Pages/Publication";
+import AinetOccasionalPapers from "./Components/specific/Publication/AinetOccasionalPapers";
+import AinetOccasionalPaperDetailed from "./Pages/AinetOccasionalPaperDetailed";
 
 const App = () => {
   return (
