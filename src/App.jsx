@@ -30,12 +30,12 @@ const App = () => {
         <Route path="/ContactUs" element={<ContactUs />} />
         <Route path="/MembershipFormforIndividualAnnual" element={<MembershipFormforIndividualAnnual />} />
         <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/publications" element={<Publication/>} />
-        <Route path="/publications/occasional-papers" element={<AinetOccasionalPaperDetailed/>} />
-        <Route path="/teacherResearch" element={<TeacherResearch/>} />
-        <Route  path="/archives" element={<Archives/>} />
-        <Route  path="/archives-conference" element={<ArchivesConference/>} />
-        <Route  path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas/>} />
+        <Route path="/publications" element={<Publication />} />
+        <Route path="/publications/occasional-papers" element={<AinetOccasionalPaperDetailed />} />
+        <Route path="/teacherResearch" element={<TeacherResearch />} />
+        <Route path="/archives" element={<Archives />} />
+        <Route path="/archives-conference" element={<ArchivesConference />} />
+        <Route path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas />} />
 
       </Routes>
       <Footer />
