@@ -78,7 +78,7 @@ const Navbar = () => {
     <nav className="bg-white text-black   shadow-md sticky top-0 z-50 py-1.5" ref={navRef}>
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold z-10">
-          <img src="./logo.svg" alt="logo ainet" className="h-[80px] md:h-[120px]" />
+          <img src="/logo.svg" alt="logo ainet" className="h-[80px] md:h-[120px]" />
         </Link>
 
         {/* Desktop Menu */}
