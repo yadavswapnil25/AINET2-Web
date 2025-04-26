@@ -192,7 +192,7 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'resources' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/resources/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
+                  <Link to="/MembershipFormforIndividualOverseas" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
                   <Link to="/resources/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
