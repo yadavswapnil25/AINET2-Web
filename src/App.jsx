@@ -6,14 +6,15 @@ import BlogsSection1 from "./Components/specific/Blogs/BlogsSection1";
 import BlogsSection2 from "./Components/specific/Blogs/BlogsSection2";
 import MembershipFormforIndividualAnnual from "./Components/specific/Forms/MembershipFormforIndividualAnnual";
 import About from "./Pages/About";
+import AinetOccasionalPaperDetailed from "./Pages/AinetOccasionalPaperDetailed";
+import Archives from "./Pages/Archives";
 import ContactUs from "./Pages/ContactUs";
 import GalleryPage from "./Pages/Gallery";
 import Home from "./Pages/Home";
 import MembershipArea from "./Pages/MembershipArea";
-import TeacherResearch from "./Pages/TeacherResearch";
 import Publication from "./Pages/Publication";
-import AinetOccasionalPapers from "./Components/specific/Publication/AinetOccasionalPapers";
-import AinetOccasionalPaperDetailed from "./Pages/AinetOccasionalPaperDetailed";
+import TeacherResearch from "./Pages/TeacherResearch";
+import ArchivesConference from "./Pages/ArchivesConference";
 
 const App = () => {
   return (
@@ -31,6 +32,8 @@ const App = () => {
         <Route path="/publications" element={<Publication/>} />
         <Route path="/publications/occasional-papers" element={<AinetOccasionalPaperDetailed/>} />
         <Route path="/teacherResearch" element={<TeacherResearch/>} />
+        <Route  path="/archives" element={<Archives/>} />
+        <Route  path="/archives-conference" element={<ArchivesConference/>} />
 
       </Routes>
       <Footer />
