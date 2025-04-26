@@ -3,7 +3,7 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
-import bg3 from "/bg3.png";
+
 
 import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
@@ -76,7 +76,9 @@ const Home = () => {
                 <button className="uppercase bg-[#FFF8DE] rounded-4xl p-4 w-[305px] font-xl font-bold btnshadow cursor-pointer">
                   Join The Community
                 </button>
-                <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[175px] font-xl font-bold btnshadow cursor-pointer">
+                <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[175px] font-xl font-bold btnshadow cursor-pointer"
+                onClick={() => window.location.href = '/about'}
+                >
                   READ MORE
                 </button>
               </div>

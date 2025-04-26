@@ -31,16 +31,15 @@ export default function MembershipFormforIndividualAnnual() {
     });
 
     // Added state for states and districts data
-    const [statesData, setStatesData] = useState([]);
     const [states, setStates] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingDistricts, setLoadingDistricts] = useState(false);
 
-    // Fetch states and districts data when component mounts
+    // Fetch states data when component mounts
     useEffect(() => {
         setLoading(true);
-        // Replace with your actual API endpoint
-        fetch('https://api.example.com/states-districts')
+        fetch('https://secure.geonames.org/searchJSON?country=IN&featureCode=ADM1&username=paresh09')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -48,33 +47,86 @@ export default function MembershipFormforIndividualAnnual() {
                 return response.json();
             })
             .then(data => {
-                setStatesData(data);
-                setStates(data.map(item => item.state));
-                setLoading(false);
+                if (data.geonames && Array.isArray(data.geonames)) {
+                    // Sort states alphabetically
+                    const sortedStates = data.geonames.sort((a, b) => 
+                        a.name.localeCompare(b.name)
+                    );
+                    setStates(sortedStates);
+                    setLoading(false);
+                } else {
+                    throw new Error('Invalid data format');
+                }
             })
             .catch(error => {
                 console.error('Error fetching states data:', error);
                 setLoading(false);
                 // You could add fallback states here if API fails
+                setStates([
+                    { geonameId: '1', name: 'Maharashtra' },
+                    { geonameId: '2', name: 'Karnataka' },
+                    { geonameId: '3', name: 'Tamil Nadu' },
+                    // Add more fallback states if needed
+                ]);
             });
     }, []);
+
+    // Fetch districts when state changes
+    const fetchDistricts = (stateId) => {
+        if (!stateId) return;
+        
+        setLoadingDistricts(true);
+        setDistricts([]);
+        
+        fetch(`https://secure.geonames.org/childrenJSON?geonameId=${stateId}&featureCode=ADM2&username=paresh09`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.geonames && Array.isArray(data.geonames)) {
+                    // Sort districts alphabetically
+                    const sortedDistricts = data.geonames.sort((a, b) => 
+                        a.name.localeCompare(b.name)
+                    );
+                    setDistricts(sortedDistricts);
+                    setLoadingDistricts(false);
+                } else {
+                    throw new Error('Invalid data format');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching districts data:', error);
+                setLoadingDistricts(false);
+                // You could add fallback districts here if API fails
+            });
+    };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
         if (type === 'checkbox') {
-            const fieldName = name.split('-')[0];
-
-            if (checked) {
+            if (name === 'agreeToTerms') {
                 setFormData(prev => ({
                     ...prev,
-                    [fieldName]: [...prev[fieldName], value]
+                    [name]: checked
                 }));
             } else {
-                setFormData(prev => ({
-                    ...prev,
-                    [fieldName]: prev[fieldName].filter(item => item !== value)
-                }));
+                const fieldName = name.split('-')[0];
+
+                if (checked) {
+                    setFormData(prev => ({
+                        ...prev,
+                        [fieldName]: [...prev[fieldName], value]
+                    }));
+                } else {
+                    setFormData(prev => ({
+                        ...prev,
+                        [fieldName]: prev[fieldName].filter(item => item !== value)
+                    }));
+                }
             }
         } else if (name.includes('.')) {
             const [parent, child] = name.split('.');
@@ -95,16 +147,56 @@ export default function MembershipFormforIndividualAnnual() {
 
     // Handle state change to update districts
     const handleStateChange = (e) => {
-        const selectedState = e.target.value;
-        setFormData({ ...formData, state: selectedState, district: '' });
-        const stateInfo = statesData.find(item => item.state === selectedState);
-        setDistricts(stateInfo ? stateInfo.districts : []);
+        const selectedStateIndex = e.target.selectedIndex;
+        if (selectedStateIndex > 0) { // Skip the placeholder option
+            const selectedState = states[selectedStateIndex - 1];
+            setFormData(prev => ({
+                ...prev,
+                state: selectedState.name,
+                district: '' // Reset district when state changes
+            }));
+            
+            // Fetch districts for the selected state
+            fetchDistricts(selectedState.geonameId);
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                state: '',
+                district: ''
+            }));
+            setDistricts([]);
+        }
+    };
+
+    // Handle district change
+    const handleDistrictChange = (e) => {
+        const selectedDistrictIndex = e.target.selectedIndex;
+        if (selectedDistrictIndex > 0) { // Skip the placeholder option
+            const selectedDistrict = districts[selectedDistrictIndex - 1];
+            setFormData(prev => ({
+                ...prev,
+                district: selectedDistrict.name
+            }));
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                district: ''
+            }));
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
         // Handle form submission logic here
+        
+        // Basic validation
+        if (formData.password !== formData.reEnterPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+        
+        // Further form submission logic
     };
 
     return (
@@ -120,7 +212,7 @@ export default function MembershipFormforIndividualAnnual() {
 
             <form onSubmit={handleSubmit}>
                 {/* Personal Information Section */}
-                <div className="mb-6 ">
+                <div className="mb-6">
                     <div className="bg-[#A6AEBF] p-2 my-8">
                         <h2 className="text-white text-xl">Personal Information</h2>
                     </div>
@@ -308,11 +400,13 @@ export default function MembershipFormforIndividualAnnual() {
                                 required
                                 disabled={loading}
                             >
-                                <option value="" disabled>
+                                <option value="">
                                     {loading ? "Loading states..." : "Select Your State"}
                                 </option>
                                 {states.map(state => (
-                                    <option key={state} value={state}>{state}</option>
+                                    <option key={state.geonameId} value={state.name}>
+                                        {state.name}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -324,16 +418,19 @@ export default function MembershipFormforIndividualAnnual() {
                             <select
                                 name="district"
                                 value={formData.district}
-                                onChange={handleChange}
+                                onChange={handleDistrictChange}
                                 className="w-full p-2 bg-[#C5D3E8] rounded appearance-none"
                                 required
-                                disabled={!formData.state || loading}
+                                disabled={!formData.state || loadingDistricts}
                             >
-                                <option value="" disabled>
-                                    {!formData.state ? "Select state first" : "Select Your District"}
+                                <option value="">
+                                    {!formData.state ? "Select state first" : 
+                                     loadingDistricts ? "Loading districts..." : "Select Your District"}
                                 </option>
                                 {districts.map(district => (
-                                    <option key={district} value={district}>{district}</option>
+                                    <option key={district.geonameId} value={district.name}>
+                                        {district.name}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -548,6 +645,7 @@ export default function MembershipFormforIndividualAnnual() {
                                 className="py-2 px-4 bg-[#C5D3E8] rounded"
                                 required
                             >
+                                <option value="">Select an option</option>
                                 <option value="YES">YES</option>
                                 <option value="NO">NO</option>
                             </select>
@@ -562,7 +660,7 @@ export default function MembershipFormforIndividualAnnual() {
                             <input
                                 type="text"
                                 name="associationName"
-                                placeholder="Enter Asso."
+                                placeholder="Enter Association Name"
                                 value={formData.associationName}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-[#C5D3E8] rounded"
@@ -575,7 +673,7 @@ export default function MembershipFormforIndividualAnnual() {
                         <label className="block text-base font-semibold mb-1">Your expectations from AINET :</label>
                         <textarea
                             name="expectations"
-                            placeholder="Enter Asso."
+                            placeholder="Enter your expectations"
                             value={formData.expectations}
                             onChange={handleChange}
                             className="w-full p-2 bg-[#C5D3E8] rounded"
@@ -650,7 +748,7 @@ export default function MembershipFormforIndividualAnnual() {
                     <div className="flex justify-center mt-6">
                         <button
                             type="submit"
-                            className="px-6 py-2 bg-amber-100 rounded-full text-sm font-medium"
+                            className="px-6 py-2 bg-amber-100 rounded-full text-sm font-bold"
                         >
                             SUBMIT APPLICATION FORM
                         </button>

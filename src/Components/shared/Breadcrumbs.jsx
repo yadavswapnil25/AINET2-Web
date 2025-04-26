@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const Breadcrumbs = ({ links = [] }) => {
   return (
-    <div className="flex items-center text-[20px] font-medium">
+    <div className="flex items-center text-sm lg:text-[20px] font-medium">
       {links.map((item, index) => (
         <div key={index} className="flex items-center">
           {item.to ? (

@@ -114,34 +114,46 @@ const Navbar = () => {
               </button>
             </div>
             
-            {/* Search */}
-            <div
-              ref={searchRef}
-              className={`relative flex items-center transition-all duration-300 ${
-                searchExpanded ? "flex-row" : "flex-row-reverse"
-              }`}
-            >
-              <button
-                onClick={() => setSearchExpanded((prev) => !prev)}
-                className="p-1"
-                aria-label="Search"
-              >
-                <img
-                  src="./searchIcon.svg"
-                  alt="Search"
-                  className="w-4 h-4 lg:w-5 lg:h-5"
-                />
-              </button>
+          {/* Search */}
+<div
+  ref={searchRef}
+  className={`relative flex items-center transition-all duration-300 ${
+    searchExpanded ? "flex-row" : "flex-row-reverse"
+  }`}
+>
+  {searchExpanded && (
+    <div className="relative">
+      <input
+        type="text"
+        placeholder="Search..."
+        className="border border-gray-300 rounded-4xl pl-10 pr-2 py-2 outline-none w-36 lg:w-48 text-sm"
+        autoFocus
+      />
+      <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
+        <img
+          src="/searchIcon.svg"
+          alt="Search"
+          className="w-6 h-6 "
+        />
+      </div>
+    </div>
+  )}
 
-              {searchExpanded && (
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="border border-gray-300 rounded px-2 py-1 outline-none w-36 lg:w-48 text-sm"
-                  autoFocus
-                />
-              )}
-            </div>
+  {!searchExpanded && (
+    <button
+      onClick={() => setSearchExpanded((prev) => !prev)}
+      className="p-1"
+      aria-label="Search"
+    >
+      <img
+        src="/searchIcon.svg"
+        alt="Search"
+        className="w-8 h-8 "
+      />
+    </button>
+  )}
+</div>
+
           </div>
           
           {/* Desktop Navigation Links */}
@@ -151,16 +163,18 @@ const Navbar = () => {
             
             {/* Desktop Dropdowns */}
             <div className="relative group" 
-                onMouseEnter={() => toggleDropdown('initiatives')} 
+                onMouseEnter={() => toggleDropdown('Projects')} 
                 onMouseLeave={() => toggleDropdown(null)}>
               <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
-                AINET Initiatives
-                <MdOutlineKeyboardArrowDown className={`ml-1 transition-transform ${dropdownOpen === 'initiatives' ? "rotate-180" : ""}`} />
+                AINET Projects
+                <MdOutlineKeyboardArrowDown className={`ml-1 transition-transform ${dropdownOpen === 'Projects' ? "rotate-180" : ""}`} />
               </button>
-              {dropdownOpen === 'initiatives' && (
-                <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
+              {dropdownOpen === 'Projects' && (
+                <div className="absolute bg-white mt-2 py-4 w-40 rounded shadow-lg z-10 top-3.5">
+                  <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
+                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
+                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Affiliates Projects</Link>
+                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
                 </div>
               )}
             </div>
@@ -178,7 +192,7 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'resources' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/resources/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
+                  <Link to="/MembershipFormforIndividualOverseas" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
                   <Link to="/resources/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
@@ -193,8 +207,9 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'event' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/event/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
-                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
+                  <Link to="/event/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
+                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
+                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
                 </div>
               )}
             </div>
@@ -210,6 +225,8 @@ const Navbar = () => {
                 <div className="absolute right-0 bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
                   <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
                   <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Annual form</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Gallery</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Archives</Link>
                 </div>
               )}
             </div>
