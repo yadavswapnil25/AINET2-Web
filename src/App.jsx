@@ -16,6 +16,8 @@ import Publication from "./Pages/Publication";
 import TeacherResearch from "./Pages/TeacherResearch";
 import ArchivesConference from "./Pages/ArchivesConference";
 import MembershipFormForIndividualOverseas from "./Components/specific/Forms/MembershipFormforIndividualOverseas";
+import MembershipFormforInstitutionalAnnual from "./Components/specific/Forms/MembershipFormforInstitutionalAnnual";
+import Conference from "./Pages/Conference";
 import Webinar from "./Pages/Webinar";
 
 const App = () => {
@@ -37,6 +39,8 @@ const App = () => {
         <Route path="/archives" element={<Archives />} />
         <Route path="/archives-conference" element={<ArchivesConference />} />
         <Route path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas />} />
+        <Route path="/MembershipFormforInstitutionalAnnual" element={<MembershipFormforInstitutionalAnnual />} />
+        <Route path="/Conference" element={<Conference />} />
         <Route path="/webinar" element={<Webinar />} />
 
       </Routes>
