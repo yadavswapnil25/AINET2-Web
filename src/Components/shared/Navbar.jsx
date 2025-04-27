@@ -193,7 +193,7 @@ const Navbar = () => {
               {dropdownOpen === 'resources' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
                   <Link to="/MembershipFormforIndividualOverseas" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
-                  <Link to="/resources/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
+                  <Link to="/MembershipFormforInstitutionalAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
             </div>
@@ -207,7 +207,7 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'event' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/event/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
+                  <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
                   <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
                   <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
                 </div>
