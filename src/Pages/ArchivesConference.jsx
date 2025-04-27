@@ -43,7 +43,7 @@ export default function ArchivesConference() {
         heading={"HIGHLIGHTS"}
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="w-full lg:max-w-[80%] mx-auto md:p-14 pt-[25px] h-auto">
         {/* Breadcrumb navigation */}
         <Breadcrumbs
           links={[

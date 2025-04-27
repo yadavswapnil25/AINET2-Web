@@ -193,7 +193,7 @@ const Navbar = () => {
               {dropdownOpen === 'resources' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
                   <Link to="/MembershipFormforIndividualOverseas" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 1</Link>
-                  <Link to="/resources/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
+                  <Link to="/MembershipFormforInstitutionalAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Item 2</Link>
                 </div>
               )}
             </div>
@@ -207,8 +207,8 @@ const Navbar = () => {
               </button>
               {dropdownOpen === 'event' && (
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link to="/event/item1" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
-                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
+                  <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
+                  <Link to="webinar" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
                   <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
                 </div>
               )}
@@ -225,8 +225,8 @@ const Navbar = () => {
                 <div className="absolute right-0 bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
                   <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
                   <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Annual form</Link>
-                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Gallery</Link>
-                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Archives</Link>
+                  <Link to="/gallery" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Gallery</Link>
+                  <Link to="/archives" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Archives</Link>
                 </div>
               )}
             </div>
@@ -273,14 +273,16 @@ const Navbar = () => {
                 className="flex justify-between items-center w-full" 
                 onClick={() => toggleMobileDropdown('initiatives')}
               >
-                AINET Initiatives
+                AINET Projects
                 <MdOutlineKeyboardArrowDown className={`transition-transform ${mobileDropdown === 'initiatives' ? "rotate-180" : ""}`} />
               </button>
               
               {mobileDropdown === 'initiatives' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/initiatives/item1" className="block py-2" onClick={() => setIsOpen(false)}>Item 1</Link>
-                  <Link to="/initiatives/item2" className="block py-2" onClick={() => setIsOpen(false)}>Item 2</Link>
+                   <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
+                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
+                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Affiliates Projects</Link>
+                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
                 </div>
               )}
             </div>
@@ -317,8 +319,9 @@ const Navbar = () => {
               
               {mobileDropdown === 'event' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/event/item1" className="block py-2" onClick={() => setIsOpen(false)}>Item 1</Link>
-                  <Link to="/event/item2" className="block py-2" onClick={() => setIsOpen(false)}>Item 2</Link>
+                  <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
+                  <Link to="webinar" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
+                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
                 </div>
               )}
             </div>
@@ -334,8 +337,10 @@ const Navbar = () => {
               
               {mobileDropdown === 'more' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/ContactUs" className="block py-2" onClick={() => setIsOpen(false)}>Contact Us</Link>
-                  <Link to="/MembershipFormforIndividualAnnual" className="block py-2" onClick={() => setIsOpen(false)}>Annual form</Link>
+                   <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
+                  <Link to="/MembershipFormforIndividualAnnual" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Annual form</Link>
+                  <Link to="/gallery" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Gallery</Link>
+                  <Link to="/archives" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Archives</Link>
                 </div>
               )}
             </div>
