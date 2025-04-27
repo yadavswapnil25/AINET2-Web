@@ -16,6 +16,7 @@ import Publication from "./Pages/Publication";
 import TeacherResearch from "./Pages/TeacherResearch";
 import ArchivesConference from "./Pages/ArchivesConference";
 import MembershipFormForIndividualOverseas from "./Components/specific/Forms/MembershipFormforIndividualOverseas";
+import Webinar from "./Pages/Webinar";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/archives" element={<Archives />} />
         <Route path="/archives-conference" element={<ArchivesConference />} />
         <Route path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas />} />
+        <Route path="/webinar" element={<Webinar />} />
 
       </Routes>
       <Footer />
