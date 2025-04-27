@@ -165,7 +165,7 @@ export default function ContactUs() {
                 <div className="bg-[#A6AEBF] rounded-3xl text-white p-10">
                     <h3 className="text-2xl font-semibold mb-4">Follow us</h3>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="flex items-center">
                             <RiInstagramFill className="text-white text-2xl mr-2" />
                             <a href="https://www.instagram.com/ainetindia" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">ainetindia</a>
