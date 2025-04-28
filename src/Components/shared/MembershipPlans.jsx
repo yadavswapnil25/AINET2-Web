@@ -3,7 +3,7 @@ import { FaUser, FaUniversity } from 'react-icons/fa';
 import PlanCard from '../shared/Plancard';
 import bg3 from "/bg3.png";
 
-export default function MembershipPlans({ discountPercentage = 50 }) {
+export default function MembershipPlans() {
     const [planType, setPlanType] = useState('individual');
 
     const planFeatures = [
@@ -78,7 +78,7 @@ export default function MembershipPlans({ discountPercentage = 50 }) {
             style={{ backgroundImage: `url(${bg3})` }}
         >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-6">
-                <h1 className="md:text-5xl font-bold text-gray-900  text-5xl">
+                <h1 className="md:text-5xl font-bold text-gray-900 text-center md:text-left  text-3xl">
                     Select Plan
                 </h1>
 
