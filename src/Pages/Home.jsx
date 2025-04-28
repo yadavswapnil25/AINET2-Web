@@ -50,7 +50,7 @@ const Home = () => {
           {/* First Half */}
           <div className="w-full flex h-full justify-around md:h-[auto]  relative p-4 md:p-14 md:pb-0 flex-col md:flex-row">
             <div className="w-full md:[55%]">
-              <h3 className="font-bold text-white tracking-wider text-3xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-20 ">
+              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-20 ">
                 A vibrant community of English Language Education professionals
                 & stakeholders which aims to <br /> Develop. Together
               </h3>
@@ -59,7 +59,7 @@ const Home = () => {
               <img
                 src={home_banner_1}
                 alt="HomeImage"
-                className="w-full  md:w-[75%] h-[350px]"
+                className="w-full  md:w-[75%] h-auto md:h-[350px]"
               />
             </div>
           </div>
@@ -67,23 +67,23 @@ const Home = () => {
           {/* Second Start */}
           <div className="w-full flex h-full  md:h-1/2 z-1 relative p-4 md:px-14 flex-col md:flex-row">
             <div className="w-full md:w-[55%] flex flex-col  px-4 gap-4">
-              <p className="text-[20px] text-white tracking-wider">
+              <p className="text-[20px] text-white tracking-normal md:tracking-wider">
                 An English language teacher association registered as charity in
                 India. An IATEFL, UK Affiliate and TESOL, US Associate.
               </p>
 
-              <div className="flex gap-4">
-                <button className="uppercase bg-[#FFF8DE] rounded-4xl p-4 w-[305px] font-xl font-bold btnshadow cursor-pointer">
+              <div className="flex flex-col md:flex-row gap-4 w-full">
+                <button className="uppercase bg-[#FFF8DE] rounded-4xl p-4 w-full md:w-[305px] font-xl font-bold btnshadow cursor-pointer">
                   Join The Community
                 </button>
-                <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[175px] font-xl font-bold btnshadow cursor-pointer"
+                <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-full md:w-[175px] font-xl font-bold btnshadow cursor-pointer"
                 onClick={() => window.location.href = '/about'}
                 >
                   READ MORE
                 </button>
               </div>
 
-              <div className="flex mt-4  gap-14">
+              <div className="flex flex-col md:flex-row items-center mt-4 text-center md:text-left  gap-6 md:gap-10 lg:gap-14">
                 <div className="flex flex-col gap-4">
                   <h3 className="text-[#D0E8C5] font-bold text-4xl">1 M +</h3>
                   <p className="text-white text-[18px]">
@@ -91,8 +91,8 @@ const Home = () => {
                   </p>
                 </div>
 
-                <div className="w-[3px] bg-white h-full" />
-                <div className="flex flex-col gap-4">
+                <div className=" h-[3px] w-full md:w-[3px] bg-white md:h-full" />
+                <div className="flex flex-col items-center  gap-4">
                   <h3 className="text-[#D0E8C5] font-bold text-4xl">3400 +</h3>
                   <p className="text-white text-[18px]">
                     Our thriving community of educators.
@@ -105,7 +105,7 @@ const Home = () => {
               <img
                 src={home_banner_2}
                 alt=""
-                className="w-full  md:w-[75%] h-[350px]"
+                className="w-full  md:w-[75%] h-auto my-2 md:h-[350px]"
               />
             </div>
           </div>
@@ -113,18 +113,18 @@ const Home = () => {
 
         {/* Section 2 */}
         <div
-          className="mt-12 relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-14 bg-cover"
+          className="mt-12 relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
           <h2 className="text-3xl w-full font-medium">UPCOMING CONFERENCE</h2>
-          <div className="w-full h-1/2 flex flex-col md:flex-row p-6 gap-8">
+          <div className="w-full h-1/2 flex flex-col md:flex-row p-0 md:p-6 gap-8">
             <div className="w-full md:w-1/2 h-full flex justify-center items-center">
               <img src={upcoming} alt="upcoming conference" />
             </div>
 
             <div className=" w-full md:w-1/2 h-full flex items-center  md:items-start justify-center flex-col gap-8">
-              <h3 className="font-bold text-4xl">
+              <h3 className="font-bold text-3xl md:text-4xl">
                 20th International <br /> Conference & Exhibition
               </h3>
               <p className="text-xl text-center md:text-left">
@@ -132,7 +132,7 @@ const Home = () => {
                 Landscape" <br />
                 19 - 21 February 2025 - Canadian University, Dubai
               </p>
-              <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer">
+              <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer">
                 REGISTER NOW
               </button>
             </div>
@@ -142,10 +142,10 @@ const Home = () => {
           <h2 className="text-3xl w-full font-medium mt-10">UPCOMING EVENTS</h2>
 
           <div className="w-full h-1/2  flex flex-col md:flex-row sm:flex-row mt-6 gap-8">
-            {eventsData.map((event, index) => (
+            {eventsData?.map((event, index) => (
               <div
                 key={index}
-                className={`relative flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
+                className={`relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
               >
                 <h2 className="text-2xl font-semibold mb-4">{event.title}</h2>
                 <p className="flex items-center text-black mb-1 text-base font-medium">

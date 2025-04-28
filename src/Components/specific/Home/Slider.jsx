@@ -48,25 +48,30 @@ const testimonialsData = [
 
 export default function CommunityVoicesSlider() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCards, setVisibleCards] = useState(3);
+  const [visibleCards, setVisibleCards] = useState(300);
+  const [cardWidth, setCardWidth] = useState();
 
-  const CARD_WIDTH =400;
   const CARD_GAP = 15;
 
   useEffect(() => {
-    const updateVisibleCards = () => {
-      if (window.innerWidth < 768) {
+    const updateLayout = () => {
+      // Set number of visible cards based on screen width
+      if (window.innerWidth < 640) {
         setVisibleCards(1);
-      } else if (window.innerWidth < 1280) {
+        // Make card width responsive on small screens
+        setCardWidth(Math.min(window.innerWidth - 40, 290));
+      } else if (window.innerWidth < 1024) {
         setVisibleCards(2);
+        setCardWidth(350);
       } else {
         setVisibleCards(3);
+        setCardWidth(400);
       }
     };
 
-    updateVisibleCards();
-    window.addEventListener("resize", updateVisibleCards);
-    return () => window.removeEventListener("resize", updateVisibleCards);
+    updateLayout();
+    window.addEventListener("resize", updateLayout);
+    return () => window.removeEventListener("resize", updateLayout);
   }, []);
 
   const handlePrev = () => {
@@ -80,14 +85,15 @@ export default function CommunityVoicesSlider() {
   };
 
   return (
-    <div className="mt-12 relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-14 bg-cover" 
-    style={{ backgroundImage: `url(${bg5})` }}
+    <div 
+      className="mt-12 relative w-full min-h-[600px] md:h-screen rounded-lg md:rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-4 md:p-14 bg-cover" 
+      style={{ backgroundImage: `url(${bg5})` }}
     >
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-5xl font-bold text-gray-900">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
+        <h2 className="text-2xl md:text-3xl lg:text-5xl font-bold text-gray-900">
           Voices from the Community 
         </h2>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 self-end sm:self-auto">
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
@@ -96,7 +102,7 @@ export default function CommunityVoicesSlider() {
             }`}
             aria-label="Previous slide"
           >
-            <FaChevronLeft className="w-5 h-5" />
+            <FaChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
           </button>
           <button
             onClick={handleNext}
@@ -108,42 +114,46 @@ export default function CommunityVoicesSlider() {
             }`}
             aria-label="Next slide"
           >
-            <FaChevronRight className="w-5 h-5" />
+            <FaChevronRight className="w-4 h-4 md:w-5 md:h-5" />
           </button>
         </div>
       </div>
 
       <div
-        className="mx-auto overflow-hidden h-full"
+        className="mx-auto overflow-hidden h-full w-full"
         style={{
-          width: `${visibleCards * (CARD_WIDTH + CARD_GAP)}px`,
+          maxWidth: `${visibleCards * (cardWidth + CARD_GAP)}px`,
         }}
       >
         <div
           className="flex transition-transform duration-500 ease-in-out items-center h-full"
           style={{
             transform: `translateX(-${
-              currentIndex * (CARD_WIDTH + CARD_GAP)
+              currentIndex * (cardWidth + CARD_GAP)
             }px)`,
             gap: `${CARD_GAP}px`,
           }}
         >
-          {testimonialsData.map((card) => (
+          {testimonialsData?.map((card) => (
             <div
               key={card.id}
               className="flex-shrink-0"
-              style={{ width: `${CARD_WIDTH}px` }}
+              style={{ width: `${cardWidth}px` }}
             >
               <div
-                className="bg-cream-100 p-4 rounded-lg shadow-md h-[450px]"
+                className="bg-cream-100 p-3 md:p-4 rounded-lg shadow-md h-[350px] sm:h-[400px] md:h-[450px]"
                 style={{ backgroundColor: "rgba(255, 253, 240, 0.9)" }}
               >
-                <div className="relative mb-4">
+                <div className="relative mb-3 md:mb-4">
                   <img
                     src={card.image}
                     alt={card.name}
                     className="w-full rounded-md"
-                    style={{ height: "270px", objectFit: "cover" }}
+                    style={{ 
+                      height: "200px", 
+                      maxHeight: "230px",
+                      objectFit: "cover" 
+                    }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
                     {/* <button className="w-12 h-12 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
@@ -151,10 +161,10 @@ export default function CommunityVoicesSlider() {
                     </button> */}
                   </div>
                 </div>
-                <p className="text-black font-medium mb-2 text-end text-[18px]">
+                <p className="text-black font-medium mb-1 md:mb-2 text-end text-sm md:text-[18px]">
                   {card.date}
                 </p>
-                <p className="text-black font-medium text-start text-semibold text-[20px]">
+                <p className="text-black font-medium text-start text-semibold text-base md:text-[20px]">
                   {card.testimonial}
                 </p>
               </div>
