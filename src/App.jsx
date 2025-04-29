@@ -19,6 +19,9 @@ import MembershipFormForIndividualOverseas from "./Components/specific/Forms/Mem
 import MembershipFormforInstitutionalAnnual from "./Components/specific/Forms/MembershipFormforInstitutionalAnnual";
 import Conference from "./Pages/Conference";
 import Webinar from "./Pages/Webinar";
+import Author from "./Pages/Author";
+import News from "./Pages/News";
+import NewsDetails from "./Pages/NewsDetails";
 
 const App = () => {
   return (
@@ -42,6 +45,9 @@ const App = () => {
         <Route path="/MembershipFormforInstitutionalAnnual" element={<MembershipFormforInstitutionalAnnual />} />
         <Route path="/Conference" element={<Conference />} />
         <Route path="/webinar" element={<Webinar />} />
+        <Route path="/author" element={<Author />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/news/:title" element={<NewsDetails />} />
 
       </Routes>
       <Footer />

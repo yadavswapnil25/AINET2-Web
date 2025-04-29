@@ -27,7 +27,7 @@ export default function AinetNews() {
       <div className="flex flex-col md:flex-row justify-between  mb-6">
       <h1 className="text-5xl font-semibold mb-[18px] ">AINET In New</h1>
         <div className="flex items-center text-[#A6AEBF] cursor-pointer text-lg justify-end">
-          <span className="mr-1">View All</span>
+          <span className="mr-1" onClick={() => window.location.href = "/news"}>View All</span>
           <FaChevronRight className="text-sm" />
         </div>
       </div>
