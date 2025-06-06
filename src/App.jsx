@@ -22,6 +22,7 @@ import Webinar from "./Pages/Webinar";
 import Author from "./Pages/Author";
 import News from "./Pages/News";
 import NewsDetails from "./Pages/NewsDetails";
+import "./App.css"
 
 const App = () => {
   return (

@@ -1,0 +1,20 @@
+.partner-slider {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.slider-track {
+  display: inline-flex;
+  gap: 2rem;
+  animation: scroll-horizontal 10s linear infinite;
+}
+
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
