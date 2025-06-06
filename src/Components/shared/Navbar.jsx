@@ -209,7 +209,7 @@ const Navbar = () => {
                 <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
                   <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
                   <Link to="webinar" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
-                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
+                  <Link to="/FDLecture" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
                 </div>
               )}
             </div>
