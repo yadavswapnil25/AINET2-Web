@@ -24,6 +24,9 @@ import News from "./Pages/News";
 import NewsDetails from "./Pages/NewsDetails";
 import "./App.css"
 import FDLecture from "./Pages/FDLecture";
+import AboutAINETAffiliates from "./Pages/AboutAINETAffiliates";
+import AboutWomenInAINET from "./Pages/AboutWomenInAINET";
+import AboutRuralELT from "./Pages/AboutRuralELT";
 
 const App = () => {
   return (
@@ -50,6 +53,10 @@ const App = () => {
         <Route path="/author" element={<Author />} />
         <Route path="/news" element={<News />} />
         <Route path="/FDLecture" element={<FDLecture />} />
+        <Route path="/AboutAINETAffiliates" element={<AboutAINETAffiliates />} />
+        <Route path="/AboutWomenInAINET" element={<AboutWomenInAINET />} />
+        <Route path="/AboutRuralELT" element={<AboutRuralELT />} />
+      
         <Route path="/news/:title" element={<NewsDetails />} />
 
       </Routes>

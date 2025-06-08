@@ -174,9 +174,9 @@ const Navbar = () => {
                
                     <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
                   <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
+                  <Link to="/AboutWomenInAINET" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
+                  <Link to="/AboutRuralELT" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
+                  <Link to="/AboutAINETAffiliates" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
                 </div>
               )}
             </div>
@@ -288,9 +288,9 @@ const Navbar = () => {
                 <div className="mt-2 pl-4 space-y-2">
                    <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
                   <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
+                  <Link to="/AboutWomenInAINET" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
+                  <Link to="/AboutRuralELT" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
+                  <Link to="/AboutAINETAffiliates" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
                 </div>
               )}
             </div>
