@@ -50,7 +50,7 @@ const Home = () => {
           {/* First Half */}
           <div className="w-full flex h-full justify-around md:h-[auto]  relative p-4 md:p-14 md:pb-0 flex-col md:flex-row">
             <div className="w-full md:[55%]">
-              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-20 ">
+              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-[4.5rem] ">
                 A vibrant community of English Language Education professionals
                 & stakeholders which aims to <br /> Develop. Together
               </h3>
