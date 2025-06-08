@@ -23,6 +23,7 @@ import Author from "./Pages/Author";
 import News from "./Pages/News";
 import NewsDetails from "./Pages/NewsDetails";
 import "./App.css"
+import FDLecture from "./Pages/FDLecture";
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
         <Route path="/webinar" element={<Webinar />} />
         <Route path="/author" element={<Author />} />
         <Route path="/news" element={<News />} />
+        <Route path="/FDLecture" element={<FDLecture />} />
         <Route path="/news/:title" element={<NewsDetails />} />
 
       </Routes>
