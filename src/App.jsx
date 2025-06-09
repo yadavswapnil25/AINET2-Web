@@ -27,6 +27,9 @@ import FDLecture from "./Pages/FDLecture";
 import AboutAINETAffiliates from "./Pages/AboutAINETAffiliates";
 import AboutWomenInAINET from "./Pages/AboutWomenInAINET";
 import AboutRuralELT from "./Pages/AboutRuralELT";
+import HELE from "./Pages/HELE";
+import Prelims from "./Pages/Prelims";
+import Decentring from "./Pages/Decentring";
 
 const App = () => {
   return (
@@ -56,6 +59,9 @@ const App = () => {
         <Route path="/AboutAINETAffiliates" element={<AboutAINETAffiliates />} />
         <Route path="/AboutWomenInAINET" element={<AboutWomenInAINET />} />
         <Route path="/AboutRuralELT" element={<AboutRuralELT />} />
+        <Route path="/HELE" element={<HELE />} />
+        <Route path="/Prelims" element={<Prelims />} />
+        <Route path="/Decentring" element={<Decentring />} />
       
         <Route path="/news/:title" element={<NewsDetails />} />
 

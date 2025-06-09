@@ -190,11 +190,11 @@ const Navbar = () => {
               {dropdownOpen === 'Initiatives' && (
                 <div className="absolute bg-white mt-2 py-4 w-40 rounded shadow-lg z-10 top-3.5">
                
-                    <Link to="/initiatives/hele" className="block px-2 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
+                    <Link to="/HELE" className="block px-2 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
                  
-                  <Link to="/initiatives/decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
+                  <Link to="Decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
                 
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
+                  <Link to="/Prelims" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
                 </div>
               )}
             </div>
@@ -305,11 +305,11 @@ const Navbar = () => {
               
               {mobileDropdown === 'initiatives' && (
                 <div className="mt-2 pl-4 space-y-2">
-                   <Link to="/initiatives/hele" className="block px-2 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
+                   <Link to="/HELE" className="block px-2 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
                  
-                  <Link to="/initiatives/decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
+                  <Link to="/Decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
                 
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
+                  <Link to="/Prelims" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
                 </div>
               )}
             </div>

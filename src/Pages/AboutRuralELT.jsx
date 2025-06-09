@@ -1,4 +1,6 @@
 import React from 'react';
+import Highlight from '../Components/shared/Highlight';
+import Breadcrumbs from '../Components/shared/Breadcrumbs';
 
 const affiliateData = {
     breadcrumb: ['Home', 'AINET Projects', 'Rural ELT'],
@@ -36,68 +38,84 @@ const AboutRuralELT = ({ data }) => {
     } = data;
 
     return (
-        <div className="px-4 py-10 md:px-8 lg:px-16 max-w-screen-xl mx-auto text-gray-700">
 
-            {/* Page Title */}
-            <h1 className="text-3xl md:text-4xl font-bold mb-10">{title}</h1>
+        <>
+            <Highlight
+                heading={"HIGHLIGHTS"}
+                subheading={"Registration for 8th AINET International Conference 2025"}
+            />
+            <div className="px-4 py-10 md:px-8 lg:px-16 max-w-screen-xl mx-auto text-gray-700">
+                <div className='pb-10'>
 
-            {/* First Section: Image + Description */}
-            <div className="flex flex-col-reverse lg:flex-row items-center gap-10 mb-12">
-                {/* Text */}
-                <div className="lg:w-2/3">
-                    {subtitle && <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">{subtitle}</h2>}
-                    <p className="whitespace-pre-line leading-relaxed">{description}</p>
-                </div>
-
-                {/* Image */}
-                <div className="lg:w-1/2 w-full">
-                    <img
-                        src="/AboutAA.jpg" // Image name remains unchanged
-                        alt="Rural ELT Event"
-                        className="w-full rounded-lg shadow-lg"
+                    <Breadcrumbs
+                        links={[
+                            { label: "Home", to: "/" },
+                            { label: "AINET Projects", to: null },
+                            { label: "Rural ELT`", to: null },
+                        ]}
                     />
                 </div>
-            </div>
+                {/* Page Title */}
+                <h1 className="text-3xl md:text-4xl font-bold mb-10">{title}</h1>
 
-            {/* Activities Section */}
-            <div className="mb-10">
-                <h3 className="text-xl md:text-2xl font-semibold mb-4">{benefitsTitle}</h3>
-                <ul className="list-disc list-inside space-y-2">
-                    {benefits.map((point, idx) => (
-                        <li key={idx}>{point}</li>
-                    ))}
-                </ul>
-            </div>
+                {/* First Section: Image + Description */}
+                <div className="flex flex-col-reverse lg:flex-row items-center gap-10 mb-12">
+                    {/* Text */}
+                    <div className="lg:w-2/3">
+                        {subtitle && <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">{subtitle}</h2>}
+                        <p className="whitespace-pre-line leading-relaxed">{description}</p>
+                    </div>
 
-            {/* Additional Info Section */}
-            {howToTitle && (
-                <div className="mb-10">
-                    <h3 className="text-xl md:text-2xl font-semibold mb-2">{howToTitle}</h3>
-                    <p className="whitespace-pre-line">{howToSteps}</p>
+                    {/* Image */}
+                    <div className="lg:w-1/2 w-full">
+                        <img
+                            src="/AboutAA.jpg" // Image name remains unchanged
+                            alt="Rural ELT Event"
+                            className="w-full rounded-lg shadow-lg"
+                        />
+                    </div>
                 </div>
-            )}
 
-            {!howToTitle && (
+                {/* Activities Section */}
                 <div className="mb-10">
-                    <p className="whitespace-pre-line">{howToSteps}</p>
+                    <h3 className="text-xl md:text-2xl font-semibold mb-4">{benefitsTitle}</h3>
+                    <ul className="list-disc list-inside space-y-2">
+                        {benefits.map((point, idx) => (
+                            <li key={idx}>{point}</li>
+                        ))}
+                    </ul>
                 </div>
-            )}
 
-            {/* Contact Section */}
-            <div>
-                <p className="font-bold text-xl md:text-2xl">
-                    {contactText}{' '}
-                    <a href={`mailto:${contactEmail}`} className="text-blue-600 underline">
-                        {contactEmail}
-                    </a>
-                    . Or contact{' '}
-                    <a href="mailto:theainet@gmail.com" className="text-blue-600 underline">
-                        theainet@gmail.com
-                    </a>{' '}
-                    <span className="font-normal">[mention “Rural ELT” in the subject]</span>
-                </p>
+                {/* Additional Info Section */}
+                {howToTitle && (
+                    <div className="mb-10">
+                        <h3 className="text-xl md:text-2xl font-semibold mb-2">{howToTitle}</h3>
+                        <p className="whitespace-pre-line">{howToSteps}</p>
+                    </div>
+                )}
+
+                {!howToTitle && (
+                    <div className="mb-10">
+                        <p className="whitespace-pre-line">{howToSteps}</p>
+                    </div>
+                )}
+
+                {/* Contact Section */}
+                <div>
+                    <p className="font-bold text-xl md:text-2xl">
+                        {contactText}{' '}
+                        <a href={`mailto:${contactEmail}`} className="text-blue-600 underline">
+                            {contactEmail}
+                        </a>
+                        . Or contact{' '}
+                        <a href="mailto:theainet@gmail.com" className="text-blue-600 underline">
+                            theainet@gmail.com
+                        </a>{' '}
+                        <span className="font-normal">[mention “Rural ELT” in the subject]</span>
+                    </p>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
