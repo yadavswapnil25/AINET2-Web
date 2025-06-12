@@ -19,11 +19,11 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
 
                 {/* Section 1: Logo + Socials */}
-                <div className=' w-full items-center flex flex-col'>
+                <div className=' w-full flex flex-col'>
                     <Link to="/" className="inline-block mb-4">
                         <img src="./footlogo.png" alt="AINET Logo"  />
                     </Link>
-                    <p className="text-sm mb-2 font-medium">Follow Us</p>
+                    <p className="text-sm mb-2 text-center font-medium">Follow Us</p>
                     <div className="flex flex-wrap gap-3 text-xl sm:text-2xl">
                         <a href="#" aria-label="Instagram" className="hover:text-white"><FaInstagram /></a>
                         <a href="#" aria-label="Facebook" className="hover:text-white"><FaFacebookF /></a>
@@ -36,39 +36,39 @@ const Footer = () => {
                 </div>
 
                 {/* Section 2: About AINET */}
-                <div className=' w-full items-center flex flex-col'>
+                <div className=' w-full  flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">AINET</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
                         <li><Link to="/about" className="hover:underline">About Us</Link></li>
                         <li><Link to="/publications" className="hover:underline">Publications</Link></li>
-                        <li><Link to="/adda" className="hover:underline">AINET Adda</Link></li>
+                        <li><Link to="/BlogsSection1" className="hover:underline">AINET Adda</Link></li>
                         <li><Link to="/resources" className="hover:underline">Resources</Link></li>
                     </ul>
                 </div>
 
                 {/* Section 3: Help & Legal */}
-                <div className=' w-full items-center flex flex-col'>
+                <div className=' w-full flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">Help</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
                         <li><Link to="/archives" className="hover:underline">Archives</Link></li>
-                        <li><Link to="/contact" className="hover:underline">Contact Us</Link></li>
+                        <li><Link to="/ContactUs" className="hover:underline">Contact Us</Link></li>
                         <li><Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link></li>
                     </ul>
                 </div>
 
                 {/* Section 4: Contact Details */}
-                <div className=' w-full items-center flex flex-col'>
+                <div className=' w-full flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">Support & Contact</h3>
-                    <ul className="space-y-4 text-base sm:text-lg flex items-center flex-col">
-                        <li className="flex items-center gap-3 ">
+                    <ul className="space-y-4 text-base sm:text-lg flex flex-col">
+                        <li className="flex gap-3 ">
                             <FaEnvelope className="text-xl" />
                             <a href="mailto:theainet@gmail.com" className="hover:underline">theainet@gmail.com</a>
                         </li>
-                        <li className="flex items-center gap-3 md:items-start">
+                        <li className="flex gap-3 md:items-start">
                             <FaPhoneAlt className="text-xl" />
                             <a href="tel:+919322890031" className="hover:underline">+91 - 9322890031</a>
                         </li>
-                        <li className="flex items-center md:items-start  gap-3 w-[60%] md:w-full">
+                        <li className="flex md:items-start  gap-3 w-[60%] md:w-full">
                             <FaUniversity className="text-5xl mt-1" />
                             <span className="text-sm sm:text-base leading-snug">
                                 AINET Block 2, 1-Ganga Villa, St. Kabir Ward, Bhandara, M.S., India, PIN 441904

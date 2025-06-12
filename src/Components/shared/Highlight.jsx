@@ -8,7 +8,7 @@ const Highlight = ({ heading, subheading }) => {
           {heading}
         </span>
         <div className="flex w-full justify-between">
-        <span className="marquee-animation text-black items-center text-center w-full z-0">{subheading}</span>
+        <span className="marquee-animation text-[#FF3D00] items-center text-center w-full z-0">{subheading}</span>
         </div>
       </div>
     </>
