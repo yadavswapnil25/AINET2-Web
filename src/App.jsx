@@ -24,6 +24,7 @@ import News from "./Pages/News";
 import NewsDetails from "./Pages/NewsDetails";
 import "./App.css"
 import FDLecture from "./Pages/FDLecture";
+import Resources from "./Pages/Resources";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="/news" element={<News />} />
         <Route path="/FDLecture" element={<FDLecture />} />
         <Route path="/news/:title" element={<NewsDetails />} />
+        <Route path="/resources" element={<Resources />} />
 
       </Routes>
       <Footer />

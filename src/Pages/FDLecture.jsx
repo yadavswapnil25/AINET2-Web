@@ -41,13 +41,13 @@ const FDLecture = () => {
   const previousWebinars = [
     {
       id: 1,
-      image: "/archives3.png",
+      image: "/archives5.png",
       title:
         "PERSONAL FINANCE CONSULTANTS BY KARINA BUYS & SARAH HUDSON ON 16TH MARCH 2023",
     },
     {
       id: 2,
-      image: "/archives4.png",
+      image: "/archives6.png",
       title:
         "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
     },
@@ -120,7 +120,7 @@ const FDLecture = () => {
         </div>
 
         <img
-          src="/webinarbanner.png"
+          src="/fdletures.png"
           alt="AINET International ELT Webinar"
           className="w-full rounded-lg shadow-lg mt-2.5"
         />
