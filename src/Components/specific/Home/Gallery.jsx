@@ -83,7 +83,7 @@ export default function Gallery() {
         </a>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-2 md:space-y-8">
         {/* Top Banner Section - Infinite Scroll (Slow) */}
         <div className="relative overflow-hidden rounded-lg">
           <div className="flex animate-scroll-slow">
@@ -91,7 +91,7 @@ export default function Gallery() {
             {bannerImages.map((image) => (
               <div
                 key={image.id}
-                className="flex-shrink-0 w-full h-[450px] object-cover mr-4 cursor-pointer transition-transform  rounded-lg"
+                className="flex-shrink-0 w-full h-[200px] md:h-[450px] object-cover mr-4 cursor-pointer transition-transform  rounded-lg"
                
               >
                 <img
