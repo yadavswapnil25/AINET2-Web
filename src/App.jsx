@@ -24,6 +24,12 @@ import News from "./Pages/News";
 import NewsDetails from "./Pages/NewsDetails";
 import "./App.css"
 import FDLecture from "./Pages/FDLecture";
+import AboutAINETAffiliates from "./Pages/AboutAINETAffiliates";
+import AboutWomenInAINET from "./Pages/AboutWomenInAINET";
+import AboutRuralELT from "./Pages/AboutRuralELT";
+import HELE from "./Pages/HELE";
+import Prelims from "./Pages/Prelims";
+import Decentring from "./Pages/Decentring";
 import Resources from "./Pages/Resources";
 
 const App = () => {
@@ -51,6 +57,13 @@ const App = () => {
         <Route path="/author" element={<Author />} />
         <Route path="/news" element={<News />} />
         <Route path="/FDLecture" element={<FDLecture />} />
+        <Route path="/AboutAINETAffiliates" element={<AboutAINETAffiliates />} />
+        <Route path="/AboutWomenInAINET" element={<AboutWomenInAINET />} />
+        <Route path="/AboutRuralELT" element={<AboutRuralELT />} />
+        <Route path="/HELE" element={<HELE />} />
+        <Route path="/Prelims" element={<Prelims />} />
+        <Route path="/Decentring" element={<Decentring />} />
+      
         <Route path="/news/:title" element={<NewsDetails />} />
         <Route path="/resources" element={<Resources />} />
 
