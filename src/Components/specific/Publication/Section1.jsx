@@ -35,7 +35,7 @@ const Section1 = () => {
             </div>
             <div className="w-full md:w-1/2 mx-auto flex items-center justify-center">
               <img
-                src="/home_banner_1.png"
+                src="/publicationsimg.png"
                 alt=""
                 className="w-[90%] h-[327px]"
               />

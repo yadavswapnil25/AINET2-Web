@@ -75,7 +75,7 @@ const AboutWomenInAINET = ({ data }) => {
                     {/* Image */}
                     <div className="lg:w-1/2 w-full">
                         <img
-                            src="/AboutAA.jpg"
+                            src="/womanmainimg.png"
                             alt="Women in AINET Event"
                             className="w-full rounded-lg shadow-lg"
                         />

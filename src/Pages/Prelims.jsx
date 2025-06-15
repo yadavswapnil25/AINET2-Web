@@ -20,14 +20,11 @@ Out of 300 applicants, 73 teachers with proficiency training needs were shortlis
 const Prelims = ({ data }) => {
     const {
         title,
-        subtitle,
+       
         description,
         courseOverview,
         assistance,
         conclusion,
-        howToSteps,
-        contactText,
-        contactEmail,
     } = data;
 
     return (
@@ -60,7 +57,7 @@ const Prelims = ({ data }) => {
                     {/* Image Section */}
                     <div className="lg:w-1/2 w-full">
                         <img
-                            src="/AboutAA.jpg"
+                            src="/prelimesimg.png"
                             alt="PRELIMS Event"
                             className="w-full rounded-lg shadow-lg"
                         />

@@ -7,7 +7,7 @@ const PlanCard = ({
   price,
   currency,
   duration,
-  accessType,
+
   planType,
   discountPercentage,
   planFeatures
@@ -40,12 +40,12 @@ const PlanCard = ({
           </div>
           <span>{duration} year Membership</span>
         </li>
-        <li className="flex items-center gap-2">
+        {/* <li className="flex items-center gap-2">
           <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
             <FaCheck className="text-white text-xs" />
           </div>
           <span>{accessType}</span>
-        </li>
+        </li> */}
 
         {planFeatures.map((feature, index) => (
           <li key={index} className="flex items-center gap-2">

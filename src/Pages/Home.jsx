@@ -20,19 +20,19 @@ import MembershipPlans from "../Components/shared/MembershipPlans"
 const Home = () => {
   const eventsData = [
     {
-      title: "International Conference 2025, 21th AINET Internat.",
+      title: "AINET Foundation Day Programmes.",
       location: "North South University, Dhaka, Bangladesh",
-      date: "25th MARCH, 2025",
+      date: "4-8 September 2025",
     },
     {
-      title: "AINET Seminar",
+      title: "Rural ELT Conference.",
       location: "Barishal University, Barishal",
-      date: "5th APRIL, 2025",
+      date: "October 2025",
     },
     {
-      title: "International Conference 2025, 22th AINET Internat.",
+      title: "“Webinar on HELE.",
       location: "North South University, Saudi, UAE",
-      date: "2nd AUGEST,2025",
+      date: "November 2025",
     },
   ];
   return (
@@ -44,7 +44,7 @@ const Home = () => {
       <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]">
         {/* Section 1 */}
         <div
-          className="relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
+          className="relative w-full h-full md:min-h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${bg1})` }}
         >
           {/* First Half */}
@@ -52,7 +52,7 @@ const Home = () => {
             <div className="w-full md:[55%]">
               <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-[4.5rem] ">
                 A vibrant community of English Language Education professionals
-                & stakeholders which aims to <br /> Develop. Together
+                & stakeholders which aims to <br /> Develop. Together.
               </h3>
             </div>
             <div className="w-full md-w-[45%] flex justify-end pt-4">
@@ -68,8 +68,7 @@ const Home = () => {
           <div className="w-full flex h-full  md:h-1/2 z-1 relative p-4 md:px-14 flex-col md:flex-row">
             <div className="w-full md:w-[55%] flex flex-col  px-4 gap-4">
               <p className="text-[20px] text-white tracking-normal md:tracking-wider">
-                An English language teacher association registered as charity in
-                India. An IATEFL, UK Affiliate and TESOL, US Associate.
+                "A national English teachers' association, registered in India. An IATEFL, UK affiliate."
               </p>
 
               <div className="flex flex-col md:flex-row gap-4 w-full">
@@ -125,7 +124,8 @@ const Home = () => {
 
             <div className=" w-full md:w-1/2 h-full flex items-center  md:items-start justify-center flex-col gap-8">
               <h3 className="font-bold text-3xl md:text-4xl">
-                20th International <br /> Conference & Exhibition
+                <strong>9th AINET International Conference </strong>
+ <br /> January 2026
               </h3>
               <p className="text-xl text-center md:text-left">
                 "The Future Of Language Education: Adapting To A Changing
@@ -133,7 +133,7 @@ const Home = () => {
                 19 - 21 February 2025 - Canadian University, Dubai
               </p>
               <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer">
-                REGISTER NOW
+               Coming soon
               </button>
             </div>
           </div>

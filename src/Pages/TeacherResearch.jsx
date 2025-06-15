@@ -108,7 +108,7 @@ const TeacherResearch = () => {
           </div>
           <div className="w-full md:w-1/2 mx-auto flex items-center justify-center">
             <img
-              src="/home_banner_1.png"
+              src="/aboutTriimg.png"
               alt=""
               className="w-[100%] h-[470px]"
             />

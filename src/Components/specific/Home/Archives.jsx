@@ -7,21 +7,56 @@ const Archives = () => {
   const events = [
     {
       category: "Conference",
-      title: "7th AINET International Conference 2024",
-      description1: "Lorem ipsum is a dummy or placeholder",
-      description2: "Lorem ipsum is a dummy or placeholder"
+      title: {
+        text: "8th AINET Conference 2025 (Online)",
+        link: "/conferences/ainet-2025-online"
+      },
+      description1: {
+        text: "7th AINET Conference 2024 (Guwahati)",
+        link: "/conferences/ainet-2024-guwahati"
+      },
+      description2: {
+        text: "6th AINET Conference 2022 (Online)",
+        link: "/conferences/ainet-2022-online"
+      },
+      description3: {
+        text: "Other Past Conferences",
+        link: "/conferences/past-conferences"
+      }
     },
     {
       category: "Webinar",
-      title: "6th AINET International Conference 2023",
-      description1: "Lorem ipsum is a dummy or placeholder",
-      description2: "Lorem ipsum is a dummy or placeholder"
+      title: {
+        text: "6th AINET International Conference 2023",
+        link: "/webinars/ainet-2023"
+      },
+      description1: {
+        text: "Lorem ipsum is a dummy or placeholder",
+        link: "/webinars/lorem-ipsum-1"
+      },
+      description2: {
+        text: "Lorem ipsum is a dummy or placeholder",
+        link: "/webinars/lorem-ipsum-2"
+      }
     },
     {
-      category: "Other",
-      title: "5th AINET International Conference 2022",
-      description1: "Lorem ipsum is a dummy or placeholder",
-      description2: "Lorem ipsum is a dummy or placeholder"
+      category: "Other Events",
+      title: {
+        text: "Decentring ELT Webinar, July 2024",
+        link: "/other/ainet-2022"
+      },
+      description1: {
+        text: "Decentring ELT Webinar, July 2024",
+        link: "/other/lorem-ipsum-1"
+      },
+      description2: {
+        text: "2nd HELE India Conference, Dec 2023",
+        link: "/other/lorem-ipsum-2"
+      },
+      description3: {
+        text: "Other Past Events",
+        link: "/other/lorem-ipsum-2"
+      },
     },
   ];
 
@@ -47,6 +82,13 @@ const Archives = () => {
 
   const handleNext = () => {
     setCurrentPage(prev => (prev < events.length - 1 ? prev + 1 : 0));
+  };
+
+  const handleLinkClick = (link) => {
+    // For demo purposes, just log the link. In real app, use router navigation
+    console.log('Navigating to:', link);
+    // window.location.href = link; // For direct navigation
+    // or use your router: navigate(link);
   };
 
   return (
@@ -78,9 +120,32 @@ const Archives = () => {
             key={index}
           >            
             <h3 className="text-lg font-semibold">{event.category}</h3>
-            <p className="">{event.title}</p> 
-            <p className="">{event.description1}</p> 
-            <p className="">{event.description2}</p>
+            <p 
+              className="cursor-pointer"
+              onClick={() => handleLinkClick(event.title.link)}
+            >
+              {event.title.text}
+            </p> 
+            <p 
+              className="cursor-pointer"
+              onClick={() => handleLinkClick(event.description1.link)}
+            >
+              {event.description1.text}
+            </p> 
+            <p 
+              className="cursor-pointer"
+              onClick={() => handleLinkClick(event.description2.link)}
+            >
+              {event.description2.text}
+            </p>
+            {event.description3 && (
+              <p 
+                className="cursor-pointer"
+                onClick={() => handleLinkClick(event.description3.link)}
+              >
+                {event.description3.text}
+              </p>
+            )}
           </div>
         ))}
         
