@@ -27,7 +27,6 @@ Decentring ELT is a global initiative with the involvement of teachers and teach
 const Decentring = ({ data }) => {
     const {
         title,
-        subtitle,
         description,
         benefitsTitle,
         benefits,
@@ -65,7 +64,7 @@ const Decentring = ({ data }) => {
                     {/* Image */}
                     <div className="lg:w-1/2 w-full">
                         <img
-                            src="/AboutAA.jpg"
+                            src="/decentringImg.png"
                             alt="Decentring ELT Event"
                             className="w-full rounded-lg shadow-lg"
                         />

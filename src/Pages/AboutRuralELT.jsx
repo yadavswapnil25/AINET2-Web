@@ -69,7 +69,7 @@ const AboutRuralELT = ({ data }) => {
                     {/* Image */}
                     <div className="lg:w-1/2 w-full">
                         <img
-                            src="/AboutAA.jpg" // Image name remains unchanged
+                            src="/ainetrural.png" // Image name remains unchanged
                             alt="Rural ELT Event"
                             className="w-full rounded-lg shadow-lg"
                         />

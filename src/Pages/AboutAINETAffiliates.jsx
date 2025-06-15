@@ -75,7 +75,7 @@ const AboutAINETAffiliates = ({ data }) => {
                     {/* Image */}
                     <div className="lg:w-1/2 w-full">
                         <img
-                            src="/AboutAA.jpg"
+                            src="/affilatesmain.png"
                             alt="AINET Event"
                             className="w-full rounded-lg shadow-lg"
                         />

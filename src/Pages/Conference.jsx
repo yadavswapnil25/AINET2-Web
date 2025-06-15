@@ -183,7 +183,7 @@ export default function ConferencePage() {
             {/* Previous Conferences */}
             <div className="p-4">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="font-bold text-3xl">Previous Conference</h2>
+                    <h2 className="font-bold text-3xl">Previous Conferences</h2>
                     <button className="text-xs text-black flex items-center" onClick={() => setExpanded(!expanded)}>
                         View All <IoChevronForward className="ml-1" />
                     </button>

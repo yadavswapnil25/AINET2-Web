@@ -26,7 +26,6 @@ const affiliateData = {
 const HELE = ({ data }) => {
     const {
         title,
-        subtitle,
         description,
         benefitsTitle,
         benefits,
@@ -64,7 +63,7 @@ const HELE = ({ data }) => {
                     {/* Image */}
                     <div className="lg:w-1/2 w-full">
                         <img
-                            src="/AboutAA.jpg"
+                            src="/archives8.png"
                             alt="HELE Event"
                             className="w-full rounded-lg shadow-lg"
                         />

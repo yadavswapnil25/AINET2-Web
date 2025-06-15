@@ -4,7 +4,7 @@ import { FaCheckCircle } from "react-icons/fa";
 const types = [
   "Membership Privileges",
   "Member Rights",
-  "Members Responsibilities",
+  "Member Responsibilities",
   "Membership Terms",
   "Membership Types",
 ];
@@ -16,7 +16,7 @@ const MembersArea = () => {
         {/* first */}
         <div className="w-full md:w-1/3">
           <h4 className="text-white font-bold underline underline-offset-2 text-[18px]">
-            AINET MEMBER'S AREA
+            AINET MEMBERS' AREA
           </h4>
 
           <h3 className="text-2xl text-center  font-bold text-white mt-12">
@@ -42,10 +42,10 @@ const MembersArea = () => {
 
         {/* third */}
         <div className="w-full md:w-1/3 flex mt-4 md:mt-0 justify-around flex-col items-center gap-4">
-          <button className="w-full md:w-[340px] bg-[#FFF8DE] text-black font-bold py-3 p-2 md:p-4 rounded-[30px]">
-            NEW MEMBER? JOIN IN
+          <button className="w-full md:w-[340px] bg-[#FFF8DE] text-black font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
+            Not a member? Join in!
           </button>
-          <button className="w-full md:w-[340px] bg-[#ffffff] text-[#A6AEBF] font-bold py-3 p-2 md:p-4 rounded-[30px]">
+          <button className="w-full md:w-[340px] bg-[#ffffff] text-[#A6AEBF] font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
             ALREADY A MEMBER? LOG IN
           </button>
 
