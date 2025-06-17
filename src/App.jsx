@@ -32,6 +32,7 @@ import Prelims from "./Pages/Prelims";
 import Decentring from "./Pages/Decentring";
 import Resources from "./Pages/Resources";
 import AINETConnect from "./Pages/AINETConnect";
+import Profile from "./Pages/Profile";
 
 const App = () => {
   return (
@@ -65,6 +66,8 @@ const App = () => {
         <Route path="/Prelims" element={<Prelims />} />
         <Route path="/Decentring" element={<Decentring />} />
         <Route path="/AINETConnect" element={<AINETConnect />} />
+        <Route path="/profile" element={<Profile />} />
+
       
         <Route path="/news/:title" element={<NewsDetails />} />
         <Route path="/resources" element={<Resources />} />
