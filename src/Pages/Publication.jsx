@@ -6,6 +6,8 @@ import AinetOccasionalPapers from "../Components/specific/Publication/AinetOccas
 import AinetConferences from "../Components/specific/Publication/AinetConferences";
 import AinetPublications from "../Components/specific/Publication/AinetPublications";
 import BookSection from "../Components/specific/Publication/DecentringBook";
+import ElePaper from "../Components/specific/Publication/Ele";
+import TeacherMuse from "../Components/specific/Publication/TeacherMuse";
 
 const Publication = () => {
   return (
@@ -47,6 +49,8 @@ const Publication = () => {
           ]}
         />
 
+        <ElePaper/>
+        <TeacherMuse/>
         <AinetOccasionalPapers />
         <AinetConferences />
         <AinetPublications />

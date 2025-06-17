@@ -32,6 +32,7 @@ import gallery17 from "../../../assets/gallery/smallgal/homesmgal-17.png";
 import gallery18 from "../../../assets/gallery/smallgal/homesmgal-18.png";
 import gallery19 from "../../../assets/gallery/smallgal/homesmgal-19.png";
 import gallery20 from "../../../assets/gallery/smallgal/homesmgal-20.png";
+import { Link } from 'react-router-dom';
 
 export default function Gallery() {
   
@@ -78,9 +79,9 @@ export default function Gallery() {
     <div className="relative w-full rounded-[25px] overflow-hidden z-1 flex flex-col p-4 md:p-14">
       <div className="flex justify-between items-center mb-6 border-b pb-2">
         <h2 className="text-xl font-bold tracking-wide">OUR GALLERY</h2>
-        <a href="/gallery" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
+        <Link to="/gallery" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
           View All <FaChevronRight className="h-4 w-4 ml-1" />
-        </a>
+        </Link>
       </div>
 
       <div className="space-y-2 md:space-y-8">

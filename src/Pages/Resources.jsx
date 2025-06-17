@@ -72,9 +72,9 @@ const Resources = () => {
         </div>
 
 
-            <div className="">
+        <div className="">
           <h2 className=" text-2xl font-semibold">
-          ELE Journals published in International
+            International ELE Journals
           </h2>
           <ul className=" list-disc ml-5 text-2xl font-medium text-black leading-[40px] mt-5 mb-14">
             <li>
@@ -84,7 +84,7 @@ const Resources = () => {
             </li>
             <li>
               <a href="https://focusonelt.com/index.php/foe">
-              Focus on ELT Journal - https://focusonelt.com/index.php/foe
+                Focus on ELT Journal - https://focusonelt.com/index.php/foe
               </a>
             </li>
             <li>

@@ -73,10 +73,13 @@ export default function ConferencePage() {
                     <IoNotificationsOutline className="text-gray-400 text-xl" />
                     <IoFilter className="text-gray-400 text-xl" />
                 </div>
+
             </div>
 
             {/* Current Conference Banner - Using full image */}
             <div className="p-4 border-b-2 border-[#A6AEBF]">
+                <h2 className="text-3xl font-bold mb-8">Upcoming Conference</h2>
+
                 <div className="rounded-lg overflow-hidden ">
                     {/* Full conference banner as a single image */}
                     <div className="w-full">
