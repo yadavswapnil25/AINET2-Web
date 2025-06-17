@@ -38,7 +38,7 @@ const Navbar = () => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setSearchExpanded(false);
       }
-      
+
       // Close mobile menu when clicking outside
       if (isOpen && navRef.current && !navRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -46,14 +46,14 @@ const Navbar = () => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     // Prevent scrolling when mobile menu is open
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.body.style.overflow = "auto";
@@ -89,13 +89,13 @@ const Navbar = () => {
               <MdMail className="size-4 lg:size-5 mr-1" />
               <span className="hidden sm:inline">theainet@gmail.com</span>
             </a>
-            
+
             {/* socials */}
             <div className="flex items-center gap-2 lg:gap-3">
               {socials.map((social) => (
-                <a 
-                  key={social.name} 
-                  href={social.link} 
+                <a
+                  key={social.name}
+                  href={social.link}
                   className="text-xl lg:text-2xl hover:text-gray-500 transition-colors"
                   aria-label={social.name}
                 >
@@ -103,7 +103,7 @@ const Navbar = () => {
                 </a>
               ))}
             </div>
-            
+
             {/* AUTH BTNS */}
             <div className="flex items-center gap-2 lg:gap-4">
               <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#A6AEBF] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300">
@@ -113,102 +113,87 @@ const Navbar = () => {
                 <Link to="/MembershipArea">LOG IN</Link>
               </button>
             </div>
-            
-          {/* Search */}
-<div
-  ref={searchRef}
-  className={`relative flex items-center transition-all duration-300 ${
-    searchExpanded ? "flex-row" : "flex-row-reverse"
-  }`}
->
-  {searchExpanded && (
-    <div className="relative">
-      <input
-        type="text"
-        placeholder="Search..."
-        className="border border-gray-300 rounded-4xl pl-10 pr-2 py-2 outline-none w-36 lg:w-48 text-sm"
-        autoFocus
-      />
-      <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-        <img
-          src="/searchIcon.svg"
-          alt="Search"
-          className="w-6 h-6 "
-        />
-      </div>
-    </div>
-  )}
 
-  {!searchExpanded && (
-    <button
-      onClick={() => setSearchExpanded((prev) => !prev)}
-      className="p-1"
-      aria-label="Search"
-    >
-      <img
-        src="/searchIcon.svg"
-        alt="Search"
-        className="w-8 h-8 "
-      />
-    </button>
-  )}
-</div>
+            {/* Search */}
+            <div
+              ref={searchRef}
+              className={`relative flex items-center transition-all duration-300 ${searchExpanded ? "flex-row" : "flex-row-reverse"
+                }`}
+            >
+              {searchExpanded && (
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="border border-gray-300 rounded-4xl pl-10 pr-2 py-2 outline-none w-36 lg:w-48 text-sm"
+                    autoFocus
+                  />
+                  <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
+                    <img
+                      src="/searchIcon.svg"
+                      alt="Search"
+                      className="w-6 h-6 "
+                    />
+                  </div>
+                </div>
+              )}
+
+              {!searchExpanded && (
+                <button
+                  onClick={() => setSearchExpanded((prev) => !prev)}
+                  className="p-1"
+                  aria-label="Search"
+                >
+                  <img
+                    src="/searchIcon.svg"
+                    alt="Search"
+                    className="w-8 h-8 "
+                  />
+                </button>
+              )}
+            </div>
 
           </div>
-          
+
           {/* Desktop Navigation Links */}
           <div className="flex flex-wrap justify-end text-sm lg:text-base space-x-2 lg:space-x-6">
             <Link to="/" className="hover:text-[#A6AEBF] transition-colors">Home</Link>
             <Link to="/about" className="hover:text-[#A6AEBF] transition-colors">About us</Link>
-            
+
             {/* Desktop Dropdowns */}
-            <div className="relative group" 
-                onMouseEnter={() => toggleDropdown('Projects')} 
-                onMouseLeave={() => toggleDropdown(null)}>
+            <div className="relative group"
+              onMouseEnter={() => toggleDropdown('Projects')}
+              onMouseLeave={() => toggleDropdown(null)}>
               <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
-                Projects
+                Projects & Initiatives
                 <MdOutlineKeyboardArrowDown className={`ml-1 transition-transform ${dropdownOpen === 'Projects' ? "rotate-180" : ""}`} />
               </button>
               {dropdownOpen === 'Projects' && (
                 <div className="absolute bg-white mt-2 py-4 w-40 rounded shadow-lg z-10 top-3.5">
-               
-                    <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
+
+                  <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
+                  <Link to="/AINETConnect" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
                   <Link to="/AboutWomenInAINET" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
                   <Link to="/AboutRuralELT" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
                   <Link to="/AboutAINETAffiliates" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
-                </div>
-              )}
-            </div>
-            <div className="relative group" 
-                onMouseEnter={() => toggleDropdown('Initiatives')} 
-                onMouseLeave={() => toggleDropdown(null)}>
-              <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
-                Initiatives
-                <MdOutlineKeyboardArrowDown className={`ml-1 transition-transform ${dropdownOpen === 'Initiatives' ? "rotate-180" : ""}`} />
-              </button>
-              {dropdownOpen === 'Initiatives' && (
-                <div className="absolute bg-white mt-2 py-4 w-40 rounded shadow-lg z-10 top-3.5">
-               
-                    <Link to="/HELE" className="block px-2 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
-                 
+                  <Link to="/HELE" className="block px-4 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
                   <Link to="Decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
-                
                   <Link to="/Prelims" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
                 </div>
+
               )}
             </div>
-            
+
             <Link to="/publications" className="hover:text-[#A6AEBF] transition-colors">Publications</Link>
             <Link to="/BlogsSection1" className="hover:text-[#A6AEBF] transition-colors">AINET Adda</Link>
             <Link to="/resources" className="hover:text-[#A6AEBF] transition-colors">Resources</Link>
-          
-            
-          
-            
-            <div className="relative group" 
-                onMouseEnter={() => toggleDropdown('event')} 
-                onMouseLeave={() => toggleDropdown(null)}>
+
+
+
+
+            <div className="relative group"
+              onMouseEnter={() => toggleDropdown('event')}
+              onMouseLeave={() => toggleDropdown(null)}>
               <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
                 Event
                 <MdOutlineKeyboardArrowDown className={`ml-1 transition-transform ${dropdownOpen === 'event' ? "rotate-180" : ""}`} />
@@ -221,10 +206,10 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            
-            <div className="relative group" 
-                onMouseEnter={() => toggleDropdown('more')} 
-                onMouseLeave={() => toggleDropdown(null)}>
+
+            <div className="relative group"
+              onMouseEnter={() => toggleDropdown('more')}
+              onMouseLeave={() => toggleDropdown(null)}>
               <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
                 More
                 <MdOutlineKeyboardArrowDown className={`ml-1 transition-transform ${dropdownOpen === 'more' ? "rotate-180" : ""}`} />
@@ -241,8 +226,8 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden z-50 mr-5" 
+        <button
+          className="md:hidden z-50 mr-5"
           onClick={() => setIsOpen(!isOpen)}
           aria-label={isOpen ? "Close menu" : "Open menu"}
         >
@@ -250,9 +235,8 @@ const Navbar = () => {
         </button>
 
         {/* Mobile Menu */}
-        <div className={`fixed inset-0 bg-white z-40 flex flex-col p-5 pt-16 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } md:hidden`}>
+        <div className={`fixed inset-0 bg-white z-40 flex flex-col p-5 pt-16 overflow-y-auto transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          } md:hidden`}>
           <div className="flex flex-col space-y-4 mb-6">
             {/* Mobile Search */}
             <div className="relative flex border-b border-gray-200 pb-4">
@@ -269,66 +253,50 @@ const Navbar = () => {
                 />
               </button>
             </div>
-            
+
             {/* Mobile Navigation Links */}
             <Link to="/" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Home</Link>
             <Link to="/about" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>About us</Link>
-            
+
             {/* Mobile Dropdowns */}
             <div className="py-3 border-b border-gray-200">
-              <button 
-                className="flex justify-between items-center w-full" 
+              <button
+                className="flex justify-between items-center w-full"
                 onClick={() => toggleMobileDropdown('initiatives')}
               >
-                Projects
+                Projects & Initiatives
                 <MdOutlineKeyboardArrowDown className={`transition-transform ${mobileDropdown === 'initiatives' ? "rotate-180" : ""}`} />
               </button>
-              
+
               {mobileDropdown === 'initiatives' && (
                 <div className="mt-2 pl-4 space-y-2">
-                   <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
-                  <Link to="/initiatives/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
+                  <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
+                  <Link to="/AINETConnect" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
                   <Link to="/AboutWomenInAINET" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
                   <Link to="/AboutRuralELT" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
                   <Link to="/AboutAINETAffiliates" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
-                </div>
-              )}
-            </div>
-            <div className="py-3 border-b border-gray-200">
-              <button 
-                className="flex justify-between items-center w-full" 
-                onClick={() => toggleMobileDropdown('initiatives')}
-              >
-                Initiatives
-                <MdOutlineKeyboardArrowDown className={`transition-transform ${mobileDropdown === 'initiatives' ? "rotate-180" : ""}`} />
-              </button>
-              
-              {mobileDropdown === 'initiatives' && (
-                <div className="mt-2 pl-4 space-y-2">
-                   <Link to="/HELE" className="block px-2 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
-                 
+                  <Link to="/HELE" className="block px-4 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
                   <Link to="/Decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
-                
                   <Link to="/Prelims" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
                 </div>
               )}
             </div>
-            
+
             <Link to="/publications" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Publications</Link>
             <Link to="/BlogsSection1" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>AINET Adda</Link>
             <Link to="/resources" className="py-3 border-b border-gray-200" onClick={() => setIsOpen(false)}>Resources</Link>
-        
-            
-           
+
+
+
             <div className="py-3 border-b border-gray-200">
-              <button 
-                className="flex justify-between items-center w-full" 
+              <button
+                className="flex justify-between items-center w-full"
                 onClick={() => toggleMobileDropdown('event')}
               >
                 Event
                 <MdOutlineKeyboardArrowDown className={`transition-transform ${mobileDropdown === 'event' ? "rotate-180" : ""}`} />
               </button>
-              
+
               {mobileDropdown === 'event' && (
                 <div className="mt-2 pl-4 space-y-2">
                   <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
@@ -337,27 +305,27 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="py-3 border-b border-gray-200">
-              <button 
-                className="flex justify-between items-center w-full" 
+              <button
+                className="flex justify-between items-center w-full"
                 onClick={() => toggleMobileDropdown('more')}
               >
                 More
                 <MdOutlineKeyboardArrowDown className={`transition-transform ${mobileDropdown === 'more' ? "rotate-180" : ""}`} />
               </button>
-              
+
               {mobileDropdown === 'more' && (
                 <div className="mt-2 pl-4 space-y-2">
-                   <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
-                  
+                  <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
+
                   <Link to="/gallery" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Gallery</Link>
                   <Link to="/archives" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Archives</Link>
                 </div>
               )}
             </div>
           </div>
-          
+
           {/* Mobile Contact */}
           <div className="mt-auto">
             {/* Mobile Auth Buttons */}
@@ -369,19 +337,19 @@ const Navbar = () => {
                 <Link to="/Login" onClick={() => setIsOpen(false)}>LOG IN</Link>
               </button>
             </div>
-            
+
             {/* Mobile Email */}
             <a className="flex items-center justify-center gap-2 py-3" href="mailto:theainet@gmail.com">
               <MdMail className="size-5" />
               theainet@gmail.com
             </a>
-            
+
             {/* Mobile Social Icons */}
             <div className="flex justify-center gap-4 py-4">
               {socials.map((social) => (
-                <a 
-                  key={social.name} 
-                  href={social.link} 
+                <a
+                  key={social.name}
+                  href={social.link}
                   className="text-2xl hover:text-gray-500 transition-colors"
                   aria-label={social.name}
                 >

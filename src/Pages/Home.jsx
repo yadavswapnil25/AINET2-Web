@@ -3,6 +3,8 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
+import newh1 from "/newh1.jpg";
+import newh2 from "/newh2.jpg";
 
 
 import home_banner_2 from "/home_banner_2.png";
@@ -30,7 +32,7 @@ const Home = () => {
       date: "October 2025",
     },
     {
-      title: "“Webinar on HELE.",
+      title: "Webinar on HELE.",
       location: "North South University, Saudi, UAE",
       date: "November 2025",
     },
@@ -44,22 +46,22 @@ const Home = () => {
       <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]">
         {/* Section 1 */}
         <div
-          className="relative w-full h-full md:min-h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
+          className="relative w-full h-[90vh]  rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${bg1})` }}
         >
           {/* First Half */}
           <div className="w-full flex h-full justify-around md:h-[auto]  relative p-4 md:p-14 md:pb-0 flex-col md:flex-row">
             <div className="w-full md:[55%]">
-              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-[4.5rem] ">
+              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.5vw]  leading-8 md:leading-[3.5rem] lg:leading-[4.5rem] ">
                 A vibrant community of English Language Education professionals
                 & stakeholders which aims to <br /> Develop. Together.
               </h3>
             </div>
-            <div className="w-full md-w-[45%] flex justify-end pt-4">
+            <div className="w-full md:w-[75%] flex justify-end pt-4">
               <img
-                src={home_banner_1}
+                src={newh1}
                 alt="HomeImage"
-                className="w-full  md:w-[75%] h-auto md:h-[350px]"
+                className="w-full   h-auto md:h-[350px] rounded-2xl"
               />
             </div>
           </div>
@@ -102,9 +104,9 @@ const Home = () => {
 
             <div className="w-full md:w-[55%] flex flex-col  px-4 gap-4">
               <img
-                src={home_banner_2}
-                alt=""
-                className="w-full  md:w-[75%] h-auto my-2 md:h-[350px]"
+                src={newh2}
+                alt="homepagebanner2"
+                className="w-full  md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl"
               />
             </div>
           </div>
@@ -112,7 +114,7 @@ const Home = () => {
 
         {/* Section 2 */}
         <div
-          className="mt-12 relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
+          className="mt-12 relative w-full h-full md:h-[85vh]  rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
@@ -147,12 +149,12 @@ const Home = () => {
                 key={index}
                 className={`relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
               >
-                <h2 className="text-2xl font-semibold mb-4">{event.title}</h2>
-                <p className="flex items-center text-black mb-1 text-base font-medium">
+                <h2 className="text-2xl font-semibold mb-6">{event.title}</h2>
+                <p className="flex items-center text-black mb-6 text-xl font-medium">
                   <MdLocationOn className="mr-2 text-xl" />
                   {event.location}
                 </p>
-                <p className="flex items-center text-black text-base font-medium">
+                <p className="flex items-center text-black text-xl font-medium">
                   <FaCalendar className="mr-2 text-xl" />
                   {event.date}
                 </p>

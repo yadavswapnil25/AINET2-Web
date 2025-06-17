@@ -26,11 +26,11 @@ export default function NewsletterSignup() {
 
 
   return (
-    <div className="w-full mx-auto p-4 bg-cover rounded-[25px] font-inter"
+    <div className="w-full  mx-auto p-4 bg-cover rounded-[25px] font-inter"
      style={{ backgroundImage: `url(${bg1})`
     }}
     >
-      <div className="w-full h-full ">
+      <div className="w-full h-full  md:h-[80vh]">
         <div className="flex flex-col md:flex-row">
           {/* Left side - Word Cloud */}
           <div className="w-full md:w-3/5 p-8 relative min-h-[300px] md:min-h-[400px]">
@@ -77,7 +77,7 @@ export default function NewsletterSignup() {
                   <input
                     type="text"
                     name="whatsapp"
-                    placeholder="Enter your WhatsApp"
+                    placeholder="Enter your WhatsApp Number"
                     className="w-full h-[50px] px-4 py-3 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder:text-[#0102038C] placeholder:text-[18px] placeholder:font-semibold placeholder:font-Poppins"
                     value={formData.whatsapp}
                     onChange={handleChange}

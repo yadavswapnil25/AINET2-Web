@@ -1,5 +1,6 @@
 import React from "react";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaChevronRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const BlogsSection1 = () => {
     // Multiple authors
@@ -156,8 +157,13 @@ const BlogsSection1 = () => {
                 </div>
 
                 {/* Latest Blogs */}
-                <div className="mb-12">
-                    <h2 className="text-3xl font-bold mb-6">Latest Blogs</h2>
+                <div className="w-full mb-12">
+                    <div className="w-full flex justify-between">
+                        <p className="text-3xl font-bold mb-6">Latest Blogs</p>
+                        <Link to="/" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
+                            View All <FaChevronRight className="h-4 w-4 ml-1" />
+                        </Link>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {latestBlogs.map((blog, index) => (
                             <div key={index} className="flex flex-col border-2 border-gray-200 rounded-lg">
@@ -190,7 +196,13 @@ const BlogsSection1 = () => {
                 {/* Conference Blogs Sections */}
                 {conferenceBlogSections.map((section, sectionIndex) => (
                     <div key={sectionIndex} className="mb-12">
-                        <h2 className="text-3xl font-bold mb-6">{section.title}</h2>
+
+                        <div className="w-full flex justify-between">
+                            <p className="text-3xl font-bold mb-6">{section.title}</p>
+                            <Link to="/" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
+                                View All <FaChevronRight className="h-4 w-4 ml-1" />
+                            </Link>
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {section.blogs.map((blog, blogIndex) => (
                                 <div key={blogIndex} className="flex flex-col border-2 border-gray-200 rounded-lg">

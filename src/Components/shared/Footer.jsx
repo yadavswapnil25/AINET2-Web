@@ -21,7 +21,7 @@ const Footer = () => {
                 {/* Section 1: Logo + Socials */}
                 <div className=' w-full flex flex-col'>
                     <Link to="/" className="inline-block mb-4">
-                        <img src="./footlogo.png" alt="AINET Logo"  />
+                        <img src="./footlogo.png" alt="AINET Logo" />
                     </Link>
                     <p className="text-sm mb-2 text-center font-medium">Follow Us</p>
                     <div className="flex flex-wrap gap-3 text-xl sm:text-2xl">
@@ -71,8 +71,7 @@ const Footer = () => {
                         <li className="flex md:items-start  gap-3 w-[60%] md:w-full">
                             <FaUniversity className="text-5xl mt-1" />
                             <span className="text-sm sm:text-base leading-snug">
-                                AINET Block 2, 1-Ganga Villa, St. Kabir Ward, Bhandara, M.S., India, PIN 441904
-                            </span>
+                                7, Professor Colony, St. Kabir Ward, Bhandara (MS) 441904                            </span>
                         </li>
                     </ul>
                 </div>

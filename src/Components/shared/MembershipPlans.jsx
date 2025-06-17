@@ -71,7 +71,7 @@ export default function MembershipPlans() {
 
     return (
         <div
-            className="relative w-full min-h-screen rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
+            className="relative w-full  h-screen md:h-[85vh] rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
             style={{ backgroundImage: `url(${bg3})` }}
         >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-6">
