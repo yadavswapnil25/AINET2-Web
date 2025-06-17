@@ -46,7 +46,7 @@ const Home = () => {
       <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]">
         {/* Section 1 */}
         <div
-          className="relative w-full h-[90vh]  rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
+          className="relative w-full h-full rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${bg1})` }}
         >
           {/* First Half */}
@@ -134,7 +134,7 @@ const Home = () => {
                 Landscape" <br />
                 19 - 21 February 2025 - Canadian University, Dubai
               </p>
-              <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer">
+              <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
                Coming soon
               </button>
             </div>
