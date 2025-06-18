@@ -156,7 +156,7 @@ export default function ContactUs() {
                                 rel="noopener noreferrer"
                                 className="text-xl no-underline"
                             >
-                                7, Professor Colony, St. Kabir Ward, Bhandara (MS) 441904                        </a>
+                                7, Professor Colony, St. Kabir Ward, Bhandara (MS) 441904 </a>
                         </div>
                     </div>
 
@@ -167,7 +167,7 @@ export default function ContactUs() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div className="flex items-center">
                                 <RiInstagramFill className="text-white text-2xl mr-2" />
-                                <a href="https://www.instagram.com/ainetindia" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">ainetindia</a>
+                                <a href="https://www.instagram.com/ainetindia/" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">ainetindia</a>
                             </div>
 
                             <div className="flex items-center">
@@ -177,17 +177,17 @@ export default function ContactUs() {
 
                             <div className="flex items-center">
                                 <FaTwitter className="text-white text-2xl mr-2" />
-                                <a href="https://twitter.com/AINET_India" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">AINET India</a>
+                                <a href="https://x.com/ainetindia" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">AINET India</a>
                             </div>
 
                             <div className="flex items-center">
                                 <FaYoutube className="text-white text-2xl mr-2" />
-                                <a href="https://www.youtube.com/@ainetindia" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">@ainetindia</a>
+                                <a href="https://www.youtube.com/AINETIndia" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">@ainetindia</a>
                             </div>
 
                             <div className="flex items-center">
                                 <FaFacebook className="text-white text-2xl mr-2" />
-                                <a href="https://www.facebook.com/ainetindia" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">fb.com/ainetindia</a>
+                                <a href="https://www.facebook.com/ainetindia/" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">fb.com/ainetindia</a>
                             </div>
 
                             <div className="flex items-center">
@@ -197,7 +197,7 @@ export default function ContactUs() {
 
                             <div className="flex items-center">
                                 <FaPinterest className="text-white text-2xl mr-2" />
-                                <a href="https://www.pinterest.com/ainet" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">AINET</a>
+                                <a href="https://in.pinterest.com/theainet/" target="_blank" rel="noopener noreferrer" className="text-xl no-underline">AINET</a>
                             </div>
                         </div>
                     </div>
