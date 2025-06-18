@@ -44,7 +44,7 @@ const AboutWomenInAINET = ({ data }) => {
 
 
             <div className="px-4 py-10 md:px-8 lg:px-16 max-w-screen-xl mx-auto text-gray-700">
-                <div className='pb-10 flex items-center justify-between'>
+                <div className='pb-6 flex items-center justify-between'>
                     <Breadcrumbs
                         links={[
                             { label: "Home", to: "/" },
