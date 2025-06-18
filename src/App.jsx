@@ -33,11 +33,13 @@ import Decentring from "./Pages/Decentring";
 import Resources from "./Pages/Resources";
 import AINETConnect from "./Pages/AINETConnect";
 import Profile from "./Pages/Profile";
+import ScrollToTop from "./Components/ScrollToTop";
 
 const App = () => {
   return (
     <>
       <Navbar />
+      <ScrollToTop/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
