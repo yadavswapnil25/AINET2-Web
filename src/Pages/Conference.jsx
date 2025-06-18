@@ -73,10 +73,13 @@ export default function ConferencePage() {
                     <IoNotificationsOutline className="text-gray-400 text-xl" />
                     <IoFilter className="text-gray-400 text-xl" />
                 </div>
+
             </div>
 
             {/* Current Conference Banner - Using full image */}
             <div className="p-4 border-b-2 border-[#A6AEBF]">
+                <h2 className="text-3xl font-bold mb-8">Upcoming Conference</h2>
+
                 <div className="rounded-lg overflow-hidden ">
                     {/* Full conference banner as a single image */}
                     <div className="w-full">
@@ -183,16 +186,16 @@ export default function ConferencePage() {
             {/* Previous Conferences */}
             <div className="p-4">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="font-bold text-3xl">Previous Conference</h2>
+                    <h2 className="font-bold text-3xl">Previous Conferences</h2>
                     <button className="text-xs text-black flex items-center" onClick={() => setExpanded(!expanded)}>
                         View All <IoChevronForward className="ml-1" />
                     </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="flex overflow-x-auto gap-3 pb-4 no-scrollbar">
                     {previousConferences.map((conference) => (
-                        <div key={conference.id} className="rounded-lg overflow-hidden">
-                            <div className="h-60 overflow-hidden">
+                        <div key={conference.id} className="rounded-lg w-[300px] flex-shrink-0">
+                            <div className="h-60 ">
                                 <img
                                     src={conference.image}
                                     alt={conference.title}

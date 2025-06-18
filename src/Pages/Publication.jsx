@@ -1,11 +1,13 @@
 import React from "react";
 import Highlight from "../Components/shared/Highlight";
 import Section1 from "../Components/specific/Publication/Section1";
-import DecentringELTBook from "../Components/specific/Publication/DecentringBook";
+// import DecentringELTBook from "../Components/specific/Publication/DecentringBook";
 import AinetOccasionalPapers from "../Components/specific/Publication/AinetOccasionalPapers";
 import AinetConferences from "../Components/specific/Publication/AinetConferences";
 import AinetPublications from "../Components/specific/Publication/AinetPublications";
 import BookSection from "../Components/specific/Publication/DecentringBook";
+// import ElePaper from "../Components/specific/Publication/Ele";
+import TeacherMuse from "../Components/specific/Publication/TeacherMuse";
 
 const Publication = () => {
   return (
@@ -36,7 +38,7 @@ const Publication = () => {
             amazon: "#",
             flipkart: "#",
             pothi: "#",
-            download: "#",
+            download: "https://theainet.net/Decentring%20ELT%20Book_compressed.pdf",
           }}
           downloadText="Download Now"
           bookInfo={[
@@ -46,9 +48,13 @@ const Publication = () => {
             { icon: "./dimentions.svg", text: "21.6 x 14 x 1 cm" },
           ]}
         />
-
-        <AinetOccasionalPapers />
-        <AinetConferences />
+ <AinetConferences />
+ <AinetOccasionalPapers />
+ <TeacherMuse/>
+        {/* <ElePaper/> */}
+       
+       
+       
         <AinetPublications />
       </div>
     </>

@@ -19,10 +19,10 @@ export default function MembershipPlans() {
     const individualPlans = [
         {
             title: "Annual",
-            price: "4500.00",
+            price: "500.00",
             currency: "₹",
             duration: "1",
-            accessType: "Indian Access only",
+          
             discountPercentage: 40
         },
         {
@@ -30,15 +30,15 @@ export default function MembershipPlans() {
             price: "1200.00",
             currency: "₹",
             duration: "3",
-            accessType: "Indian Access only",
+           
             discountPercentage: 50
         },
         {
             title: "Overseas",
-            price: "20.00",
-            currency: "₹",
+            price: "20.00 (Rs. 1500)",
+            currency: "$",
             duration: "1",
-            accessType: "Global Access",
+           
             discountPercentage: 25
         }
     ];
@@ -46,26 +46,23 @@ export default function MembershipPlans() {
     const institutionalPlans = [
         {
             title: "Annual",
-            price: "5000.00",
+            price: "1000.00",
             currency: "₹",
             duration: "1",
-            accessType: "Multi-user Access",
             discountPercentage: 40
         },
         {
             title: "Long Term",
-            price: "12000.00",
+            price: "2500.00",
             currency: "₹",
             duration: "3",
-            accessType: "Multi-user Access",
             discountPercentage: 35
         },
         {
-            title: "Enterprise",
-            price: "200.00",
-            currency: "₹",
+            title: "Overseas",
+            price: "30.00 (Rs. 2500)",
+            currency: "$",
             duration: "1",
-            accessType: "Global Enterprise Access",
             discountPercentage: 55
         }
     ];
@@ -74,7 +71,7 @@ export default function MembershipPlans() {
 
     return (
         <div
-            className="relative w-full min-h-screen rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
+            className="relative w-full  min-h-screen  rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
             style={{ backgroundImage: `url(${bg3})` }}
         >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-6">

@@ -67,56 +67,58 @@ const Webinar = () => {
           ]}
         />
         <h1 className=" text-4xl font-semibold mt-12">Webinar</h1>
-        <div className="flex items-center justify-end space-x-4">
-          <div
-            ref={searchRef}
-            className={`relative flex items-center transition-all duration-300 ${
-              searchExpanded ? "flex-row" : "flex-row-reverse"
-            }`}
-          >
-            {searchExpanded && (
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="border border-gray-300 rounded-4xl pl-10 pr-2 py-2 outline-none w-36 lg:w-48 text-sm"
-                  autoFocus
-                />
-                <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-                  <img
-                    src="/searchIcon.svg"
-                    alt="Search"
-                    className="w-6 h-6 "
-                  />
-                </div>
-              </div>
-            )}
-
-            {!searchExpanded && (
-              <button
-                onClick={() => setSearchExpanded((prev) => !prev)}
-                className="p-1"
-                aria-label="Search"
-              >
-                <img src="/searchIcon.svg" alt="Search" className="w-8 h-8 " />
-              </button>
-            )}
-          </div>
-
-          <button className="p-2 rounded-md text-gray-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
-              viewBox="0 0 20 20"
-              fill="#C5D3E8"
+        <div className="flex items-center justify-center md:justify-between mb-8 flex-col md:flex-row">
+          <h2 className="text-3xl font-bold mt-8">Upcoming Conference</h2>
+          <div className="flex items-center justify-end space-x-4">
+            <div
+              ref={searchRef}
+              className={`relative flex items-center transition-all duration-300 ${searchExpanded ? "flex-row" : "flex-row-reverse"
+                }`}
             >
-              <path
-                fillRule="evenodd"
-                d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
+              {searchExpanded && (
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="border border-gray-300 rounded-4xl pl-10 pr-2 py-2 outline-none w-36 lg:w-48 text-sm"
+                    autoFocus
+                  />
+                  <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
+                    <img
+                      src="/searchIcon.svg"
+                      alt="Search"
+                      className="w-6 h-6 "
+                    />
+                  </div>
+                </div>
+              )}
+
+              {!searchExpanded && (
+                <button
+                  onClick={() => setSearchExpanded((prev) => !prev)}
+                  className="p-1"
+                  aria-label="Search"
+                >
+                  <img src="/searchIcon.svg" alt="Search" className="w-8 h-8 " />
+                </button>
+              )}
+            </div>
+
+            <button className="p-2 rounded-md text-gray-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
+                viewBox="0 0 20 20"
+                fill="#C5D3E8"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <img

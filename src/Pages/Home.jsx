@@ -3,6 +3,8 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
+import newh1 from "/newh1.jpg";
+import newh2 from "/newh2.jpg";
 
 
 import home_banner_2 from "/home_banner_2.png";
@@ -20,19 +22,19 @@ import MembershipPlans from "../Components/shared/MembershipPlans"
 const Home = () => {
   const eventsData = [
     {
-      title: "International Conference 2025, 21th AINET Internat.",
+      title: "AINET Foundation Day Programmes.",
       location: "North South University, Dhaka, Bangladesh",
-      date: "25th MARCH, 2025",
+      date: "4-8 September 2025",
     },
     {
-      title: "AINET Seminar",
+      title: "Rural ELT Conference.",
       location: "Barishal University, Barishal",
-      date: "5th APRIL, 2025",
+      date: "October 2025",
     },
     {
-      title: "International Conference 2025, 22th AINET Internat.",
+      title: "Webinar on HELE.",
       location: "North South University, Saudi, UAE",
-      date: "2nd AUGEST,2025",
+      date: "November 2025",
     },
   ];
   return (
@@ -44,22 +46,22 @@ const Home = () => {
       <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]">
         {/* Section 1 */}
         <div
-          className="relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
+          className="relative w-full h-full rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat bg-cover bg-center"
           style={{ backgroundImage: `url(${bg1})` }}
         >
           {/* First Half */}
           <div className="w-full flex h-full justify-around md:h-[auto]  relative p-4 md:p-14 md:pb-0 flex-col md:flex-row">
             <div className="w-full md:[55%]">
-              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.8vw]  leading-8 md:leading-20 ">
+              <h3 className="font-bold text-white tracking-wider text-xl text-center md:text-left  md:text-[2.5vw]  leading-8 md:leading-[3.5rem] lg:leading-[4.5rem] ">
                 A vibrant community of English Language Education professionals
-                & stakeholders which aims to <br /> Develop. Together
+                & stakeholders which aims to <br /> Develop. Together.
               </h3>
             </div>
-            <div className="w-full md-w-[45%] flex justify-end pt-4">
+            <div className="w-full md:w-[75%] flex justify-end pt-4">
               <img
-                src={home_banner_1}
+                src={newh1}
                 alt="HomeImage"
-                className="w-full  md:w-[75%] h-auto md:h-[350px]"
+                className="w-full   h-auto md:h-[350px] rounded-2xl"
               />
             </div>
           </div>
@@ -68,8 +70,7 @@ const Home = () => {
           <div className="w-full flex h-full  md:h-1/2 z-1 relative p-4 md:px-14 flex-col md:flex-row">
             <div className="w-full md:w-[55%] flex flex-col  px-4 gap-4">
               <p className="text-[20px] text-white tracking-normal md:tracking-wider">
-                An English language teacher association registered as charity in
-                India. An IATEFL, UK Affiliate and TESOL, US Associate.
+                "A national English teachers' association, registered in India. An IATEFL, UK affiliate."
               </p>
 
               <div className="flex flex-col md:flex-row gap-4 w-full">
@@ -95,7 +96,7 @@ const Home = () => {
                 <div className="flex flex-col items-center  gap-4">
                   <h3 className="text-[#D0E8C5] font-bold text-4xl">3400 +</h3>
                   <p className="text-white text-[18px]">
-                    Our thriving community of educators.
+                    Our thriving community of <br /> educators.
                   </p>
                 </div>
               </div>
@@ -103,9 +104,9 @@ const Home = () => {
 
             <div className="w-full md:w-[55%] flex flex-col  px-4 gap-4">
               <img
-                src={home_banner_2}
-                alt=""
-                className="w-full  md:w-[75%] h-auto my-2 md:h-[350px]"
+                src={newh2}
+                alt="homepagebanner2"
+                className="w-full  md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl"
               />
             </div>
           </div>
@@ -113,7 +114,7 @@ const Home = () => {
 
         {/* Section 2 */}
         <div
-          className="mt-12 relative w-full h-full md:h-screen rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
+          className="mt-12 relative w-full h-full md:h-[85vh]  rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
@@ -125,15 +126,16 @@ const Home = () => {
 
             <div className=" w-full md:w-1/2 h-full flex items-center  md:items-start justify-center flex-col gap-8">
               <h3 className="font-bold text-3xl md:text-4xl">
-                20th International <br /> Conference & Exhibition
+                <strong>9th AINET International Conference </strong>
+ <br /> January 2026
               </h3>
               <p className="text-xl text-center md:text-left">
                 "The Future Of Language Education: Adapting To A Changing
                 Landscape" <br />
                 19 - 21 February 2025 - Canadian University, Dubai
               </p>
-              <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer">
-                REGISTER NOW
+              <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
+               Coming soon
               </button>
             </div>
           </div>
@@ -147,12 +149,12 @@ const Home = () => {
                 key={index}
                 className={`relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
               >
-                <h2 className="text-2xl font-semibold mb-4">{event.title}</h2>
-                <p className="flex items-center text-black mb-1 text-base font-medium">
+                <h2 className="text-2xl font-semibold mb-6">{event.title}</h2>
+                <p className="flex items-center text-black mb-6 text-xl font-medium">
                   <MdLocationOn className="mr-2 text-xl" />
                   {event.location}
                 </p>
-                <p className="flex items-center text-black text-base font-medium">
+                <p className="flex items-center text-black text-xl font-medium">
                   <FaCalendar className="mr-2 text-xl" />
                   {event.date}
                 </p>
