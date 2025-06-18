@@ -1,22 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Breadcrumbs from "../../shared/Breadcrumbs";
 
 export default function AboutDetails() {
   return (
     <div className="max-w-6xl mx-auto mb-12 pt-[25px] h-auto">
       {/* Navigation Bar */}
-      <div className="w-full mx-auto mb-2">
-        <div className="flex items-center text-[20px] font-medium ">
-          <Link to="/" className="text-black hover:underline">
-            Home
-          </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-400">About</span>
-        </div>
-      </div>
+
+      <Breadcrumbs links={[
+        { label: "Home", to: "/" },
+        { label: "About", to: null },
+      ]} />
+  
 
       {/* Main Content Section */}
-      <section className="w-full mx-auto mt-2 md:mt-8">
+      <section className="w-full mx-auto mt-5 md:mt-8">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left Text Content */}
           <div className="lg:w-1/2">

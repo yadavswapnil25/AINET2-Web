@@ -9,7 +9,7 @@ const Resources = () => {
         heading={"HIGHLIGHTS"}
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
-      <div className="max-w-full lg:max-w-[80%] mx-auto p-8 md:p-14 pt-[25px] h-auto">
+      <div className="max-w-full lg:max-w-[80%] mx-auto p-8 md:p-14 pt-[25px] h-auto" id="resources"> 
         <Breadcrumbs
           links={[
             { label: "Home", to: "/" },

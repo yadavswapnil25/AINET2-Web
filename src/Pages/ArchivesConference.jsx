@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../Components/shared/Breadcrumbs";
 import Highlight from "../Components/shared/Highlight";
+import ScrollToTop from "../Components/ScrollToTop";
 
 export default function ArchivesConference() {
   // Mock data for conferences
@@ -11,39 +12,45 @@ export default function ArchivesConference() {
       image: "/archives1.png",
       title:
         "7th AINET INTERNATIONAL ELT CONFERENCE GUWAHATI, FEBRUARY 3-4, 2024",
+        link: "https://store.pothi.com/book/krishna-dixit-english-language-education-global-south-innovation-inclusion-empowerment/ "
     },
     {
       id: 2,
       image: "/archives2.png",
       title:
         "6th AINET INTERNATIONAL ELT CONFERENCE NEW DELHI, DECEMBER 5-6, 2022",
+        link: "https://store.pothi.com/book/krishna-dixit-changing-learners-changing-teachers-ele-new-world/ "
     },
     {
       id: 3,
       image: "/archivesConf3.png",
       title:
         "5th AINET INTERNATIONAL ELT CONFERENCE HYDERABAD, JANUARY 3-4, 2020",
+        link: "https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/ "
     },
     {
       id: 4,
       image: "/archivesConf4.png",
       title:
         "4th AINET INTERNATIONAL ELT CONFERENCE MUMBAI, FEBRUARY 2-3, 2018",
+        link: "/archives-conference"
     },
     {
       id: 5,
       image: "/archivesConf5.png",
       title: "2th AINET INTERNATIONAL ELT CONFERENCE MUMBAI, JANUARY 10, 2015",
+      link: "https://store.pothi.com/book/krishna-dixit-vivek-joshi-milind-mane-english-language-education-understanding-change/ "
     },
   ];
 
   return (
     <>
+    <ScrollToTop/>
       <Highlight
         heading={"HIGHLIGHTS"}
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
-      <div className="w-full lg:max-w-[80%] mx-auto md:p-14 pt-[25px] h-auto">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Breadcrumb navigation */}
         <Breadcrumbs
           links={[
@@ -98,7 +105,7 @@ export default function ArchivesConference() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {conferences.map((item) => (
-              <div key={item.id} className="group cursor-pointer">
+              <div key={item.id} className="group cursor-pointer" onClick={() => window.location.href = item.link}>
               {/* Image */}
               <div className="relative  w-full overflow-hidden rounded-md mb-2">
                 <img
