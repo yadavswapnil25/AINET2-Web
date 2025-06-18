@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function AboutDetails() {
   return (
-    <div className="max-w-full lg:max-w-[70%] mx-auto md:p-14 pt-[25px] h-auto">
+    <div className="max-w-6xl mx-auto mb-12 pt-[25px] h-auto">
       {/* Navigation Bar */}
       <div className="w-full mx-auto mb-8">
         <div className="flex items-center text-[20px] font-medium ">

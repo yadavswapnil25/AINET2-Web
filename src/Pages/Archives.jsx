@@ -31,6 +31,7 @@ export default function Archives() {
     {
       title: "Webinar",
       viewAll: "View All",
+      navigate: "/archives-conference",
       items: [
         {
           id: 1,
@@ -51,6 +52,7 @@ export default function Archives() {
     {
       title: "FO Lectures",
       viewAll: "View All",
+      navigate: "/archives-conference",
       items: [
         {
           id: 1,
@@ -70,6 +72,7 @@ export default function Archives() {
     {
       title: "Other",
       viewAll: "View All",
+      navigate: "/archives-conference",
       items: [
         {
           id: 1,
