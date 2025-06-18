@@ -25,12 +25,12 @@ const Footer = () => {
                     </Link>
                     <p className="text-sm mb-2 text-center font-medium">Follow Us</p>
                     <div className="flex flex-wrap gap-3 text-xl sm:text-2xl">
-                        <a href="#" aria-label="Instagram" className="hover:text-white"><FaInstagram /></a>
-                        <a href="#" aria-label="Facebook" className="hover:text-white"><FaFacebookF /></a>
-                        <a href="#" aria-label="YouTube" className="hover:text-white"><FaYoutube /></a>
-                        <a href="#" aria-label="Pinterest" className="hover:text-white"><FaPinterestP /></a>
-                        <a href="#" aria-label="Twitter" className="hover:text-white"><FaTwitter /></a>
-                        <a href="#" aria-label="WhatsApp" className="hover:text-white"><FaWhatsapp /></a>
+                        <a href="https://www.instagram.com/ainetindia/" target='_blankC' aria-label="Instagram" className="hover:text-white"><FaInstagram /></a>
+                        <a href="https://www.facebook.com/ainetindia/" target='_blank' aria-label="Facebook" className="hover:text-white"><FaFacebookF /></a>
+                        <a href="https://www.youtube.com/AINETIndia" target='_blank' aria-label="YouTube" className="hover:text-white"><FaYoutube /></a>
+                        <a href="https://in.pinterest.com/theainet/" target='_blank' aria-label="Pinterest" className="hover:text-white"><FaPinterestP /></a>
+                        <a href="https://x.com/ainetindia" target='_blank' aria-label="Twitter" className="hover:text-white"><FaTwitter /></a>
+                        <a href="https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" target='_blank' aria-label="WhatsApp" className="hover:text-white"><FaWhatsapp /></a>
                         <a href="#" aria-label="Telegram" className="hover:text-white"><FaTelegramPlane /></a>
                     </div>
                 </div>

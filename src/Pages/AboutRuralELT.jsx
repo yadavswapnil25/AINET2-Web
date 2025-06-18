@@ -51,7 +51,7 @@ const AboutRuralELT = ({ data }) => {
                         links={[
                             { label: "Home", to: "/" },
                             { label: "AINET Projects", to: null },
-                            { label: "Rural ELT`", to: null },
+                            { label: "Rural ELT", to: null },
                         ]}
                     />
                 </div>

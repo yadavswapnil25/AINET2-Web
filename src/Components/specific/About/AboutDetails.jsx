@@ -5,7 +5,7 @@ export default function AboutDetails() {
   return (
     <div className="max-w-6xl mx-auto mb-12 pt-[25px] h-auto">
       {/* Navigation Bar */}
-      <div className="w-full mx-auto mb-8">
+      <div className="w-full mx-auto mb-2">
         <div className="flex items-center text-[20px] font-medium ">
           <Link to="/" className="text-black hover:underline">
             Home
@@ -16,7 +16,7 @@ export default function AboutDetails() {
       </div>
 
       {/* Main Content Section */}
-      <section className="w-full mx-auto mt-14">
+      <section className="w-full mx-auto mt-2 md:mt-8">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left Text Content */}
           <div className="lg:w-1/2">

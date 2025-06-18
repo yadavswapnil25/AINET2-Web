@@ -3,6 +3,7 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
+import bg3 from "/bg3.png";
 import newh1 from "/newh1.jpg";
 import newh2 from "/newh2.jpg";
 
@@ -114,7 +115,7 @@ const Home = () => {
 
         {/* Section 2 */}
         <div
-          className="mt-12 relative w-full h-full   rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
+          className="mt-12 relative w-full h-full rounded-3xl overflow-hidden  flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover bg-center"
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
@@ -176,7 +177,7 @@ const Home = () => {
         </div>
 
         {/* Section 5 */}
-        <CommunityVoicesSlider />
+        {/* <CommunityVoicesSlider /> */}
 
         {/* Section 6 */}
         <Partners />

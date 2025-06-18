@@ -192,7 +192,7 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
                         </div>
 
                         {/* Bottom Auto-scroll Section */}
-                        <h2 className="text-3xl font-bold text-gray-900 mb-8">AINET Connect Project Lead</h2>
+                        {/* <h2 className="text-3xl font-bold text-gray-900 mb-8">AINET Connect Project Lead</h2>
                         <div className="relative">
                             <div
                                 ref={scrollRef}
@@ -221,7 +221,7 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </main>
             </div>
