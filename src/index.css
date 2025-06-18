@@ -1,51 +1,53 @@
 @import "tailwindcss";
 
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-    -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.btnshadow{
-    box-shadow: 2px 4px 4px 0px #00000040;
+.btnshadow {
+  box-shadow: 2px 4px 4px 0px #00000040;
 
 }
-button{
+
+button {
   cursor: pointer;
 }
-.clippath{
-    clip-path: polygon(0 0%, 100% 0%, 82% 100%, 0% 100%);
+
+.clippath {
+  clip-path: polygon(0 0%, 100% 0%, 82% 100%, 0% 100%);
 }
 
-.bg-clip-1{
-    clip-path: polygon(50% 0%, 100% 0, 100% 15%, 62% 100%, 0 100%, 0% 60%, 0 0);
+.bg-clip-1 {
+  clip-path: polygon(50% 0%, 100% 0, 100% 15%, 62% 100%, 0 100%, 0% 60%, 0 0);
 
 }
 
 
 @keyframes scroll-left-to-right {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
+  0% {
+    transform: translateX(100%);
   }
-  .marquee-animation {
-    animation: scroll-left-to-right 20s linear infinite;
-    display: inline-block;
-    white-space: nowrap;
+
+  100% {
+    transform: translateX(-100%);
   }
-  
-/* Hide scrollbar but keep functionality */
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+.marquee-animation {
+  animation: scroll-left-to-right 20s linear infinite;
+  display: inline-block;
+  white-space: nowrap;
 }
-  
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
