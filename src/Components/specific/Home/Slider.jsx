@@ -10,7 +10,7 @@ const testimonialsData = [
     image: "/sliderImg1.png",
     date: "10th March 2024",
     testimonial:
-      " a dummy or placeholder text commonly used in graphic design,",
+      "  dummy or placeholder text commonly used in graphic design,",
   },
   {
     id: 2,
