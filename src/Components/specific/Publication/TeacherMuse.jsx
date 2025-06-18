@@ -17,7 +17,7 @@ export default function TeacherMuse() {
         </Link>
       </div>
       
-     <div className="flex flex-wrap gap-6">
+     <div className="flex overflow-x-auto gap-6">
         <img src={muse1} alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/amol-padwad-prithvirajsingh-thakur-teachers-muse/"}/>
         <img src={muse2} alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/amol-padwad-prithvirajsingh-thakur-teachers-muse-volume-2/"}/>
         <img src={muse3} alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/amol-padwad-teachers-muse-vol-3/"}/>
