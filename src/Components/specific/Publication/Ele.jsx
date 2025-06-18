@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ele1 from "/ele1.jpg"
+
 import ele2 from "/ele2.png"
 import ele3 from "/ele3.png"
 import ele4 from "/ele4.png"
@@ -19,10 +19,10 @@ export default function ElePaper() {
       </div>
       
      <div className="flex flex-wrap gap-6">
-        <img src={ele1} alt="" className='h-[550px]' />
-        <img src={ele2} alt="" className='h-[550px]' />
-        <img src={ele3} alt="" className='h-[550px]' />
-        <img src={ele4} alt="" className='h-[550px]' />
+       
+        <img src={ele2} alt="" className='h-[550px]' onClick={()=>window.location.href=" https://store.pothi.com/book/krishna-dixit-exploring-learners-and-learning-english/"}/>
+        <img src={ele3} alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/"}/>
+        <img src={ele4} alt="" className='h-[550px]' onClick={()=>window.location.href=" https://store.pothi.com/book/krishna-dixit-exploring-learners-and-learning-english/"}/>
      </div>
     </div>
   );

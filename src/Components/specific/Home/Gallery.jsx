@@ -86,7 +86,7 @@ export default function Gallery() {
 
       <div className="space-y-2 md:space-y-8">
         {/* Top Banner Section - Infinite Scroll (Slow) */}
-        <div className="relative overflow-hidden rounded-lg">
+        <div className="relative overflow-hidden rounded-lg h-[250px] md:h-auto">
           <div className="flex animate-scroll-slow">
             {/* First set of images */}
             {bannerImages.map((image) => (
@@ -120,7 +120,7 @@ export default function Gallery() {
         </div>
 
         {/* Bottom Small Images Section - Infinite Scroll (Fast) */}
-        <div className="relative overflow-hidden rounded-lg">
+        <div className="relative overflow-hidden rounded-lg ">
           <div className="flex animate-scroll-fast">
             {/* First set of small images */}
             {smallImages.map((image) => (

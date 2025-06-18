@@ -14,8 +14,8 @@ export default function AinetConferences() {
       </div>
       
      <div className="flex flex-wrap gap-6">
-        <img src="./ainetPaper.png" alt="" className='h-[550px]' />
-        <img src="./ainetPaper.png" alt="" className='h-[550px]' />
+        <img src="./publicationsconf1.png" alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/"} />
+        <img src="./publicationconf2.png" alt="" className='h-[550px]' onClick={()=>window.location.href=" https://store.pothi.com/book/krishna-dixit-exploring-learners-and-learning-english/"} />
      </div>
     </div>
   );

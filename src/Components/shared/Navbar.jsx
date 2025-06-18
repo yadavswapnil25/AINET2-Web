@@ -270,14 +270,14 @@ const Navbar = () => {
 
               {mobileDropdown === 'initiatives' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors">Teacher Research</Link>
-                  <Link to="/AINETConnect" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Connect</Link>
-                  <Link to="/AboutWomenInAINET" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Women in AINET</Link>
-                  <Link to="/AboutRuralELT" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Rural ELT</Link>
-                  <Link to="/AboutAINETAffiliates" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET Affiliates</Link>
-                  <Link to="/HELE" className="block px-4 py-2 hover:bg-gray-100 transition-colors"> HELE</Link>
-                  <Link to="/Decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Decentring</Link>
-                  <Link to="/Prelims" className="block px-4 py-2 hover:bg-gray-100 transition-colors">AINET PRELIM</Link>
+                  <Link to="/teacherResearch" className="block px-2 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Teacher Research</Link>
+                  <Link to="/AINETConnect" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>AINET Connect</Link>
+                  <Link to="/AboutWomenInAINET" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Women in AINET</Link>
+                  <Link to="/AboutRuralELT" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Rural ELT</Link>
+                  <Link to="/AboutAINETAffiliates" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>AINET Affiliates</Link>
+                  <Link to="/HELE" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}> HELE</Link>
+                  <Link to="/Decentring" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Decentring</Link>
+                  <Link to="/Prelims" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>AINET PRELIM</Link>
                 </div>
               )}
             </div>
@@ -299,9 +299,9 @@ const Navbar = () => {
 
               {mobileDropdown === 'event' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Conferences</Link>
-                  <Link to="webinar" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Webinars</Link>
-                  <Link to="/event/item2" className="block px-4 py-2 hover:bg-gray-100 transition-colors">FD Lectures</Link>
+                  <Link to="/Conference" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Conferences</Link>
+                  <Link to="webinar" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Webinars</Link>
+                  <Link to="/FDLecture" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>FD Lectures</Link>
                 </div>
               )}
             </div>
@@ -317,10 +317,9 @@ const Navbar = () => {
 
               {mobileDropdown === 'more' && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Contact Us</Link>
-
-                  <Link to="/gallery" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Gallery</Link>
-                  <Link to="/archives" className="block px-4 py-2 hover:bg-gray-100 transition-colors">Archives</Link>
+                  <Link to="/ContactUs" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Contact Us</Link>
+                  <Link to="/gallery" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Gallery</Link>
+                  <Link to="/archives" className="block px-4 py-2 hover:bg-gray-100 transition-colors" onClick={() => setIsOpen(false)}>Archives</Link>
                 </div>
               )}
             </div>

@@ -135,7 +135,7 @@ const FDLecture = () => {
 
         {/* Date and Time Details */}
         <div className="flex flex-col md:flex-row w-full items-center justify-center  my-6 gap-20">
-          <div className=" flex gap-5 items-center justify-center">
+          {/* <div className=" flex gap-5 items-center justify-center">
             <div className=" flex  rounded-md gap-4 items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@ const FDLecture = () => {
               <PiClockDuotone className=" text-[#A6AEBF] size-9" />
               <span className=" text-sm md:text-lg font-medium">9:00 AM</span>
             </div>
-          </div>
+          </div> */}
           <div className=" flex gap-5 items-center justify-center">
             <div className=" flex  rounded-md gap-4 items-center justify-center">
               <svg
@@ -233,7 +233,7 @@ const FDLecture = () => {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-[25px] font-bold">Previous FDLecture</h2>
             <Link
-              to="/gallery"
+              to="/archives"
               className="text-gray-400 hover:text-blue-500 flex items-center text-lg"
             >
               View All <FaChevronRight className="h-4 w-4 ml-1" />
