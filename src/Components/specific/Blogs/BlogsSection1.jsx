@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCalendarAlt, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -117,9 +117,12 @@ const BlogsSection1 = () => {
         },
     ];
 
+    const [showAll, setShowAll] = useState(false);
+
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Top Blogs Section */}
+            {showAll && (
             <div className="mb-12">
                 <h1 className="text-4xl font-bold mb-6">Top Blogs</h1>
 
@@ -233,6 +236,9 @@ const BlogsSection1 = () => {
                     </div>
                 ))}
             </div>
+            )}
+
+            <h1 className="text-4xl font-bold mb-6">Page under construction</h1>
         </div>
     );
 };

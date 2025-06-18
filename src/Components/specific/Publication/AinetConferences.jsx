@@ -1,5 +1,6 @@
 import React from 'react';
-
+import ele2 from "/ele2.png"
+import ele1 from "/ele1.jpg"
 export default function AinetConferences() {
   return (
     <div className="  p-4  mt-10">
@@ -13,9 +14,12 @@ export default function AinetConferences() {
         </a>
       </div>
       
-     <div className="flex flex-wrap gap-6">
-        <img src="./publicationsconf1.png" alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/"} />
+     <div className="flex overflow-x-auto gap-6">
+     <img src={ele2} alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/krishna-dixit-vivek-joshi-milind-mane-english-language-education-understanding-change/"}/>
         <img src="./publicationconf2.png" alt="" className='h-[550px]' onClick={()=>window.location.href=" https://store.pothi.com/book/krishna-dixit-exploring-learners-and-learning-english/"} />
+        <img src="./publicationsconf1.png" alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/"} />
+        <img src={ele1} alt="" className='h-[550px]' onClick={()=>window.location.href="https://store.pothi.com/book/krishna-dixit-changing-learners-changing-teachers-ele-new-world/"}/>
+        <img src="./otherpublicationssouth.png" alt="" className='h-[550px]' onClick={()=>window.location.href=" https://store.pothi.com/book/krishna-dixit-english-language-education-global-south-innovation-inclusion-empowerment/"}/>
      </div>
     </div>
   );
