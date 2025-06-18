@@ -6,7 +6,7 @@ import bg5 from "/bg5.png";
 const testimonialsData = [
   {
     id: 1,
-    name: "John Doe",
+    name: "John Yadav",
     image: "/sliderImg1.png",
     date: "10th March 2024",
     testimonial:
