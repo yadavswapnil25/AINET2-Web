@@ -1,0 +1,52 @@
+name: React App Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout Repository Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2️⃣ Install Dependencies & Build React App
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build React App
+        run: npm run build
+
+      # 3️⃣ Create ZIP of Build Folder
+      - name: Archive Production Build
+        run: |
+          cd dist  # or 'build' depending on framework (Vite uses 'dist')
+          zip -r ../react-build.zip .
+
+      # 4️⃣ Copy ZIP to Remote Server via SSH
+      - name: Copy Build to Server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          source: "react-build.zip"
+          target: "~/react-build.zip"
+
+      # 5️⃣ SSH into Remote & Deploy
+      - name: Deploy on Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          script: |
+            rm -rf /var/www/ainet2-web-build/*
+            unzip -o ~/react-build.zip -d /var/www/ainet2-web-build/
+            rm ~/react-build.zip
+            sudo systemctl reload nginx
+
