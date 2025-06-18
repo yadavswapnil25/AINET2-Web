@@ -21,16 +21,7 @@ const Section1 = () => {
             <div className="md:w-1/2 w-full">
               <h3 className="text-5xl font-bold mb-8">Publications</h3>
               <p className="text-[18px]">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum
+              AINET brings out a wide range of publications including conference proceedings, teachers' creative work, resource materials and thematic anthologies. It also collaborates with several organisations to publish works with valuable research and innovation content. Enjoy the publications listed on this page and do share your feedback with us. Many of these publications are free to access.
               </p>
             </div>
             <div className="w-full md:w-1/2 mx-auto flex items-center justify-center">
