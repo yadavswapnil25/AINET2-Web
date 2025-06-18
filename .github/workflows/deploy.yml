@@ -33,7 +33,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           source: "react-build.zip"
           target: "~/react-build.zip"
 
@@ -43,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           script: |
             rm -rf /var/www/ainet2-web-build/*
             unzip -o ~/react-build.zip -d /var/www/ainet2-web-build/
