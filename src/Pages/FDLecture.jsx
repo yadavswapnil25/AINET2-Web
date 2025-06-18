@@ -68,7 +68,7 @@ const FDLecture = () => {
         />
         <h1 className=" text-4xl font-semibold mt-12">FDLecture</h1>
         <div className="flex items-center justify-center md:justify-between mb-8 flex-col md:flex-row">
-          <h2 className="text-3xl font-bold mt-8">Upcoming Conference</h2>
+          <h2 className="text-3xl font-bold mt-8">Upcoming FDLecture</h2>
 
           <div className="flex items-center justify-end space-x-4">
             <div
@@ -244,7 +244,7 @@ const FDLecture = () => {
             {previousWebinars.map((webinar) => (
               <div
                 key={webinar.id}
-                className="cursor-pointer w-[300px] md:w-[550px] "
+                className="cursor-pointer w-[300px] md:w-[320px] xl:w-[350px] "
               >
                 <div className="mb-2 ">
                   <img

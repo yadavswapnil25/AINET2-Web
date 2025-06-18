@@ -86,7 +86,7 @@ export default function CommunityVoicesSlider() {
 
   return (
     <div 
-      className="mt-12 relative w-full min-h-[600px] md:h-[80vh] rounded-lg md:rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-4 md:p-14 bg-cover" 
+      className="mt-12 relative w-full min-h-[600px] md:h-full rounded-lg md:rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-4 md:p-14 bg-cover" 
       style={{ backgroundImage: `url(${bg5})` }}
     >
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
