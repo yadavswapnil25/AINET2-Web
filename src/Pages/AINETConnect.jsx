@@ -11,6 +11,8 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import Breadcrumbs from '../Components/shared/Breadcrumbs';
+import Highlight from '../Components/shared/Highlight';
 
 const AINETConnect = () => {
   const scrollRef = useRef(null);
@@ -38,7 +40,7 @@ The AINET Connect project was launched with an aim to support professional devel
 The project led to building a team of volunteer teacher-trainers from its membership. The project was launched and now manages AINET accounts on Facebook, Twitter, Instagram, WhatsApp, Pinterest, and LinkedIn. The project is focused on professional interaction and development. During the COVID Pandemic times the AINET Connect Associates did a tremendous job in engaging its members and keeping AINET going.
 
 AINET Connect brings you immense opportunities to network with ELT communities, participate in a wide range of activities and learn, grow and enjoy!`,
-    contactEmail: "ainetsocial@gmail.com",
+    contactEmail: "theainet@gmail.com",
     clickHereText: "Click here."
   };
 
@@ -59,14 +61,14 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
       image: null
     },
     {
-      name: "Dr. Millind Mane",
+      name: "Dr. Milind Mane",
       role: "",
-      image: "/api/placeholder/120/120"
+      image: "/milindmane.png"
     },
     {
       name: "Nadeem Khan",
       role: "",
-      image: "/api/placeholder/120/120"
+      image: "/nadeemkhan.png"
     }
   ];
 
@@ -96,13 +98,29 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
   const breadcrumb = ["Home", "AINET Projects", "AINET Connect"];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+    
+    <Highlight
+                heading={"HIGHLIGHTS"}
+                subheading={"Registration for 8th AINET International Conference 2025"}
+            />
+   
+    <div className="min-h-screen relative bg-gray-50">
+
 
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto py-8">
+      <main className="max-w-7xl mx-auto py-8 relative">
+      <Breadcrumbs
+                        links={[
+                            { label: "Home", to: "/" },
+                            { label: "AINET Projects", to: null },
+                            { label: "AINET Connect", to: null },
+                        ]}
+                    />
+                    <img src="/ainetconnectlogo.png" alt="logoconnect" className=' absolute right-0 top-2' />
         {/* Hero Section */}
-        <div className="overflow-hidden mb-8">
+        <div className="overflow-hidden mb-8 mt-8">
           <div className="lg:flex">
             <div className="lg:w-1/2 ">
               <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
@@ -149,7 +167,7 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
         </div>
 
         {/* Contact Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className=" rounded-lg shadow-md p-6 mb-8">
           <p className="text-gray-700 mb-4">
             Want to know more about AINET Connect?{' '}
             <span className="text-blue-600 hover:text-blue-800 cursor-pointer underline">
@@ -166,14 +184,14 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
         </div>
 
         {/* Lead Team Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">AINET Connect Associates</h2>
+        <div className=" rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">AINET Connect Lead Team</h2>
           
           {/* First Row - Static Grid (as per original design) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {leadTeamTop.map((member, index) => (
-              <div key={index} className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 bg-gray-200 rounded-full overflow-hidden">
+              <div key={index} className="border rounded-lg overflow-hidden shadow-sm">
+                <div className="h-48 flex items-center justify-center ">
                   {member.image ? (
                     <img 
                       src={member.image} 
@@ -181,19 +199,21 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-8 h-8 text-gray-400" />
+                    <div className="w-32 h-32 rounded-full  flex items-center justify-center">
+                      <User className="w-16 h-16 text-gray-400" />
                     </div>
                   )}
                 </div>
-                <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                {member.role && <p className="text-sm text-gray-600">{member.role}</p>}
+                <div className="p-4 text-center">
+                  <h3 className="font-semibold text-gray-900 text-lg">{member.name}</h3>
+                  {member.role && <p className="text-sm text-gray-600">{member.role}</p>}
+                </div>
               </div>
             ))}
           </div>
 
           {/* Second Team Section Title */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">AINET Connect Project Lead</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">AINET Connect Lead Team</h2>
           
           {/* Second Row - Scrollable (only this section) */}
           <div className="relative">
@@ -206,16 +226,11 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
             
             <div 
               ref={scrollRef}
-              className="flex overflow-x-auto scrollbar-hide space-x-6 px-12 py-4"
-              style={{
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-                WebkitScrollbar: { display: 'none' }
-              }}
+              className="flex overflow-x-auto no-scrollbar space-x-6 px-12 py-4"
             >
               {leadTeamBottom.map((member, index) => (
-                <div key={index} className="flex-shrink-0 text-center w-28">
-                  <div className="w-20 h-20 mx-auto mb-3 bg-gray-200 rounded-full overflow-hidden">
+                <div key={index} className="flex-shrink-0 border rounded-lg overflow-hidden shadow-sm w-48">
+                  <div className="h-48 flex items-center justify-center bg-gray-200">
                     {member.image ? (
                       <img 
                         src={member.image} 
@@ -223,13 +238,15 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <User className="w-6 h-6 text-gray-400" />
+                      <div className="w-32 h-32 rounded-full  flex items-center justify-center">
+                        <User className="w-16 h-16 text-gray-400" />
                       </div>
                     )}
                   </div>
-                  <h4 className="font-medium text-gray-900 text-sm">{member.name}</h4>
-                  {member.role && <p className="text-xs text-gray-600">{member.role}</p>}
+                  <div className="p-4 text-center">
+                    <h4 className="font-medium text-gray-900">{member.name}</h4>
+                    {member.role && <p className="text-sm text-gray-600">{member.role}</p>}
+                  </div>
                 </div>
               ))}
             </div>
@@ -244,6 +261,7 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
         </div>
       </main>
     </div>
+    </>
   );
 };
 
