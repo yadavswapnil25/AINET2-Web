@@ -8,15 +8,17 @@ import AinetPublications from "../Components/specific/Publication/AinetPublicati
 import BookSection from "../Components/specific/Publication/DecentringBook";
 // import ElePaper from "../Components/specific/Publication/Ele";
 import TeacherMuse from "../Components/specific/Publication/TeacherMuse";
+import ScrollToTop from "../Components/ScrollToTop";
 
 const Publication = () => {
   return (
     <>
+    <ScrollToTop />
       <Highlight
         heading={"HIGHLIGHTS"}
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
-      <div className="max-w-full lg:max-w-[80%] mx-auto p-8 md:p-14 pt-[25px] h-auto">
+      <div className="max-w-full lg:max-w-[80%] mx-auto p-8 md:p-14 pt-[25px] h-auto " id="publications">
         <Section1 />
         
         <BookSection
@@ -24,8 +26,8 @@ const Publication = () => {
           coverImage="/decentringBook.png"
           title="Decentring ELT: Practices and Possibilities"
           editors={[
-            { name: "Amol Padwad", img: "/editors.png" },
-            { name: "Richard Smith", img: "/editors.png" },
+            { name: "Amol Padwad", img: "" },
+            { name: "Richard Smith", img: "" },
           ]}
           description={`The 'Decentring ELT' initiative launched in 2018 by the A.S. Hornby
         Educational Trust ('Hornby Trust', for short) aims to support the

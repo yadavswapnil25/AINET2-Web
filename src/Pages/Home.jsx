@@ -23,19 +23,19 @@ import MembershipPlans from "../Components/shared/MembershipPlans"
 const Home = () => {
   const eventsData = [
     {
-      title: "AINET Foundation Day Programmes.",
-      location: "North South University, Dhaka, Bangladesh",
-      date: "4-8 September 2025",
+      title: "AINET Foundation Week Programmes.",
+      location: "Online",
+      date: "5 - 12 September 2025",
     },
     {
       title: "Rural ELT Conference.",
-      location: "Barishal University, Barishal",
+      location: "Maharashtra",
       date: "October 2025",
     },
     {
       title: "Webinar on HELE.",
-      location: "North South University, Saudi, UAE",
-      date: "November 2025",
+      location: "Online",
+      date: "TBA",
     },
   ];
   return (
@@ -131,9 +131,8 @@ const Home = () => {
  <br /> January 2026
               </h3>
               <p className="text-xl text-center md:text-left">
-                "The Future Of Language Education: Adapting To A Changing
-                Landscape" <br />
-                19 - 21 February 2025 - Canadian University, Dubai
+                
+               January 2026 Lucknow, India
               </p>
               <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
                Coming soon

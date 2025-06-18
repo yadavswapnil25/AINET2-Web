@@ -39,10 +39,10 @@ const Footer = () => {
                 <div className=' w-full  flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">AINET</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
-                        <li><Link to="/about" className="hover:underline">About Us</Link></li>
-                        <li><Link to="/publications" className="hover:underline">Publications</Link></li>
-                        <li><Link to="/BlogsSection1" className="hover:underline">AINET Adda</Link></li>
-                        <li><Link to="/resources" className="hover:underline">Resources</Link></li>
+                        <li><a href="/about/#about" className="hover:underline">About Us</a></li>
+                        <li><a href="/publications/#publications" className="hover:underline">Publications</a></li>
+                        <li><a href="/BlogsSection1" className="hover:underline">AINET Adda</a></li>
+                        <li><a href="/resources/#resources" className="hover:underline">Resources</a></li>
                     </ul>
                 </div>
 
@@ -50,9 +50,9 @@ const Footer = () => {
                 <div className=' w-full flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">Help</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
-                        <li><Link to="/archives" className="hover:underline">Archives</Link></li>
-                        <li><Link to="/ContactUs" className="hover:underline">Contact Us</Link></li>
-                        <li><Link to="/privacy-policy" className="hover:underline">Privacy Policy</Link></li>
+                        <li><a href="/archives" className="hover:underline">Archives</a></li>
+                        <li><a href="/ContactUs" className="hover:underline">Contact Us</a></li>
+                        <li><a href="/privacy-policy" className="hover:underline">Privacy Policy</a></li>
                     </ul>
                 </div>
 

@@ -48,7 +48,7 @@ const AinetTeam = () => {
 
         {/* Team Section */}
         <div className="pt-16">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 text-center">
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 text-left">
             The AINET Team
           </h1>
           <img
