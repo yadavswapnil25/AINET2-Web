@@ -24,21 +24,7 @@ const Archives = () => {
         link: "/conferences/past-conferences"
       }
     },
-    {
-      category: "Webinar",
-      title: {
-        text: "6th AINET International Conference 2023",
-        link: "/webinars/ainet-2023"
-      },
-      description1: {
-        text: "Lorem ipsum is a dummy or placeholder",
-        link: "/webinars/lorem-ipsum-1"
-      },
-      description2: {
-        text: "Lorem ipsum is a dummy or placeholder",
-        link: "/webinars/lorem-ipsum-2"
-      }
-    },
+    
     {
       category: "Other Events",
       title: {

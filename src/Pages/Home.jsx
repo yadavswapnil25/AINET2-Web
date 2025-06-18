@@ -114,7 +114,7 @@ const Home = () => {
 
         {/* Section 2 */}
         <div
-          className="mt-12 relative w-full h-full md:h-[85vh]  rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
+          className="mt-12 relative w-full h-full   rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
