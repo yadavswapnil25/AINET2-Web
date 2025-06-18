@@ -6,7 +6,7 @@ export default function AinetNews() {
   const [newsItems] = useState([
     {
       id: 1,
-      image: "/api/placeholder/400/320",
+      image: "/news.png",
       location: "MUMBAI",
       title: "'TH AINET INTERNATIONAL CONFERENCE",
       headline: "Tech creating rift among teachers",
@@ -14,7 +14,7 @@ export default function AinetNews() {
     },
     {
       id: 2,
-      image: "/api/placeholder/400/320",
+      image: "/news.png",
       location: "MUMBAI",
       title: "'TH AINET INTERNATIONAL CONFERENCE",
       headline: "Tech creating rift among teachers",
@@ -39,7 +39,7 @@ export default function AinetNews() {
               <img 
                 src={item.image} 
                 alt="Conference" 
-                className="w-full h-48 object-cover"
+                className="w-full h-60 object-cover"
               />
               <div className="absolute top-2 left-2 bg-blue-700 text-white px-2 py-1 text-sm font-bold">
                 {item.location}
