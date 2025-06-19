@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaCalendarAlt, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import PageUnderConstruct from "../../../Pages/PageUnderConstruct";
 
 const BlogsSection1 = () => {
     // Multiple authors
@@ -238,7 +239,7 @@ const BlogsSection1 = () => {
             </div>
             )}
 
-            <h1 className="text-4xl font-bold mb-6">Page under construction</h1>
+            <PageUnderConstruct/>
         </div>
     );
 };

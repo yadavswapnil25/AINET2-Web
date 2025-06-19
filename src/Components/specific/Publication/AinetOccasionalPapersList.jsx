@@ -59,8 +59,8 @@ export default function AinetOccasionalPapersList() {
           { label: "Occasional Papers", to: null },
         ]}
       />
-      <div className="flex justify-between items-center mb-6 mt-12">
-        <h1 className="text-[40px] font-bold mb-10">AINET Occasional Papers</h1>
+      <div className="flex justify-between items-start mb-6 mt-12 flex-col md:flex-row">
+        <h1 className="md:text-[40px] text-2xl text-left font-bold mb-10">AINET Occasional Papers</h1>
         <div className="flex items-center space-x-2">
           <div ref={searchRef} className="relative">
             {searchOpen ? (
