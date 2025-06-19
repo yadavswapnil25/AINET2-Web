@@ -3,6 +3,7 @@ import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
+import bg3 from "/bg3.png";
 import newh1 from "/newh1.jpg";
 import newh2 from "/newh2.jpg";
 
@@ -22,19 +23,19 @@ import MembershipPlans from "../Components/shared/MembershipPlans"
 const Home = () => {
   const eventsData = [
     {
-      title: "AINET Foundation Day Programmes.",
-      location: "North South University, Dhaka, Bangladesh",
-      date: "4-8 September 2025",
+      title: "AINET Foundation Week Programmes.",
+      location: "Online",
+      date: "5 - 12 September 2025",
     },
     {
       title: "Rural ELT Conference.",
-      location: "Barishal University, Barishal",
+      location: "Maharashtra",
       date: "October 2025",
     },
     {
       title: "Webinar on HELE.",
-      location: "North South University, Saudi, UAE",
-      date: "November 2025",
+      location: "Online",
+      date: "TBA",
     },
   ];
   return (
@@ -114,7 +115,7 @@ const Home = () => {
 
         {/* Section 2 */}
         <div
-          className="mt-12 relative w-full h-full   rounded-[25px] overflow-hidden z-1 flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover"
+          className="mt-12 relative w-full h-full rounded-3xl overflow-hidden  flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover bg-center"
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
@@ -130,9 +131,8 @@ const Home = () => {
  <br /> January 2026
               </h3>
               <p className="text-xl text-center md:text-left">
-                "The Future Of Language Education: Adapting To A Changing
-                Landscape" <br />
-                19 - 21 February 2025 - Canadian University, Dubai
+                
+               January 2026 Lucknow, India
               </p>
               <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
                Coming soon
@@ -176,7 +176,7 @@ const Home = () => {
         </div>
 
         {/* Section 5 */}
-        <CommunityVoicesSlider />
+        {/* <CommunityVoicesSlider /> */}
 
         {/* Section 6 */}
         <Partners />

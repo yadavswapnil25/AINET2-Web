@@ -24,13 +24,13 @@ const Navbar = () => {
   };
 
   const socials = [
-    { name: "Instagram", icon: <RiInstagramFill />, link: "#" },
-    { name: "Facebook", icon: <IoLogoFacebook />, link: "#" },
-    { name: "Youtube", icon: <AiFillYoutube />, link: "#" },
-    { name: "X", icon: <RiTwitterXLine />, link: "#" },
+    { name: "Instagram", icon: <RiInstagramFill />, link: "https://www.instagram.com/ainetindia/" },
+    { name: "Facebook", icon: <IoLogoFacebook />, link: "https://www.facebook.com/ainetindia/" },
+    { name: "Youtube", icon: <AiFillYoutube />, link: "https://www.youtube.com/AINETIndia" },
+    { name: "X", icon: <RiTwitterXLine />, link: "https://x.com/ainetindia" },
     { name: "telegram", icon: <RiTelegramFill />, link: "#" },
-    { name: "pinterest", icon: <FaPinterest />, link: "#" },
-    { name: "whatsapp", icon: <RiWhatsappFill />, link: "#" },
+    { name: "pinterest", icon: <FaPinterest />, link: "https://in.pinterest.com/theainet/" },
+    { name: "whatsapp", icon: <RiWhatsappFill />, link: "https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" },
   ];
 
   useEffect(() => {
@@ -96,6 +96,7 @@ const Navbar = () => {
                 <a
                   key={social.name}
                   href={social.link}
+                  target="_blank"
                   className="text-xl lg:text-2xl hover:text-gray-500 transition-colors"
                   aria-label={social.name}
                 >

@@ -84,19 +84,23 @@ const TeacherResearch = () => {
         subheading={"Registration for 8th AINET International Conference 2025"}
       />
       <div className="max-w-full lg:max-w-[80%] mx-auto p-8 md:p-14 pt-[25px] h-auto relative">
-        <Breadcrumbs
-          links={[
-            { label: "Home", to: "/" },
-            { label: "AINET Projects", to: null },
-            { label: "Teacher Research", to: null },
-          ]}
-        />
+        <div className='pb-6 flex items-center justify-between'>
+          <Breadcrumbs
+            links={[
+              { label: "Home", to: "/" },
+              { label: "AINET Projects", to: null },
+              { label: "Women In AINET", to: null },
+            ]}
+          />
+          {/* teacherResearchLogo */}
+          <img
+            src="/teacherResearchLogo.png"
+            alt="teacherResearchLogo"
+            className="w-18 sm:w-24 md:w-25 lg:w-30"
+          />
+        </div>
         {/* teacherResearchLogo */}
-        <img
-          src="/teacherResearchLogo.png"
-          alt="teacherResearchLogo"
-          className=" relative ml-[60%] sm:ml-0 sm:absolute top-0 right-0"
-        />
+
         {/* main content */}
         <div className="w-full mt-8 h-auto flex md:justify-between md:items-start justify-center items-center gap-8 flex-col md:flex-row">
           {/* left */}

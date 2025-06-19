@@ -1,4 +1,3 @@
-
 import { FaChevronRight } from 'react-icons/fa';
 
 // Banner images (horizontal) - replace with your actual imports
@@ -92,13 +91,12 @@ export default function Gallery() {
             {bannerImages.map((image) => (
               <div
                 key={image.id}
-                className="flex-shrink-0 w-full h-[200px] md:h-[450px] object-cover mr-4 cursor-pointer transition-transform  rounded-lg"
-               
+                className="flex-shrink-0 w-[100vw] h-[200px] md:h-[450px] object-cover mr-0 cursor-pointer transition-transform rounded-lg"
               >
                 <img
                   src={image.src}
                   alt={image.alt}
-                  className="w-full h-full object-fill rounded-2xl "
+                  className="w-full h-full object-cover rounded-2xl"
                 />
               </div>
             ))}
@@ -106,8 +104,7 @@ export default function Gallery() {
             {bannerImages.map((image) => (
               <div
                 key={`duplicate-${image.id}`}
-                className="flex-shrink-0 w-full h-[400px] object-cover mr-4 cursor-pointer transition-transform  rounded-lg"
-              
+                className="flex-shrink-0 w-[100vw] h-[200px] md:h-[450px] object-cover mr-0 cursor-pointer transition-transform rounded-lg"
               >
                 <img
                   src={image.src}
@@ -162,7 +159,7 @@ export default function Gallery() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(calc(-100% * 8));
+            transform: translateX(calc(-100vw * ${bannerImages.length}));
           }
         }
 
@@ -176,7 +173,7 @@ export default function Gallery() {
         }
 
         .animate-scroll-slow {
-          animation: scroll-slow 32s steps(8, end) infinite;
+          animation: scroll-slow 32s steps(${bannerImages.length}, end) infinite;
         }
 
         .animate-scroll-fast {
