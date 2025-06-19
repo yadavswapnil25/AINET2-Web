@@ -80,7 +80,7 @@ export default function Gallery() {
     ],
     // Fifth row - 2 images
     [
-      { id: 11, src: "/gallery_img_5_1.png", alt: "Networking session" },
+      // { id: 11, src: "/gallery_img_5_1.png", alt: "Networking session" },
       { id: 12, src: "/gallery_img_5_2.png", alt: "Group photo outside" },
       { id: 12, src: "/gallery_img_5_3.png", alt: "Group photo outside" },
     ],

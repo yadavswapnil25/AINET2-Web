@@ -23,7 +23,7 @@ const Footer = () => {
                     <Link to="/" className="inline-block mb-4">
                         <img src="./footlogo.png" alt="AINET Logo" />
                     </Link>
-                    <p className="text-sm mb-2 text-center font-medium">Follow Us</p>
+                    <p className="text-sm mb-2 text-left font-medium">Follow Us</p>
                     <div className="flex flex-wrap gap-3 text-xl sm:text-2xl">
                         <a href="https://www.instagram.com/ainetindia/" target='_blankC' aria-label="Instagram" className="hover:text-white"><FaInstagram /></a>
                         <a href="https://www.facebook.com/ainetindia/" target='_blank' aria-label="Facebook" className="hover:text-white"><FaFacebookF /></a>
@@ -39,10 +39,10 @@ const Footer = () => {
                 <div className=' w-full  flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">AINET</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
-                        <li><a href="/about/#about" className="hover:underline">About Us</a></li>
-                        <li><a href="/publications/#publications" className="hover:underline">Publications</a></li>
+                        <li><a href="/about" className="hover:underline">About Us</a></li>
+                        <li><a href="/publications" className="hover:underline">Publications</a></li>
                         <li><a href="/BlogsSection1" className="hover:underline">AINET Adda</a></li>
-                        <li><a href="/resources/#resources" className="hover:underline">Resources</a></li>
+                        <li><a href="/resources" className="hover:underline">Resources</a></li>
                     </ul>
                 </div>
 

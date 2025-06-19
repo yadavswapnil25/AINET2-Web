@@ -32,97 +32,97 @@ const Resources = () => {
           <h2 className="text-2xl font-semibold">International ELE Journals</h2>
           <ul className="list-disc ml-5 text-2xl font-medium text-black leading-[40px] mt-5">
             <li>
-              <a href="http://www.tesl-ej.org" className="text-blue-600 hover:underline">
+              <a href="http://www.tesl-ej.org" target="_blank" className="text-blue-600 hover:underline">
                 Teaching English as a Second Language
               </a>
             </li>
             <li>
-              <a href="https://focusonelt.com/index.php/foe" className="text-blue-600 hover:underline">
+              <a href="https://focusonelt.com/index.php/foe" target="_blank" className="text-blue-600 hover:underline">
                 Focus on ELT Journal
               </a>
             </li>
             <li>
-              <a href="https://assumptionjournal.au.edu/index.php/newEnglishTeacher" className="text-blue-600 hover:underline">
+              <a href="https://assumptionjournal.au.edu/index.php/newEnglishTeacher" target="_blank" className="text-blue-600 hover:underline">
                 The New English Teacher
               </a>
             </li>
             <li>
-              <a href="http://www.tjtesol.org" className="text-blue-600 hover:underline">
+              <a href="http://www.tjtesol.org" target="_blank" className="text-blue-600 hover:underline">
                 Taiwan Journal of TESOL
               </a>
             </li>
             <li>
-              <a href="https://esw.byuh.edu/tesol/tesl" className="text-blue-600 hover:underline">
+              <a href="https://esw.byuh.edu/tesol/tesl" target="_blank" className="text-blue-600 hover:underline">
                 TESL Reporter
               </a>
             </li>
             <li>
-              <a href="https://www.jltl.com.tr/index.php/jltl" className="text-blue-600 hover:underline">
+              <a href="https://www.jltl.com.tr/index.php/jltl" target="_blank" className="text-blue-600 hover:underline">
                 Journal of Language Teaching and Learning
               </a>
             </li>
             <li>
-              <a href="https://cjlt.ca/index.php/cjlt/index" className="text-blue-600 hover:underline">
+              <a href="https://cjlt.ca/index.php/cjlt/index" target="_blank" className="text-blue-600 hover:underline">
                 Canadian Journal of Learning & Technology
               </a>
             </li>
             <li>
-              <a href="https://citejournal.org" className="text-blue-600 hover:underline">
+              <a href="https://citejournal.org" target="_blank" className="text-blue-600 hover:underline">
                 Contemporary Issues in Technology & Teacher Education
               </a>
             </li>
             <li>
-              <a href="http://journals.sfu.ca/ijepl/index.php/ijepl" className="text-blue-600 hover:underline">
+              <a href="http://journals.sfu.ca/ijepl/index.php/ijepl" target="_blank" className="text-blue-600 hover:underline">
                 International Journal of Education Policy and Leadership
               </a>
             </li>
             <li>
-              <a href="http://www.internationaljournalofspecialeducation.com/" className="text-blue-600 hover:underline">
+              <a href="http://www.internationaljournalofspecialeducation.com/" target="_blank" className="text-blue-600 hover:underline">
                 The International Journal of Special Education
               </a>
             </li>
             <li>
-              <a href="http://www.isetl.org/ijtlhe/" className="text-blue-600 hover:underline">
+              <a href="http://www.isetl.org/ijtlhe/" target="_blank" className="text-blue-600 hover:underline">
                 International Journal of Teaching and Learning in Higher Education
               </a>
             </li>
             <li>
-              <a href="http://www.iier.org.au/iier.html" className="text-blue-600 hover:underline">
+              <a href="http://www.iier.org.au/iier.html" target="_blank" className="text-blue-600 hover:underline">
                 Issues in educational Research
               </a>
             </li>
             <li>
-              <a href="https://tpre.ecu.edu/index.php/tpre" className="text-blue-600 hover:underline">
+              <a href="https://tpre.ecu.edu/index.php/tpre" target="_blank" className="text-blue-600 hover:underline">
                 Theory and Practice in Rural Education
               </a>
             </li>
             <li>
-              <a href="http://www.joci.ecu.edu/index.php/JoCI" className="text-blue-600 hover:underline">
+              <a href="http://www.joci.ecu.edu/index.php/JoCI" target="_blank" className="text-blue-600 hover:underline">
                 Journal of Curriculum and Instruction (up to 2019)
               </a>
             </li>
             <li>
-              <a href="http://www.ncolr.org/jiol/" className="text-blue-600 hover:underline">
+              <a href="http://www.ncolr.org/jiol/" target="_blank" className="text-blue-600 hover:underline">
                 Journal of Interactive Online Learning
               </a>
             </li>
             <li>
-              <a href="http://www.jrre.psu.edu/" className="text-blue-600 hover:underline">
+              <a href="http://www.jrre.psu.edu/" target="_blank" className="text-blue-600 hover:underline">
                 Journal of Research in Rural Education
               </a>
             </li>
             <li>
-              <a href="http://ojs.uwindsor.ca/ojs/leddy/index.php/JTL" className="text-blue-600 hover:underline">
+              <a href="http://ojs.uwindsor.ca/ojs/leddy/index.php/JTL" target="_blank" className="text-blue-600 hover:underline">
                 Journal of Teaching and Learning
               </a>
             </li>
             <li>
-              <a href="https://revistas.unal.edu.co/index.php/profile" className="text-blue-600 hover:underline">
+              <a href="https://revistas.unal.edu.co/index.php/profile" target="_blank" className="text-blue-600 hover:underline">
                 PROFILE: Issues in Teachers' Professional Development
               </a>
             </li>
             <li>
-              <a href="http://www.ascd.org/el/" className="text-blue-600 hover:underline">
+              <a href="http://www.ascd.org/el/" target="_blank" className="text-blue-600 hover:underline">
                 Educational Leadership Magazine
               </a>
             </li>

@@ -4,8 +4,8 @@ import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
 import bg3 from "/bg3.png";
-import newh1 from "/newh1.jpg";
-import newh2 from "/newh2.jpg";
+import newh1 from "/newh11.jpg";
+import newh2 from "/newh22.jpg";
 
 
 import home_banner_2 from "/home_banner_2.png";
