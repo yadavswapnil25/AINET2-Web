@@ -37,7 +37,8 @@ const Decentring = lazy(() => import("./Pages/Decentring"));
 const Resources = lazy(() => import("./Pages/Resources"));
 const AINETConnect = lazy(() => import("./Pages/AINETConnect"));
 const Profile = lazy(() => import("./Pages/Profile"));
-
+const PageUnderConstruct = lazy(() => import("./Pages/PageUnderConstruct"));
+const AinetOccasionalPapersList = lazy(() => import("./Components/specific/Publication/AinetOccasionalPapersList"));
 
 const App = () => {
   return (
@@ -77,6 +78,8 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/news/newsDetail" element={<NewsDetails />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
+          <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
         </Routes>
       </Suspense>
 
