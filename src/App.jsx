@@ -75,7 +75,7 @@ const App = () => {
           <Route path="/Decentring" element={<Decentring />} />
           <Route path="/AINETConnect" element={<AINETConnect />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/news/:title" element={<NewsDetails />} />
+          <Route path="/news/newsDetail" element={<NewsDetails />} />
           <Route path="/resources" element={<Resources />} />
         </Routes>
       </Suspense>

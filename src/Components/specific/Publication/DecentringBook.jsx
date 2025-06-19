@@ -37,7 +37,7 @@ export default function BookSection({
                 <React.Fragment key={idx}>
                   {idx > 0 && <span className="text-[20px] font-bold">&</span>}
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden">
+                    <div className="w-8 h-8 rounded-full bg-black overflow-hidden">
                       <img src={editor.img} alt={editor.name} />
                     </div>
                     <span className="text-[20px] font-bold">{editor.name}</span>

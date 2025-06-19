@@ -1,41 +1,44 @@
 import { useState } from 'react';
 import { FaEye, FaChevronRight } from 'react-icons/fa';
 import { BsYoutube } from 'react-icons/bs';
+import ScrollToTop from '../../ScrollToTop';
+
 
 export default function AinetNews() {
   const [newsItems] = useState([
     {
       id: 1,
-      image: "/news.png",
+      image: "/TOI.png",
       location: "MUMBAI",
       title: "'TH AINET INTERNATIONAL CONFERENCE",
       headline: "Tech creating rift among teachers",
       content: "Nagpur: Division and discrimination have cropped up between teachers who are tech-savvy and those who aren't. This was endorsed in the open debate during the concluding day of the 3rd All India Network of English Teachers (AINET) International Conference on Saturday."
     },
-    {
-      id: 2,
-      image: "/news.png",
-      location: "MUMBAI",
-      title: "'TH AINET INTERNATIONAL CONFERENCE",
-      headline: "Tech creating rift among teachers",
-      content: "Nagpur: Division and discrimination have cropped up between teachers who are tech-savvy and those who aren't. This was endorsed in the open debate during the concluding day of the 3rd All India Network of English Teachers (AINET) International Conference on Saturday."
-    }
+    // {
+    //   id: 2,
+    //   image: "/news.png",
+    //   location: "MUMBAI",
+    //   title: "'TH AINET INTERNATIONAL CONFERENCE",
+    //   headline: "Tech creating rift among teachers",
+    //   content: "Nagpur: Division and discrimination have cropped up between teachers who are tech-savvy and those who aren't. This was endorsed in the open debate during the concluding day of the 3rd All India Network of English Teachers (AINET) International Conference on Saturday."
+    // }
   ]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
+      <ScrollToTop />
       <div className="flex flex-col md:flex-row justify-between  mb-6">
-      <h1 className="text-2xl md:text-4xl font-semibold mb-[18px] text-center">AINET In News</h1>
-        <div className="flex items-center text-[#A6AEBF] cursor-pointer text-lg justify-end">
+      <h1 className="text-2xl md:text-4xl font-semibold mb-[18px] text-left">AINET In News</h1>
+        {/* <div className="flex items-center text-[#A6AEBF] cursor-pointer text-lg justify-end">
           <span className="mr-1" onClick={() => window.location.href = "/news"}>View All</span>
           <FaChevronRight className="text-sm" />
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {newsItems.map((item) => (
-          <div key={item.id} className="border border-[#A6AEBF] rounded-[20px] overflow-hidden shadow-sm w-full">
-            <div className="relative">
+          <div key={item.id} className="border border-[#A6AEBF] rounded-[20px] overflow-hidden shadow-sm w-full" onClick={() => window.location.href = "/news/newsDetail"}>
+            <div className="relative" >
               <img 
                 src={item.image} 
                 alt="Conference" 

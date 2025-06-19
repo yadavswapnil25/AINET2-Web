@@ -77,7 +77,7 @@ export default function NewsletterSignup() {
                   <input
                     type="text"
                     name="whatsapp"
-                    placeholder="Enter your WhatsApp Number"
+                    placeholder="Enter your WhatsApp No."
                     className="w-full h-[50px] px-4 py-3 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder:text-[#0102038C] placeholder:text-[18px] placeholder:font-semibold placeholder:font-Poppins"
                     value={formData.whatsapp}
                     onChange={handleChange}
