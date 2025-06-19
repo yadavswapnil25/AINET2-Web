@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Breadcrumbs from "../../shared/Breadcrumbs";
+import occasionalPaper1 from "../../../assets/pdf/OP1.pdf";
+import occasionalPaper2 from "../../../assets/pdf/OP2.pdf";
 
 export default function AinetOccasionalPapersList() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -19,6 +21,20 @@ export default function AinetOccasionalPapersList() {
     };
   }, [searchRef]);
 
+  const handleDownload = (pdf) => {
+    // Create an anchor element
+    const link = document.createElement('a');
+    link.href = pdf;
+    // Set the download attribute to force download instead of navigation
+    link.setAttribute('download', pdf.split('/').pop());
+    // Append to the document
+    document.body.appendChild(link);
+    // Trigger the download
+    link.click();
+    // Clean up
+    document.body.removeChild(link);
+  };
+
   const papers = [
     {
       id: 1,
@@ -33,6 +49,7 @@ export default function AinetOccasionalPapersList() {
         "Teacher Motivation: A Conceptual Overview Dr. Krishna Dixit, Ambedkar University Delhi, India AINET Association of English Teachers",
       image: "/ainetPaper.png",
       alt: "AINET Occasional Papers No. 2",
+      pdf: occasionalPaper2,
     },
     {
       id: 2,
@@ -47,11 +64,12 @@ export default function AinetOccasionalPapersList() {
         "Initial English Teacher Education and English Curriculum Goals: Bridging the Gap Dr. Martin Wedell, School of Education, University of Leeds, UK AINET Association of English Teachers",
       image: "/ainetPaper.png",
       alt: "AINET Occasional Papers No. 1",
+      pdf: occasionalPaper1,
     },
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className=" w-full h-auto">
       <Breadcrumbs
         links={[
           { label: "Home", to: "/" },
@@ -139,7 +157,7 @@ export default function AinetOccasionalPapersList() {
 
               <p className="mb-4 text-gray-800">{paper.description}</p>
 
-              <button className="bg-yellow-50 hover:bg-yellow-100 text-gray-800 py-2 px-6 rounded-full border border-yellow-200 transition duration-200">
+              <button className="bg-yellow-50 hover:bg-yellow-100 text-gray-800 py-2 px-6 rounded-full border border-yellow-200 transition duration-200" onClick={()=>handleDownload(paper.pdf)}>
                 Download PDF
               </button>
             </div>
