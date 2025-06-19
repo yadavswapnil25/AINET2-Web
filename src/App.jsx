@@ -5,6 +5,7 @@ import Navbar from "./Components/shared/Navbar";
 import ScrollToTop from "./Components/ScrollToTop";
 import AboutNews from "./Pages/AboutNews";
 import Loader from "./Components/shared/Loader";
+import Login from "./Components/shared/Login";
 
 
 const Home = lazy(() => import("./Pages/Home"));
@@ -80,6 +81,7 @@ const App = () => {
           <Route path="/resources" element={<Resources />} />
           <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
           <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Suspense>
 
