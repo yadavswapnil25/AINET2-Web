@@ -19,6 +19,7 @@ import Gallery from "../Components/specific/Home/Gallery";
 import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
 import Archives from "../Components/specific/Home/Archives";
 import MembershipPlans from "../Components/shared/MembershipPlans"
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const eventsData = [
@@ -78,9 +79,9 @@ const Home = () => {
               </p>
 
               <div className="flex flex-col md:flex-row gap-4 w-full">
-                <button className="uppercase bg-[#FFF8DE] rounded-4xl p-4 w-full md:w-[305px] font-xl font-bold btnshadow cursor-pointer">
+                <Link to="/login" className="uppercase bg-[#FFF8DE] text-center rounded-4xl p-4 w-full md:w-[305px] font-xl font-bold btnshadow cursor-pointer">
                   Join The Community
-                </button>
+                </Link>
                 <button className="uppercase bg-[#D0E8C5] rounded-4xl p-4 w-full md:w-[175px] font-xl font-bold btnshadow cursor-pointer"
                 onClick={() => window.location.href = '/about'}
                 >
