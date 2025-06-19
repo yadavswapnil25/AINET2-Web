@@ -7,41 +7,41 @@ const Archives = () => {
   const events = [
     {
       category: "Conference",
-      title: {
-        text: "8th AINET Conference 2025 (Online)",
-        link: "/conferences/ainet-2025-online"
+      description: {
+        text: "7th AINET Conference, 2024",
+        link: "https://store.pothi.com/book/krishna-dixit-english-language-education-global-south-innovation-inclusion-empowerment/"
       },
       description1: {
-        text: "7th AINET Conference 2024 (Guwahati)",
-        link: "/conferences/ainet-2024-guwahati"
+        text: "6th AINET Conference, 2022",
+        link: "https://store.pothi.com/book/krishna-dixit-changing-learners-changing-teachers-ele-new-world/"
       },
       description2: {
-        text: "6th AINET Conference 2022 (Online)",
-        link: "/conferences/ainet-2022-online"
+        text: "5th AINET Conference, 2020",
+        link: "https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/"
       },
       description3: {
-        text: "Other Past Conferences",
-        link: "/conferences/past-conferences"
+        text: "3rd AINET Conference, 2016",
+        link: "https://store.pothi.com/book/krishna-dixit-exploring-learners-and-learning-english/ "
       }
     },
     
     {
       category: "Other Events",
-      title: {
-        text: "Decentring ELT Webinar, July 2024",
-        link: "/other/ainet-2022"
+      description: {
+        text: "Teachers' Muse, Vol. 3, 2024",
+        link: "https://store.pothi.com/book/amol-padwad-teachers-muse-vol-3/"
       },
       description1: {
-        text: "Decentring ELT Webinar, July 2024",
-        link: "/other/lorem-ipsum-1"
+        text: "Decentring ELT, 2023",
+        link: "https://www.hornby-trust.org.uk/wp-content/uploads/2024/11/Padwad-Smith-2023-compressed_1.pdf"
       },
       description2: {
-        text: "2nd HELE India Conference, Dec 2023",
-        link: "/other/lorem-ipsum-2"
+        text: "Connecting Eight Effective Classrooms, 2021",
+        link: "https://store.pothi.com/book/dipika-gode-connecting-eight-effective-elt-classrooms-contexts-challenges-and-solutions/"
       },
       description3: {
-        text: "Other Past Events",
-        link: "/other/lorem-ipsum-2"
+        text: "Research in ELE Directory, 2014",
+        link: "https://store.pothi.com/book/amol-padwad-research-english-language-education-indian-universities-directory/"
       },
     },
   ];
@@ -73,13 +73,13 @@ const Archives = () => {
   const handleLinkClick = (link) => {
     // For demo purposes, just log the link. In real app, use router navigation
     console.log('Navigating to:', link);
-    // window.location.href = link; // For direct navigation
+    window.location.href = link; // For direct navigation
     // or use your router: navigate(link);
   };
 
   return (
     <div className="w-full p-2.5 bg-[#D0E8C5] rounded-3xl flex flex-col md:flex-row gap-4 md:gap-9 mt-[40px] relative">
-      <div className="h-[80px] md:h-[180px] bg-[#FFF8DE] w-full md:min-w-[130px] md:w-auto rounded-tl-[20px] rounded-tr-[20px] md:rounded-tr-none md:rounded-bl-[20px] grid place-items-center underline text-lg font-semibold">
+      <div className="h-[80px] md:h-[180px] bg-[#FFF8DE] w-full md:min-w-[130px] md:w-auto rounded-tl-[20px] rounded-tr-[20px] md:rounded-tr-none md:rounded-bl-[20px] flex items-center md:justify-center justify-start pl-4 md:pl-0 underline text-lg font-semibold">
         ARCHIVE
       </div>
       
@@ -108,9 +108,9 @@ const Archives = () => {
             <h3 className="text-lg font-semibold">{event.category}</h3>
             <p 
               className="cursor-pointer"
-              onClick={() => handleLinkClick(event.title.link)}
+              onClick={() => handleLinkClick(event.description.link)}
             >
-              {event.title.text}
+              {event.description.text}
             </p> 
             <p 
               className="cursor-pointer"
