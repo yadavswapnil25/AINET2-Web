@@ -45,12 +45,12 @@ const Webinar = () => {
       title:
         "PERSONAL FINANCE CONSULTANTS BY KARINA BUYS & SARAH HUDSON ON 16TH MARCH 2023",
     },
-    {
-      id: 2,
-      image: "/archives4.png",
-      title:
-        "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
-    },
+    // {
+    //   id: 2,
+    //   image: "/archives4.png",
+    //   title:
+    //     "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
+    // },
   ];
 
   return (
@@ -213,10 +213,10 @@ const Webinar = () => {
         <div className="mb-4">
           <div className="flex items-start">
             <span className="font-medium min-w-[110px]">Topic : </span>
-            <span className="text-gray-800">
+            {/* <span className="text-gray-800">
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry.
-            </span>
+            </span> */}
           </div>
         </div>
 
@@ -232,14 +232,14 @@ const Webinar = () => {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-[25px] font-bold">Previous Webinar</h2>
             <Link
-              to="/gallery"
+              to="/archives-conference"
               className="text-gray-400 hover:text-blue-500 flex items-center text-lg"
             >
               View All <FaChevronRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 mb-5">
+          <div className="flex flex-wrap justify-start items-start gap-6 mb-5">
             {previousWebinars.map((webinar) => (
               <div
                 key={webinar.id}

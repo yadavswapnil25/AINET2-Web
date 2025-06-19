@@ -40,17 +40,17 @@ export default function Archives() {
             "PERSONAL FINANCE CONSULTANTS BY KARINA BUYS & SARAH HUDSON ON 16TH MARCH 2023",
           date: "Mar 16",
         },
-        {
-          id: 2,
-          image: "/archives4.png",
-          title:
-            "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
-          date: "Mar 24",
-        },
+        // {
+        //   id: 2,
+        //   image: "/archives4.png",
+        //   title:
+        //     "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
+        //   date: "Mar 24",
+        // },
       ],
     },
     {
-      title: "FO Lectures",
+      title: "FD Lectures",
       viewAll: "View All",
       navigate: "/archives-conference",
       items: [
@@ -60,13 +60,13 @@ export default function Archives() {
           title: "FREE ENGLISH LECTURE BY LORIEM IPSUM ON 22ND MAY, 2024",
           date: "May 22",
         },
-        {
-          id: 2,
-          image: "/archives6.png",
-          title:
-            "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
-          date: "May 24",
-        },
+        // {
+        //   id: 2,
+        //   image: "/archives6.png",
+        //   title:
+        //     "LOREM IPSUM IS SIMPLY DUMMY TEXT OF THE PRINTING AND TYPESETTING INDUSTRY",
+        //   date: "May 24",
+        // },
       ],
     },
     {

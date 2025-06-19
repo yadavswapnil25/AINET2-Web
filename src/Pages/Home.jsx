@@ -26,16 +26,19 @@ const Home = () => {
       title: "AINET Foundation Week Programmes.",
       location: "Online",
       date: "5 - 12 September 2025",
+      link: "/conference"
     },
     {
       title: "Rural ELT Conference.",
       location: "Maharashtra",
       date: "October 2025",
+      link: "/webinar"
     },
     {
       title: "Webinar on HELE.",
       location: "Online",
       date: "TBA",
+      link: "/fdlecture"
     },
   ];
   return (
@@ -159,7 +162,7 @@ const Home = () => {
                   {event.date}
                 </p>
 
-                <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer">
+                <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer" onClick={()=>window.location.href=event.link}>
                   <img src="./arrowright.svg" alt="arrowright" />
                 </button>
               </div>
