@@ -10,7 +10,7 @@ const About = () => {
     <>
       <Highlight heading={"HIGHLIGHTS"} subheading={"Registration for 8th AINET International Conference 2025"} />
 
-      <div className='w-full h-auto p-4 md:p-[34px] pt-0 md:pt-[46px]'>
+      <div className='w-full h-auto p-4 md:p-[34px] pt-0 md:pt-[46px]' id="about">
         {/* Section 1 */}
         <AboutDetails />
       </div>
