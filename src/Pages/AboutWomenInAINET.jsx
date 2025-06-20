@@ -39,7 +39,7 @@ const AboutWomenInAINET = ({ data }) => {
         <>
             <Highlight
                 heading={"HIGHLIGHTS"}
-                subheading={"Registration for 8th AINET International Conference 2025"}
+                subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
             />
 
 
