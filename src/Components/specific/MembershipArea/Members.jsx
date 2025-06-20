@@ -4,7 +4,7 @@ const Members = () => {
     return (
         <>
             <>
-                <Highlight heading={"HIGHLIGHTS"} subheading={"Registration for 8th AINET International Conference 2025"} />
+                <Highlight heading={"HIGHLIGHTS"} subheading={"9th AINET International Conference 2026 - To Be Announced SOON"} />
                 <div className="w-full mx-40 my-10">
                     <div className="flex items-center text-[20px] font-medium ">
                         <Link to="/" className="text-black hover:underline">Home</Link>
