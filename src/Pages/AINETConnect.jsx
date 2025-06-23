@@ -68,7 +68,7 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
         <>
             <Highlight
                 heading={"HIGHLIGHTS"}
-                subheading={"Registration for 8th AINET International Conference 2025"}
+                subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
             />
 
             <div className="min-h-screen px-4 sm:px-6">
