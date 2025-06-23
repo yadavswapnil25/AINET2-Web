@@ -75,7 +75,7 @@ export default function MembershipFormForIndividualOverseas() {
     };
 
     return (
-        <div className="max-w-5xl mx-auto p-6 relative bg-white">
+        <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
             {/* Close button */}
             <button className="absolute top-2 right-2 bg-black rounded-full p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
