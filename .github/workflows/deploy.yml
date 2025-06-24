@@ -32,3 +32,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "build/**"
           target: "/var/www/ainet2-web-build/"
+          strip_components: 0
+          overwrite: true
+          debug: true
