@@ -24,15 +24,15 @@ export default function MembershipPlans() {
             price: "500.00",
             currency: "₹",
             duration: "1",
-            type: "individual",
+            type: "Individual",
             discountPercentage: 40
         },
         {
-            title: "Long Term",
+            title: "LongTerm",
             price: "1200.00",
             currency: "₹",
             duration: "3",
-            type: "individual",
+            type: "Individual",
             discountPercentage: 50
         },
         {
@@ -40,7 +40,7 @@ export default function MembershipPlans() {
             price: "20.00 (Rs. 1500)",
             currency: "$",
             duration: "1",
-            type: "individual",
+            type: "Individual",
             discountPercentage: 25
         }
     ];
@@ -52,15 +52,15 @@ export default function MembershipPlans() {
             currency: "₹",
             duration: "1",
             discountPercentage: 40,
-            type: "institutional"
+            type: "Institutional"
         },
         {
-            title: "Long Term",
+            title: "LongTerm",
             price: "2500.00",
             currency: "₹",
             duration: "3",
             discountPercentage: 35,
-            type: "institutional"
+            type: "Institutional"
         },
         {
             title: "Overseas",
@@ -68,12 +68,12 @@ export default function MembershipPlans() {
             currency: "$",
             duration: "1",
             discountPercentage: 55,
-            type: "institutional"
+            type: "Institutional"
         }
     ];
 
     const plansToShow = planType === 'individual' ? individualPlans : institutionalPlans;
-    console.log("PlanToSHow>>", plansToShow)
+ 
 
     const handlePayNow = (plan) => {
         console.log("plan", plan)
