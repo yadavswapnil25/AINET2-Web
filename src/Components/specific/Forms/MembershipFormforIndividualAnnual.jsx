@@ -1,46 +1,170 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { baseUrl } from '../../../utils/constant';
+import { initiatePayment } from '../../../utils/utility';
+import PaymentSuccessModal from '../../PaymentIntegration/Popup';
+import Loader from '../../../Components/shared/Loader';
 
-// Simulated toast functions for demo purposes
+// Simulated toast functions for demo purposes with ID support
 const toast = {
     success: (message) => {
         const toastDiv = document.createElement('div');
         toastDiv.className = 'toast toast-success';
         toastDiv.textContent = message;
         document.body.appendChild(toastDiv);
-        setTimeout(() => document.body.removeChild(toastDiv), 3000);
+        setTimeout(() => {
+            if (document.body.contains(toastDiv)) {
+                document.body.removeChild(toastDiv);
+            }
+        }, 3000);
     },
     error: (message) => {
         const toastDiv = document.createElement('div');
         toastDiv.className = 'toast toast-error';
         toastDiv.textContent = message;
         document.body.appendChild(toastDiv);
-        setTimeout(() => document.body.removeChild(toastDiv), 4000);
+        setTimeout(() => {
+            if (document.body.contains(toastDiv)) {
+                document.body.removeChild(toastDiv);
+            }
+        }, 4000);
     },
     warning: (message) => {
         const toastDiv = document.createElement('div');
         toastDiv.className = 'toast toast-warning';
         toastDiv.textContent = message;
         document.body.appendChild(toastDiv);
-        setTimeout(() => document.body.removeChild(toastDiv), 3000);
+        setTimeout(() => {
+            if (document.body.contains(toastDiv)) {
+                document.body.removeChild(toastDiv);
+            }
+        }, 3000);
     },
     info: (message) => {
         const toastDiv = document.createElement('div');
         toastDiv.className = 'toast toast-info';
         toastDiv.textContent = message;
         document.body.appendChild(toastDiv);
-        setTimeout(() => document.body.removeChild(toastDiv), 3000);
+        setTimeout(() => {
+            if (document.body.contains(toastDiv)) {
+                document.body.removeChild(toastDiv);
+            }
+        }, 3000);
+    },
+    loading: (message) => {
+        const toastId = 'loading-toast-' + Date.now();
+        const toastDiv = document.createElement('div');
+        toastDiv.className = 'toast toast-loading';
+        toastDiv.id = toastId;
+        toastDiv.innerHTML = `
+            <div class="flex items-center">
+                <div class="loading-spinner"></div>
+                <span class="ml-2">${message}</span>
+            </div>
+        `;
+        document.body.appendChild(toastDiv);
+        return toastId;
+    },
+    dismiss: (toastId) => {
+        const toastDiv = document.getElementById(toastId);
+        if (toastDiv && document.body.contains(toastDiv)) {
+            document.body.removeChild(toastDiv);
+        }
     }
 };
+
+// Multi-select dropdown component
+const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const handleToggle = (value) => {
+        const newSelected = selected.includes(value)
+            ? selected.filter(item => item !== value)
+            : [...selected, value];
+        onChange(newSelected);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <div className="relative" ref={dropdownRef}>
+            <div
+                className="w-full p-2 bg-[#C5D3E8] rounded cursor-pointer border border-gray-300 min-h-[40px] flex items-center justify-between"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <div className="flex flex-wrap gap-1">
+                    {selected.length > 0 ? (
+                        selected.map((item, index) => (
+                            <span
+                                key={index}
+                                className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                            >
+                                {item}
+                            </span>
+                        ))
+                    ) : (
+                        <span className="text-gray-500">{placeholder}</span>
+                    )}
+                </div>
+                <svg
+                    className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            {isOpen && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {options.map((option, index) => (
+                        <div
+                            key={index}
+                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selected.includes(option) ? 'bg-blue-50 text-blue-600' : ''
+                                }`}
+                            onClick={() => handleToggle(option)}
+                        >
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    checked={selected.includes(option)}
+                                    readOnly
+                                    className="mr-2"
+                                />
+                                {option}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+
 
 export default function MembershipFormforIndividualAnnual() {
     const location = useLocation();
     const navigate = useNavigate();
-    console.log("Location state:", location?.state);
     const plan = location?.state;
-    console.log("plan",plan)
+    const [isPaymentDone, setIsPaymentDone] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    console.log("plan", plan)
 
 
     const [formData, setFormData] = useState({
@@ -58,13 +182,11 @@ export default function MembershipFormforIndividualAnnual() {
         qualification: [],
         area_of_work: [],
         password: "",
-        agree: true,
+        agree: false,
         membership_type: plan?.type,
-        membership_plan: "Annual",
+        membership_plan: plan?.title,
         pin: "",
         password_confirmation: "",
-
-
     });
 
     // Added state for states and districts data
@@ -73,11 +195,31 @@ export default function MembershipFormforIndividualAnnual() {
     const [loading, setLoading] = useState(true);
     const [loadingDistricts, setLoadingDistricts] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isEmailValid, setIsEmailValid] = useState(true);
+
+    // Options for multi-select dropdowns
+    const qualificationOptions = [
+        "B.Ed",
+        "D.Ed",
+        "M.Ed",
+        "CELTA/DELTA/TTS",
+        "PGCTE",
+        "PGDTE"
+    ];
+
+    const areaOfWorkOptions = [
+        "Primary School",
+        "Secondary School",
+        "Junior College (+2)",
+        "Senior College/University",
+        "Teacher Education",
+        "Other"
+    ];
 
     // Fetch states data when component mounts
     useEffect(() => {
         setLoading(true);
-        toast.info("Loading states data...");
+
 
         fetch('https://secure.geonames.org/searchJSON?country=IN&featureCode=ADM1&username=paresh09')
             .then(response => {
@@ -88,13 +230,11 @@ export default function MembershipFormforIndividualAnnual() {
             })
             .then(data => {
                 if (data.geonames && Array.isArray(data.geonames)) {
-                    // Sort states alphabetically
                     const sortedStates = data.geonames.sort((a, b) =>
                         a.name.localeCompare(b.name)
                     );
                     setStates(sortedStates);
                     setLoading(false);
-                    toast.success("States loaded successfully!");
                 } else {
                     throw new Error('Invalid data format');
                 }
@@ -102,13 +242,7 @@ export default function MembershipFormforIndividualAnnual() {
             .catch(error => {
                 console.error('Error fetching states data:', error);
                 setLoading(false);
-                toast.error("Failed to load states. Using fallback data.");
-                // Fallback states
-                setStates([
-                    { geonameId: '1', name: 'Maharashtra' },
-                    { geonameId: '2', name: 'Karnataka' },
-                    { geonameId: '3', name: 'Tamil Nadu' },
-                ]);
+
             });
     }, []);
 
@@ -118,7 +252,6 @@ export default function MembershipFormforIndividualAnnual() {
 
         setLoadingDistricts(true);
         setDistricts([]);
-        toast.info("Loading districts...");
 
         fetch(`https://secure.geonames.org/childrenJSON?geonameId=${stateId}&featureCode=ADM2&username=paresh09`)
             .then(response => {
@@ -129,13 +262,11 @@ export default function MembershipFormforIndividualAnnual() {
             })
             .then(data => {
                 if (data.geonames && Array.isArray(data.geonames)) {
-                    // Sort districts alphabetically
                     const sortedDistricts = data.geonames.sort((a, b) =>
                         a.name.localeCompare(b.name)
                     );
                     setDistricts(sortedDistricts);
                     setLoadingDistricts(false);
-                    toast.success("Districts loaded successfully!");
                 } else {
                     throw new Error('Invalid data format');
                 }
@@ -156,20 +287,6 @@ export default function MembershipFormforIndividualAnnual() {
                     ...prev,
                     [name]: checked
                 }));
-            } else {
-                const fieldName = name.split('-')[0];
-
-                if (checked) {
-                    setFormData(prev => ({
-                        ...prev,
-                        [fieldName]: [...prev[fieldName], value]
-                    }));
-                } else {
-                    setFormData(prev => ({
-                        ...prev,
-                        [fieldName]: prev[fieldName].filter(item => item !== value)
-                    }));
-                }
             }
         } else if (name.includes('.')) {
             const [parent, child] = name.split('.');
@@ -188,18 +305,24 @@ export default function MembershipFormforIndividualAnnual() {
         }
     };
 
+    // Handle multi-select changes
+    const handleMultiSelectChange = (name, selectedValues) => {
+        setFormData(prev => ({
+            ...prev,
+            [name]: selectedValues
+        }));
+    };
+
     // Handle state change to update districts
     const handleStateChange = (e) => {
         const selectedStateIndex = e.target.selectedIndex;
-        if (selectedStateIndex > 0) { // Skip the placeholder option
+        if (selectedStateIndex > 0) {
             const selectedState = states[selectedStateIndex - 1];
             setFormData(prev => ({
                 ...prev,
                 state: selectedState.name,
-                district: '' // Reset district when state changes
+                district: ''
             }));
-
-            // Fetch districts for the selected state
             fetchDistricts(selectedState.geonameId);
         } else {
             setFormData(prev => ({
@@ -214,7 +337,7 @@ export default function MembershipFormforIndividualAnnual() {
     // Handle district change
     const handleDistrictChange = (e) => {
         const selectedDistrictIndex = e.target.selectedIndex;
-        if (selectedDistrictIndex > 0) { // Skip the placeholder option
+        if (selectedDistrictIndex > 0) {
             const selectedDistrict = districts[selectedDistrictIndex - 1];
             setFormData(prev => ({
                 ...prev,
@@ -228,9 +351,32 @@ export default function MembershipFormforIndividualAnnual() {
         }
     };
 
+    // Check if form is valid for submit button
+    const isFormValid = () => {
+        const requiredFields = [
+            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'whatsapp_no', 'email', 'address', 'state', 'district',
+            'teaching_exp', 'password', 'password_confirmation', 'pin'
+        ];
+
+        for (let field of requiredFields) {
+            if (!formData[field] || formData[field].toString().trim() === '') {
+                return false;
+            }
+        }
+
+        if (formData.qualification.length === 0) return false;
+        if (formData.area_of_work.length === 0) return false;
+        if (!formData.agree) return false;
+        if (formData.password !== formData.password_confirmation) return false;
+
+        if (!isEmailValid) return false;
+
+        return true;
+    };
+
     // Form validation function
     const validateForm = () => {
-        // Check required fields
         const requiredFields = [
             'first_name', 'last_name', 'gender', 'dob', 'mobile',
             'whatsapp_no', 'email', 'address', 'state', 'district',
@@ -244,19 +390,16 @@ export default function MembershipFormforIndividualAnnual() {
             }
         }
 
-        // Check if at least one qualification is selected
         if (formData.qualification.length === 0) {
             toast.error("Please select at least one qualification.");
             return false;
         }
 
-        // Check if at least one area of work is selected
         if (formData.area_of_work.length === 0) {
             toast.error("Please select at least one area of work.");
             return false;
         }
 
-        // Password validation
         if (formData.password !== formData.password_confirmation) {
             toast.error("Passwords do not match!");
             return false;
@@ -267,28 +410,24 @@ export default function MembershipFormforIndividualAnnual() {
             return false;
         }
 
-        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
             toast.error("Please enter a valid email address.");
             return false;
         }
 
-        // Mobile number validation (assuming 10 digits)
         const mobileRegex = /^[0-9]{10}$/;
         if (!mobileRegex.test(formData.mobile)) {
             toast.error("Please enter a valid 10-digit mobile number.");
             return false;
         }
 
-        // PIN code validation (assuming 6 digits)
         const pinRegex = /^[0-9]{6}$/;
         if (!pinRegex.test(formData.pin)) {
             toast.error("Please enter a valid 6-digit PIN code.");
             return false;
         }
 
-        // Terms and conditions
         if (!formData.agree) {
             toast.error("Please agree to the terms and conditions.");
             return false;
@@ -297,56 +436,115 @@ export default function MembershipFormforIndividualAnnual() {
         return true;
     };
 
+    console.log("location", location.state)
+
+    const checkEmailExists = async () => {
+        const email = formData.email;
+
+        if (!email) return; // skip if empty
+
+        try {
+            const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
+
+            if (!res.ok) {
+                console.error("Failed to check email");
+                return;
+            }
+
+            const data = await res.json();
+
+            if (!data.status || data.status === false) {
+                setIsEmailValid(false); // ❌ email not valid
+                toast.warning("❌ Email already exists. Please use a different email.");
+            } else {
+                setIsEmailValid(true); // ✅ email valid
+                // Optional success message
+            }
+        } catch (error) {
+            console.error("Error checking email:", error);
+        }
+    };
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
-
-        // Validate form before submission
         if (!validateForm()) {
             return;
         }
 
         setIsSubmitting(true);
-        toast.info("Submitting your application...");
-
 
 
         try {
-            const res = await fetch("https://api.theainet.net/api/v1/client/membership-signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(formData)
+            const paymentResponse = await initiatePayment({
+                amount: plan?.price, // in INR
+                name: `${formData.first_name} ${formData.last_name}`,
+                email: formData.email,
+                contact: formData.mobile,
             });
 
-            console.log("res???", res)
+
+            toast.success("✅ Payment Successful");
+
+
+            // Now call your API
+            setLoading(true);
+            const res = await fetch(`${baseUrl}client/membership-signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
 
             if (res.ok) {
                 const responseData = await res.json();
-                toast.success("🎉 Application submitted successfully! Welcome to AINET!");
-                console.log("Success response:", responseData);
+                setIsPaymentDone(true);
+                setShowSuccessModal(true);
+                setFormData({
+                    first_name: "",
+                    last_name: "",
+                    gender: "",
+                    dob: "",
+                    mobile: "",
+                    whatsapp_no: "",
+                    email: "",
+                    address: "",
+                    state: "",
+                    district: "",
+                    teaching_exp: 0,
+                    qualification: [],
+                    area_of_work: [],
+                    password: "",
+                    agree: false,
+                    membership_type: "",
+                    membership_plan: "",
+                    pin: "",
+                    password_confirmation: "",
+                })
+
             } else {
                 const errorData = await res.json();
-                toast.error(`Submission failed: ${errorData.message || 'Please try again.'}`);
+                toast.error(`${errorData.message || "Please try again."}`);
                 console.error("Error response:", errorData);
             }
+
         } catch (error) {
-            console.error("Network error:", error);
-            toast.error("Network error. Please check your connection and try again.");
+            toast.dismiss(loadingToastId);
+            toast.error(`❌ ${error}`);
+            console.error("Payment or API Error:", error);
         } finally {
             setIsSubmitting(false);
+            setLoading(false);
         }
     };
 
-
-    
-    useEffect(()=>{
+    useEffect(() => {
         if (!location.state) navigate("/")
-    },[])
-
+    }, [])
 
     return (
         <>
@@ -392,6 +590,17 @@ export default function MembershipFormforIndividualAnnual() {
                     }
                 }
             `}</style>
+
+            {showSuccessModal && (
+                <PaymentSuccessModal
+                    show={true}
+                    onClose={() => { setShowSuccessModal(false); navigate("/") }}
+                />
+            )}
+
+            {
+                loading && <Loader />
+            }
 
             <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
                 {/* Close button */}
@@ -518,9 +727,11 @@ export default function MembershipFormforIndividualAnnual() {
                                     placeholder="Enter Your Email"
                                     value={formData.email}
                                     onChange={handleChange}
+                                    onBlur={checkEmailExists}
                                     className="w-full p-2 bg-[#C5D3E8] rounded"
                                     required
                                 />
+
                             </div>
 
                             <div>
@@ -611,7 +822,7 @@ export default function MembershipFormforIndividualAnnual() {
                             <h2 className="text-white text-xl">Other Information</h2>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     Teaching Experience (In Years) : <span className="text-red-500">*</span>
@@ -630,159 +841,29 @@ export default function MembershipFormforIndividualAnnual() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
-                                <label className="block text-sm mb-2">Area's of your work : <span className="text-red-500">*</span></label>
-                                <div className="space-y-1">
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="primary"
-                                            name="area_of_work"
-                                            value="Primary School"
-                                            checked={formData.area_of_work.includes('Primary School')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="primary" className="text-sm">Primary School</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="secondary"
-                                            name="area_of_work"
-                                            value="Secondary School"
-                                            checked={formData.area_of_work.includes('Secondary School')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="secondary" className="text-sm">Secondary School</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="juniorCollege"
-                                            name="area_of_work"
-                                            value="Junior College (+2)"
-                                            checked={formData.area_of_work.includes('Junior College (+2)')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="juniorCollege" className="text-sm">Junior College (+2)</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="seniorCollege"
-                                            name="area_of_work"
-                                            value="Senior College/University"
-                                            checked={formData.area_of_work.includes('Senior College/University')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="seniorCollege" className="text-sm">Senior College/University</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="teacherEd"
-                                            name="area_of_work"
-                                            value="Teacher Education"
-                                            checked={formData.area_of_work.includes('Teacher Education')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="teacherEd" className="text-sm">Teacher Education</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="other"
-                                            name="area_of_work"
-                                            value="Other"
-                                            checked={formData.area_of_work.includes('Other')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="other" className="text-sm">Other</label>
-                                    </div>
-                                </div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Area's of your work : <span className="text-red-500">*</span>
+                                </label>
+                                <MultiSelectDropdown
+                                    options={areaOfWorkOptions}
+                                    selected={formData.area_of_work}
+                                    onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
+                                    placeholder="Select areas of work"
+                                    name="area_of_work"
+                                />
                             </div>
 
                             <div>
-                                <label className="block text-sm mb-2">Added Qualification : <span className="text-red-500">*</span></label>
-                                <div className="space-y-1">
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="bed"
-                                            name="qualification"
-                                            value="B.Ed"
-                                            checked={formData.qualification.includes('B.Ed')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="bed" className="text-sm">B.Ed</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="ded"
-                                            name="qualification"
-                                            value="D.Ed"
-                                            checked={formData.qualification.includes('D.Ed')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="ded" className="text-sm">D.Ed</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="med"
-                                            name="qualification"
-                                            value="M.Ed"
-                                            checked={formData.qualification.includes('M.Ed')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="med" className="text-sm">M.Ed</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="celt"
-                                            name="qualification"
-                                            value="CELTA/DELTA/TTS"
-                                            checked={formData.qualification.includes('CELTA/DELTA/TTS')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="celt" className="text-sm">CELTA/DELTA/TTS</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="pgcte"
-                                            name="qualification"
-                                            value="PGCTE"
-                                            checked={formData.qualification.includes('PGCTE')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="pgcte" className="text-sm">PGCTE</label>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="pgdte"
-                                            name="qualification"
-                                            value="PGDTE"
-                                            checked={formData.qualification.includes('PGDTE')}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor="pgdte" className="text-sm">PGDTE</label>
-                                    </div>
-                                </div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Added Qualification : <span className="text-red-500">*</span>
+                                </label>
+                                <MultiSelectDropdown
+                                    options={qualificationOptions}
+                                    selected={formData.qualification}
+                                    onChange={(selected) => handleMultiSelectChange('qualification', selected)}
+                                    placeholder="Select qualifications"
+                                    name="qualification"
+                                />
                             </div>
                         </div>
 
@@ -832,19 +913,23 @@ export default function MembershipFormforIndividualAnnual() {
                                 I agree to the terms and conditions of the membership. <span className="text-red-500">*</span>
                             </label>
                         </div>
-
                         <div className="flex justify-center mt-6">
                             <button
                                 type="submit"
-                                disabled={isSubmitting}
-                                className={`px-6 py-2 rounded-full text-sm font-bold ${isSubmitting
-                                    ? 'bg-gray-400 cursor-not-allowed'
-                                    : 'bg-amber-100 hover:bg-amber-200'
+                                disabled={isSubmitting || !isFormValid()}
+                                className={`px-6 py-2 rounded-full text-sm font-bold ${isSubmitting || !isFormValid()
+                                    ? 'bg-gray-400 cursor-not-allowed disabled:cursor-not-allowed'
+                                    : 'bg-amber-100 hover:bg-amber-200 cursor-pointer'
                                     }`}
+                                style={{
+                                    cursor: isSubmitting || !isFormValid() ? 'not-allowed' : 'pointer'
+                                }}
                             >
                                 {isSubmitting ? 'SUBMITTING...' : 'SUBMIT APPLICATION FORM'}
                             </button>
                         </div>
+
+
                     </div>
                 </form>
             </div>
