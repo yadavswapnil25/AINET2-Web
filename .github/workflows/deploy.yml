@@ -21,8 +21,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build React app
+      - name: Build React App
         run: npm run build
+
+      # Archive Build Directory
+      - name: Archive Production Build
+        run: |
+          zip -r build.zip dist  # Vite = dist; for CRA use 'build'
 
       - name: Deploy to Linux server via SSH
         uses: appleboy/scp-action@v0.1.7
