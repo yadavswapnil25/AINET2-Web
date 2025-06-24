@@ -43,11 +43,11 @@ jobs:
           target: "~/react-build.zip"
 
       # 6️⃣ SSH into VPS → Extract & Reload NGINX
-      - name: Deploy on VPS
-        uses: appleboy/ssh-action@master
+       - name: Deploy to Linux server via SSH
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             rm -rf /var/www/ainet2-web-build/*
