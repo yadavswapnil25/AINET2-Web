@@ -53,4 +53,6 @@ jobs:
             unzip -o /root/react/react-build.zip -d /root/react/
             mv /root/react/dist/*  /var/www/ainet2-web-build/
             rm -rf /root/react/
+            find /var/www/ainet2-web-build -type d -exec chmod 755 {} \;
+            find /var/www/ainet2-web-build -type f -exec chmod 644 {} \;
             sudo systemctl reload nginx
