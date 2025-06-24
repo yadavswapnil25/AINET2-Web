@@ -470,27 +470,29 @@ export default function MembershipFormforIndividualAnnual() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validateForm()) {
-            return;
-        }
+        if (!validateForm()) return;
 
-        setIsSubmitting(true);
 
+        const loadingToastId = toast.loading("Initializing payment...");
 
         try {
+            // 1. 🔁 Payment via Razorpay
             const paymentResponse = await initiatePayment({
                 amount: plan?.price, // in INR
                 name: `${formData.first_name} ${formData.last_name}`,
                 email: formData.email,
                 contact: formData.mobile,
+                currency: plan?.currency || "INR"
             });
 
-
+            // ✅ Payment succeeded
+            toast.dismiss(loadingToastId);
             toast.success("✅ Payment Successful");
 
-
-            // Now call your API
+            // 2. 🔁 Now hit the registration API
             setLoading(true);
+            setIsSubmitting(true);
+
             const res = await fetch(`${baseUrl}client/membership-signup`, {
                 method: "POST",
                 headers: {
@@ -502,8 +504,10 @@ export default function MembershipFormforIndividualAnnual() {
 
             if (res.ok) {
                 const responseData = await res.json();
+
                 setIsPaymentDone(true);
                 setShowSuccessModal(true);
+
                 setFormData({
                     first_name: "",
                     last_name: "",
@@ -524,23 +528,23 @@ export default function MembershipFormforIndividualAnnual() {
                     membership_plan: "",
                     pin: "",
                     password_confirmation: "",
-                })
-
+                });
             } else {
                 const errorData = await res.json();
-                toast.error(`${errorData.message || "Please try again."}`);
-                console.error("Error response:", errorData);
+                toast.error(`${errorData.message || "Something went wrong. Please try again."}`);
             }
 
         } catch (error) {
+            // ❌ Razorpay payment failed or cancelled
             toast.dismiss(loadingToastId);
-            toast.error(`❌ ${error}`);
+            toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {
             setIsSubmitting(false);
             setLoading(false);
         }
     };
+
 
     useEffect(() => {
         if (!location.state) navigate("/")
