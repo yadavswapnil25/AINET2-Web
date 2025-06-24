@@ -52,7 +52,7 @@ export default function MembershipPlans() {
             currency: "₹",
             duration: "1",
             discountPercentage: 40,
-            type:"institutional"
+            type: "institutional"
         },
         {
             title: "Long Term",
@@ -60,7 +60,7 @@ export default function MembershipPlans() {
             currency: "₹",
             duration: "3",
             discountPercentage: 35,
-            type:"institutional"
+            type: "institutional"
         },
         {
             title: "Overseas",
@@ -68,7 +68,7 @@ export default function MembershipPlans() {
             currency: "$",
             duration: "1",
             discountPercentage: 55,
-            
+            type: "institutional"
         }
     ];
 
