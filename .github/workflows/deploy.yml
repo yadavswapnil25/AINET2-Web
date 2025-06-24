@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "react-build.zip"
-          target: "/root/react-build.zip"
+          target: "/root/"
 
       # 6. SSH into server to deploy
       - name: Deploy on server via SSH
@@ -51,5 +51,4 @@ jobs:
           script: |
             rm -rf /var/www/ainet2-web-build/*
             unzip -o /root/react-build.zip -d /var/www/ainet2-web-build/
-            rm ~/react-build.zip
             sudo systemctl reload nginx
