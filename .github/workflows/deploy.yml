@@ -10,41 +10,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1 Checkout Repository Code
-       - name: Checkout code
+      # 1. Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2 Setup Node.js (Recommended for caching etc.)
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18  # Change to match your project’s Node version
+          node-version: 18
 
-      # 3 Install Dependencies & Build React App
-      - name: Install Dependencies
+      # 3. Install dependencies and build
+      - name: Install dependencies
         run: npm ci
 
-      - name: Build React App
+      - name: Build React app
         run: npm run build
 
-      # 4 Archive Build Directory
-      - name: Archive Production Build
-        run: |
-          zip -r react-build.zip dist  # Vite = dist; for CRA use 'build'
+      # 4. Zip the build output
+      - name: Archive production build
+        run: zip -r react-build.zip build  # 'build' for CRA, 'dist' for Vite
 
-      # 5 Upload Build to VPS via SCP
-      - name: Upload Build to VPS
-        uses: appleboy/scp-action@master
+      # 5. Upload build zip to server
+      - name: Upload build to server
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "react-build.zip"
           target: "~/react-build.zip"
 
-      # 6 SSH into VPS → Extract & Reload NGINX
-       - name: Deploy to Linux server via SSH
-        uses: appleboy/scp-action@v0.1.7
+      # 6. SSH into server to deploy
+      - name: Deploy on server via SSH
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
