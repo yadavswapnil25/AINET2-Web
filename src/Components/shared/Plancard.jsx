@@ -7,10 +7,10 @@ const PlanCard = ({
   price,
   currency,
   duration,
-
   planType,
   discountPercentage,
-  planFeatures
+  planFeatures,
+  handleClick
 }) => (
   <div className="flex flex-col justify-between h-full bg-yellow-50 p-5 py-6 md:p-10 md:py-15 rounded-xl shadow-sm">
     <div>
@@ -58,8 +58,8 @@ const PlanCard = ({
       </ul>
     </div>
 
-    <button className="mt-auto bg-green-100 border border-green-300 hover:bg-green-200 transition-colors w-full py-3 rounded-full flex items-center justify-center relative">
-      <span className=" mr-2 font-semibold">PAY NOW</span>
+    <button onClick={handleClick} className="mt-auto bg-green-100 border border-green-300 hover:bg-green-200 transition-colors w-full py-3 rounded-full flex items-center justify-center relative">
+      <span className=" mr-2 font-semibold" >PAY NOW</span>
       <img src="/arrow_pay.svg" alt="arrow_white" className="absolute left-1" />
     </button>
   </div>   
