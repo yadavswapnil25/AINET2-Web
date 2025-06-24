@@ -29,7 +29,7 @@ jobs:
 
       # 4. Zip the build output
       - name: Archive production build
-        run: zip -r react-build.zip build  # 'build' for CRA, 'dist' for Vite
+        run: zip -r react-build.zip dist  # 'build' for CRA, 'dist' for Vite
 
       # 5. Upload build zip to server
       - name: Upload build to server
