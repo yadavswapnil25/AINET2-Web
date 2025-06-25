@@ -1,3 +1,5 @@
+import { razorpayKey } from "./constant";
+
 export const initiatePayment = async ({ amount, name, email, contact, currency }) => {
     return new Promise(async (resolve, reject) => {
         const loadScript = () =>
@@ -13,7 +15,7 @@ export const initiatePayment = async ({ amount, name, email, contact, currency }
         if (!isLoaded) return reject("Razorpay SDK failed to load.");
 
         const options = {
-            key: "rzp_test_UrtmlRIU5M1TXE", // use live key in prod
+            key: razorpayKey, // use live key in prod
             amount: amount * 100, // Razorpay works in paise
             currency: currency || "INR",
             name: "AINET",
