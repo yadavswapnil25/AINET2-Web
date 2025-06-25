@@ -5,75 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { baseUrl } from '../../../utils/constant';
 import { initiatePayment } from '../../../utils/utility';
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
+import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
 import Loader from '../../../Components/shared/Loader';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { toast } from 'react-toastify';
 
-// Simulated toast functions for demo purposes with ID support
-const toast = {
-    success: (message) => {
-        const toastDiv = document.createElement('div');
-        toastDiv.className = 'toast toast-success';
-        toastDiv.textContent = message;
-        document.body.appendChild(toastDiv);
-        setTimeout(() => {
-            if (document.body.contains(toastDiv)) {
-                document.body.removeChild(toastDiv);
-            }
-        }, 3000);
-    },
-    error: (message) => {
-        const toastDiv = document.createElement('div');
-        toastDiv.className = 'toast toast-error';
-        toastDiv.textContent = message;
-        document.body.appendChild(toastDiv);
-        setTimeout(() => {
-            if (document.body.contains(toastDiv)) {
-                document.body.removeChild(toastDiv);
-            }
-        }, 4000);
-    },
-    warning: (message) => {
-        const toastDiv = document.createElement('div');
-        toastDiv.className = 'toast toast-warning';
-        toastDiv.textContent = message;
-        document.body.appendChild(toastDiv);
-        setTimeout(() => {
-            if (document.body.contains(toastDiv)) {
-                document.body.removeChild(toastDiv);
-            }
-        }, 3000);
-    },
-    info: (message) => {
-        const toastDiv = document.createElement('div');
-        toastDiv.className = 'toast toast-info';
-        toastDiv.textContent = message;
-        document.body.appendChild(toastDiv);
-        setTimeout(() => {
-            if (document.body.contains(toastDiv)) {
-                document.body.removeChild(toastDiv);
-            }
-        }, 3000);
-    },
-    loading: (message) => {
-        const toastId = 'loading-toast-' + Date.now();
-        const toastDiv = document.createElement('div');
-        toastDiv.className = 'toast toast-loading';
-        toastDiv.id = toastId;
-        toastDiv.innerHTML = `
-            <div class="flex items-center">
-                <div class="loading-spinner"></div>
-                <span class="ml-2">${message}</span>
-            </div>
-        `;
-        document.body.appendChild(toastDiv);
-        return toastId;
-    },
-    dismiss: (toastId) => {
-        const toastDiv = document.getElementById(toastId);
-        if (toastDiv && document.body.contains(toastDiv)) {
-            document.body.removeChild(toastDiv);
-        }
-    }
-};
+
 
 // Multi-select dropdown component
 const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name }) => {
@@ -103,7 +41,7 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
     return (
         <div className="relative" ref={dropdownRef}>
             <div
-                className="w-full p-2 bg-[#C5D3E8] rounded cursor-pointer border border-gray-300 min-h-[40px] flex items-center justify-between"
+                className="w-full p-2 bg-white rounded cursor-pointer border border-gray-300 min-h-[40px] flex items-center justify-between"
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex flex-wrap gap-1">
@@ -164,6 +102,7 @@ export default function MembershipFormforIndividualAnnual() {
     const plan = location?.state;
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
     console.log("plan", plan)
 
 
@@ -178,7 +117,7 @@ export default function MembershipFormforIndividualAnnual() {
         address: "",
         state: "",
         district: "",
-        teaching_exp: 0,
+        teaching_exp: "",
         qualification: [],
         area_of_work: [],
         password: "",
@@ -196,6 +135,9 @@ export default function MembershipFormforIndividualAnnual() {
     const [loadingDistricts, setLoadingDistricts] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(true);
+    const [passwordTouched, setPasswordTouched] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     // Options for multi-select dropdowns
     const qualificationOptions = [
@@ -275,6 +217,7 @@ export default function MembershipFormforIndividualAnnual() {
                 console.error('Error fetching districts data:', error);
                 setLoadingDistricts(false);
                 toast.error("Failed to load districts for the selected state.");
+
             });
     };
 
@@ -368,7 +311,6 @@ export default function MembershipFormforIndividualAnnual() {
         if (formData.qualification.length === 0) return false;
         if (formData.area_of_work.length === 0) return false;
         if (!formData.agree) return false;
-        if (formData.password !== formData.password_confirmation) return false;
 
         if (!isEmailValid) return false;
 
@@ -472,8 +414,14 @@ export default function MembershipFormforIndividualAnnual() {
 
         if (!validateForm()) return;
 
+        // Show payment confirmation modal instead of proceeding directly to payment
+        setShowPaymentConfirmation(true);
+    };
 
-        const loadingToastId = toast.loading("Initializing payment...");
+    const handlePaymentProceed = async () => {
+        // Close the confirmation modal
+        setShowPaymentConfirmation(false);
+        
 
         try {
             // 1. 🔁 Payment via Razorpay
@@ -486,7 +434,7 @@ export default function MembershipFormforIndividualAnnual() {
             });
 
             // ✅ Payment succeeded
-            toast.dismiss(loadingToastId);
+       
             toast.success("✅ Payment Successful");
 
             // 2. 🔁 Now hit the registration API
@@ -550,8 +498,29 @@ export default function MembershipFormforIndividualAnnual() {
         if (!location.state) navigate("/")
     }, [])
 
+    function getPasswordStrength(password) {
+        return {
+            length: password.length >= 8,
+            upper: /[A-Z]/.test(password),
+            lower: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[^A-Za-z0-9]/.test(password),
+        };
+    }
+    const passwordStrength = getPasswordStrength(formData.password);
+    const allStrong = Object.values(passwordStrength).every(Boolean);
+
     return (
         <>
+            {/* Payment Confirmation Modal */}
+            <PaymentConfirmationModal 
+                show={showPaymentConfirmation}
+                onClose={() => setShowPaymentConfirmation(false)}
+                onProceed={handlePaymentProceed}
+                amount={plan?.price}
+                currency={plan?.currency || "INR"}
+            />
+            
             <style jsx>{`
                 .toast {
                     position: fixed;
@@ -593,6 +562,55 @@ export default function MembershipFormforIndividualAnnual() {
                         opacity: 1;
                     }
                 }
+
+                /* Date picker custom styles */
+                .react-datepicker-wrapper {
+                    width: 100%;
+                }
+                
+                .react-datepicker {
+                    font-family: inherit;
+                    border-radius: 8px;
+                    border: 1px solid #e2e8f0;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                }
+                
+                .react-datepicker__header {
+                    background-color: #f8fafc;
+                    border-bottom: 1px solid #e2e8f0;
+                    border-top-left-radius: 8px;
+                    border-top-right-radius: 8px;
+                    padding-top: 10px;
+                }
+                
+                .react-datepicker__day--selected {
+                    background-color: #3b82f6;
+                    border-radius: 50%;
+                }
+                
+                .react-datepicker__day:hover {
+                    border-radius: 50%;
+                }
+                
+                .react-datepicker__day--keyboard-selected {
+                    background-color: rgba(59, 130, 246, 0.5);
+                    border-radius: 50%;
+                }
+                
+                .react-datepicker__month-select,
+                .react-datepicker__year-select {
+                    padding: 5px;
+                    border-radius: 4px;
+                    border: 1px solid #e2e8f0;
+                }
+                
+                .react-datepicker__navigation {
+                    top: 12px;
+                }
+                
+                .react-datepicker__day--outside-month {
+                    color: #cbd5e1;
+                }
             `}</style>
 
             {showSuccessModal && (
@@ -609,9 +627,10 @@ export default function MembershipFormforIndividualAnnual() {
             <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
                 {/* Close button */}
                 <button className="absolute top-2 right-2 bg-black rounded-full p-1">
-                    <Link to="/"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                    </svg>
+                    <Link to={{ pathname: '/', hash: '#membershipplan' }}> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                        </svg>
                     </Link>
                 </button>
 
@@ -635,7 +654,7 @@ export default function MembershipFormforIndividualAnnual() {
                                     placeholder="Enter Your Name"
                                     value={formData.first_name}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
                                 />
                             </div>
@@ -650,73 +669,7 @@ export default function MembershipFormforIndividualAnnual() {
                                     placeholder="Enter Your Name"
                                     value={formData.last_name}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-base font-semibold mb-1">
-                                    Gender : <span className="text-red-500">*</span>
-                                </label>
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded appearance-none"
-                                    required
-                                >
-                                    <option value="" disabled>Select Your Gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-base font-semibold mb-1">
-                                    Date of Birth : <span className="text-red-500">*</span>
-                                </label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type='date'
-                                        name="dob"
-                                        value={formData.dob}
-                                        onChange={handleChange}
-                                        className="w-full p-2 bg-[#C5D3E8] rounded"
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-base font-semibold mb-1">
-                                    Contact No. : <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    name="mobile"
-                                    placeholder="Enter Your No."
-                                    value={formData.mobile}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
-                                    maxLength={10}
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-base font-semibold mb-1">
-                                    WhatsApp No. : <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    name="whatsapp_no"
-                                    placeholder="Enter Your No."
-                                    value={formData.whatsapp_no}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
-                                    maxLength={10}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
                                 />
                             </div>
@@ -732,10 +685,88 @@ export default function MembershipFormforIndividualAnnual() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     onBlur={checkEmailExists}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
                                 />
+                            </div>
 
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Gender : <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    required
+                                >
+                                    <option value="" disabled>Select Your Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Date of Birth : <span className="text-red-500">*</span>
+                                </label>
+                                <div className="flex gap-2 w-full">
+                                    <DatePicker
+                                        selected={formData.dob ? new Date(formData.dob) : null}
+                                        onChange={(date) => {
+                                            setFormData(prev => ({
+                                                ...prev,
+                                                dob: date ? date.toISOString().split('T')[0] : ""
+                                            }));
+                                        }}
+                                        maxDate={new Date(Date.now() - 24 * 60 * 60 * 1000)} // Disables today and future dates
+                                        showMonthDropdown
+                                        showYearDropdown
+                                        yearDropdownItemNumber={100}
+                                        scrollableYearDropdown
+                                        dropdownMode="select"
+                                        placeholderText="Select your date of birth"
+                                        dateFormat="yyyy-MM-dd"
+                                        className="w-full p-2 bg-white rounded border border-gray-300"
+                                        required
+                                        popperClassName="date-picker-popper"
+                                        
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Contact No. : <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="mobile"
+                                    placeholder="Enter Your Number"
+                                    value={formData.mobile}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    maxLength={10}
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    WhatsApp No. : <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="tel"
+                                    name="whatsapp_no"
+                                    placeholder="Enter Your Number"
+                                    value={formData.whatsapp_no}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    maxLength={10}
+                                    required
+                                />
                             </div>
 
                             <div>
@@ -748,7 +779,7 @@ export default function MembershipFormforIndividualAnnual() {
                                     placeholder="Enter Your PIN"
                                     value={formData.pin}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
                                     maxLength={6}
                                     required
                                 />
@@ -764,7 +795,7 @@ export default function MembershipFormforIndividualAnnual() {
                                 placeholder="Enter Your Address"
                                 value={formData.address}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
                                 rows="3"
                                 required
                             ></textarea>
@@ -779,7 +810,7 @@ export default function MembershipFormforIndividualAnnual() {
                                     name="state"
                                     value={formData.state}
                                     onChange={handleStateChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded appearance-none"
+                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                                     required
                                     disabled={loading}
                                 >
@@ -802,7 +833,7 @@ export default function MembershipFormforIndividualAnnual() {
                                     name="district"
                                     value={formData.district}
                                     onChange={handleDistrictChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded appearance-none"
+                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                                     required
                                     disabled={!formData.state || loadingDistricts}
                                 >
@@ -834,10 +865,10 @@ export default function MembershipFormforIndividualAnnual() {
                                 <input
                                     type="text"
                                     name="teaching_exp"
-                                    placeholder="Enter Your Exp."
+                                    placeholder="Enter Your Experience"
                                     value={formData.teaching_exp}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
                                 />
                             </div>
@@ -876,45 +907,113 @@ export default function MembershipFormforIndividualAnnual() {
                                 <label className="block text-base font-semibold mb-1">
                                     Password : <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Enter Your Password"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
-                                    required
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        placeholder="Enter Your Password"
+                                        value={formData.password}
+                                        onChange={e => { handleChange(e); setPasswordTouched(true); }}
+                                        className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        tabIndex={-1}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                                        onClick={() => setShowPassword(v => !v)}
+                                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    >
+                                        {showPassword ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12C3.5 7.5 7.5 4.5 12 4.5c4.5 0 8.5 3 9.75 7.5-1.25 4.5-5.25 7.5-9.75 7.5-4.5 0-8.5-3-9.75-7.5z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.5 12c1.25 4.5 5.25 7.5 10.5 7.5 2.042 0 3.97-.488 5.625-1.352M6.228 6.228A9.956 9.956 0 0112 4.5c4.5 0 8.5 3 9.75 7.5-.386 1.386-1.09 2.693-2.06 3.823M6.228 6.228l11.544 11.544M6.228 6.228L4.5 4.5m15 15l-1.728-1.728" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.88 9.88a3 3 0 014.24 4.24" />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                                {/* Password strength instructions */}
+                                <div className="mt-2 text-xs">
+                                    <div className="font-semibold mb-1">Password must contain:</div>
+                                    <ul className="space-y-1">
+                                        <li className={passwordTouched ? (passwordStrength.length ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                            • At least 8 characters
+                                        </li>
+                                        <li className={passwordTouched ? (passwordStrength.upper ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                            • An uppercase letter (A-Z)
+                                        </li>
+                                        <li className={passwordTouched ? (passwordStrength.lower ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                            • A lowercase letter (a-z)
+                                        </li>
+                                        <li className={passwordTouched ? (passwordStrength.number ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                            • A number (0-9)
+                                        </li>
+                                        <li className={passwordTouched ? (passwordStrength.special ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                            • A special character (!@#$%^&*)
+                                        </li>
+                                    </ul>
+                                    {passwordTouched && !allStrong && (
+                                        <div className="text-red-500 mt-1">Password is not strong enough.</div>
+                                    )}
+                                </div>
                             </div>
 
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     Re-Enter Password : <span className="text-red-500">*</span>
                                 </label>
-                                <input
-                                    type="password"
-                                    name="password_confirmation"
-                                    placeholder="Enter Your Password"
-                                    value={formData.password_confirmation}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded"
-                                    required
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPasswordConfirm ? "text" : "password"}
+                                        name="password_confirmation"
+                                        placeholder="Enter Your Password"
+                                        value={formData.password_confirmation}
+                                        onChange={handleChange}
+                                        className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        tabIndex={-1}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                                        onClick={() => setShowPasswordConfirm(v => !v)}
+                                        aria-label={showPasswordConfirm ? 'Hide password' : 'Show password'}
+                                    >
+                                        {showPasswordConfirm ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12C3.5 7.5 7.5 4.5 12 4.5c4.5 0 8.5 3 9.75 7.5-1.25 4.5-5.25 7.5-9.75 7.5-4.5 0-8.5-3-9.75-7.5z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.5 12c1.25 4.5 5.25 7.5 10.5 7.5 2.042 0 3.97-.488 5.625-1.352M6.228 6.228A9.956 9.956 0 0112 4.5c4.5 0 8.5 3 9.75 7.5-.386 1.386-1.09 2.693-2.06 3.823M6.228 6.228l11.544 11.544M6.228 6.228L4.5 4.5m15 15l-1.728-1.728" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9.88 9.88a3 3 0 014.24 4.24" />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
                         <div className="mt-4 flex items-center">
-                            <input
-                                type="checkbox"
-                                id="agreeToTerms"
-                                name="agree"
-                                checked={formData.agree}
-                                onChange={handleChange}
-                                className="mr-2"
-                                required
-                            />
-                            <label htmlFor="agreeToTerms" className="text-sm">
-                                I agree to the terms and conditions of the membership. <span className="text-red-500">*</span>
+                            <label htmlFor="agreeToTerms" className="flex items-center cursor-pointer select-none gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="agreeToTerms"
+                                    name="agree"
+                                    checked={formData.agree}
+                                    onChange={handleChange}
+                                    required
+                                    className="accent-green-600 w-5 h-5 rounded border-2 border-gray-400 checked:border-green-600 focus:ring-2 focus:ring-green-300 transition-all duration-200 shadow-sm hover:shadow-md bg-white"
+                                />
+                                <span className="text-sm">
+                                    I agree to the terms and conditions of the membership. <span className="text-red-500">*</span>
+                                </span>
                             </label>
                         </div>
                         <div className="flex justify-center mt-6">
@@ -922,8 +1021,8 @@ export default function MembershipFormforIndividualAnnual() {
                                 type="submit"
                                 disabled={isSubmitting || !isFormValid()}
                                 className={`px-6 py-2 rounded-full text-sm font-bold ${isSubmitting || !isFormValid()
-                                    ? 'bg-gray-400 cursor-not-allowed disabled:cursor-not-allowed'
-                                    : 'bg-amber-100 hover:bg-amber-200 cursor-pointer'
+                                    ? 'bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed'
+                                    : 'bg-amber-200 hover:bg-amber-300 cursor-pointer'
                                     }`}
                                 style={{
                                     cursor: isSubmitting || !isFormValid() ? 'not-allowed' : 'pointer'

@@ -30,7 +30,7 @@ const PlanCard = ({
         {planType === 'individual' ? 'Individual' : 'Institutional'} {title}
       </h3>
       <div className="text-4xl md:text-5xl font-bold mb-10">
-        {currency} {price}
+        {currency === 'INR' ? '₹' : '$'} {price}
       </div>
 
       <ul className="space-y-4 mb-10">

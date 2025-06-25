@@ -6,6 +6,7 @@ import ScrollToTop from "./Components/ScrollToTop";
 import AboutNews from "./Pages/AboutNews";
 import Loader from "./Components/shared/Loader";
 import Login from "./Components/shared/Login";
+import { ToastContainer } from "react-toastify";
 
 
 const Home = lazy(() => import("./Pages/Home"));
@@ -40,10 +41,12 @@ const AINETConnect = lazy(() => import("./Pages/AINETConnect"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const PageUnderConstruct = lazy(() => import("./Pages/PageUnderConstruct"));
 const AinetOccasionalPapersList = lazy(() => import("./Components/specific/Publication/AinetOccasionalPapersList"));
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <>
+      <ToastContainer/>
       <Navbar />
       <ScrollToTop />
       <Suspense fallback={<Loader />}>

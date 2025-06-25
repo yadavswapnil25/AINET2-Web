@@ -81,7 +81,7 @@ export default function MembershipPlans() {
     }
 
     return (
-        <div
+        <div id='membershipplan'
             className="relative w-full  min-h-screen  rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
             style={{ backgroundImage: `url(${bg3})` }}
         >
