@@ -634,7 +634,7 @@ export default function MembershipFormforIndividualAnnual() {
                     </Link>
                 </button>
 
-                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for Individual Annual</h1>
+                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for {plan?.type} {plan?.title}</h1>
 
                 <form onSubmit={handleSubmit}>
                     {/* Personal Information Section */}
@@ -644,6 +644,21 @@ export default function MembershipFormforIndividualAnnual() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Email : <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Enter Your Email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    onBlur={checkEmailExists}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    required
+                                />
+                            </div>
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     First Name : <span className="text-red-500">*</span>
@@ -658,7 +673,6 @@ export default function MembershipFormforIndividualAnnual() {
                                     required
                                 />
                             </div>
-
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     Last Name : <span className="text-red-500">*</span>
@@ -669,22 +683,6 @@ export default function MembershipFormforIndividualAnnual() {
                                     placeholder="Enter Your Name"
                                     value={formData.last_name}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-base font-semibold mb-1">
-                                    Email : <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Enter Your Email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    onBlur={checkEmailExists}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
                                 />
