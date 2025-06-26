@@ -22,12 +22,11 @@ const RazorpayCheckout = () => {
         }
 
         const options = {
-            key: "rzp_test_UrtmlRIU5M1TXE",
+            key: razorpayKey,
             amount: 50000, // in paise = ₹500
             currency: "INR",
             name: "AINET",
             description: "Membership Payment",
-            image: "https://yourdomain.com/logo.png", // optional
             handler: function (response) {
                 console.log("✅ Payment success:", response);
                 setPaymentStatus("success");
