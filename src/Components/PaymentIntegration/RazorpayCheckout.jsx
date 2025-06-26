@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { razorpayKey } from "../../utils/constant";
 
 const RazorpayCheckout = () => {
     const [paymentStatus, setPaymentStatus] = useState("idle");
@@ -12,6 +13,8 @@ const RazorpayCheckout = () => {
             document.body.appendChild(script);
         });
     };
+
+    console.log("Razorpay Key", razorpayKey);
 
     const handlePayment = async () => {
         const res = await loadRazorpayScript();
