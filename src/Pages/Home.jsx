@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Highlight from "../Components/shared/Highlight";
 import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
@@ -6,7 +6,6 @@ import bg2 from "/bg2.png";
 import bg3 from "/bg3.png";
 import newh1 from "/newh11.jpg";
 import newh2 from "/newh22.jpg";
-
 
 import home_banner_2 from "/home_banner_2.png";
 import upcoming from "/upcoming.png";
@@ -19,9 +18,20 @@ import Gallery from "../Components/specific/Home/Gallery";
 import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
 import Archives from "../Components/specific/Home/Archives";
 import MembershipPlans from "../Components/shared/MembershipPlans"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Home = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === "#membershipplan") {
+      const el = document.getElementById("membershipplan");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
+
   const eventsData = [
     {
       title: "AINET Foundation Week Programmes.",

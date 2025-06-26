@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { FaUser, FaUniversity } from 'react-icons/fa';
 import PlanCard from '../shared/Plancard';
 import bg3 from "/bg3.png";
+import { useNavigate } from 'react-router-dom';
 
 export default function MembershipPlans() {
     const [planType, setPlanType] = useState('individual');
+    const navigate = useNavigate()
 
     const planFeatures = [
         "Membership Privileges",
@@ -20,25 +22,25 @@ export default function MembershipPlans() {
         {
             title: "Annual",
             price: "500.00",
-            currency: "₹",
+            currency: "INR",
             duration: "1",
-          
+            type: "Individual",
             discountPercentage: 40
         },
         {
-            title: "Long Term",
+            title: "LongTerm",
             price: "1200.00",
-            currency: "₹",
+            currency: "INR",
             duration: "3",
-           
+            type: "Individual",
             discountPercentage: 50
         },
         {
             title: "Overseas",
-            price: "20.00 (Rs. 1500)",
-            currency: "$",
+            price: "20.00",
+            currency: "USD",
             duration: "1",
-           
+            type: "Individual",
             discountPercentage: 25
         }
     ];
@@ -47,30 +49,39 @@ export default function MembershipPlans() {
         {
             title: "Annual",
             price: "1000.00",
-            currency: "₹",
+            currency: "INR",
             duration: "1",
-            discountPercentage: 40
+            discountPercentage: 40,
+            type: "Institutional"
         },
         {
-            title: "Long Term",
+            title: "LongTerm",
             price: "2500.00",
-            currency: "₹",
+            currency: "INR",
             duration: "3",
-            discountPercentage: 35
+            discountPercentage: 35,
+            type: "Institutional"
         },
         {
             title: "Overseas",
-            price: "30.00 (Rs. 2500)",
-            currency: "$",
+            price: "30.00",
+            currency: "USD",
             duration: "1",
-            discountPercentage: 55
+            discountPercentage: 55,
+            type: "Institutional"
         }
     ];
 
     const plansToShow = planType === 'individual' ? individualPlans : institutionalPlans;
 
+
+    const handlePayNow = (plan) => {
+        console.log("plan", plan)
+        navigate("/MembershipFormforIndividualAnnual", { state: plan })
+    }
+
     return (
-        <div
+        <div id='membershipplan'
             className="relative w-full  min-h-screen  rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
             style={{ backgroundImage: `url(${bg3})` }}
         >
@@ -110,6 +121,7 @@ export default function MembershipPlans() {
                         planType={planType}
                         discountPercentage={plan.discountPercentage}
                         planFeatures={planFeatures}
+                        handleClick={() => handlePayNow(plan)}
                     />
                 ))}
             </div>
