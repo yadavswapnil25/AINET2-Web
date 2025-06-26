@@ -484,7 +484,7 @@ export default function MembershipFormforIndividualAnnual() {
 
         } catch (error) {
             // ❌ Razorpay payment failed or cancelled
-            toast.dismiss(loadingToastId);
+            // toast.dismiss(loadingToastId);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {
