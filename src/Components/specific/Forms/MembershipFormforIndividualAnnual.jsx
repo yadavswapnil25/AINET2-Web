@@ -422,7 +422,7 @@ export default function MembershipFormforIndividualAnnual() {
         
 
         try {
-            // 1. 🔁 Payment via Razorpay
+          
             const paymentResponse = await initiatePayment({
                 amount: plan?.price, // in INR
                 name: `${formData.first_name} ${formData.last_name}`,
@@ -431,11 +431,11 @@ export default function MembershipFormforIndividualAnnual() {
                 currency: plan?.currency || "INR"
             });
 
-            // ✅ Payment succeeded
+   
        
             toast.success("✅ Payment Successful");
 
-            // 2. 🔁 Now hit the registration API
+
             setLoading(true);
             setIsSubmitting(true);
 

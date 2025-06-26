@@ -15,6 +15,16 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/profile');
+    }
+  }, [navigate]);
+
+
+  
   // On mount, check for remembered email
   useEffect(() => {
     const rememberedEmail = localStorage.getItem(REMEMBER_EMAIL_KEY);

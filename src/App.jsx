@@ -7,6 +7,7 @@ import AboutNews from "./Pages/AboutNews";
 import Loader from "./Components/shared/Loader";
 import Login from "./Components/shared/Login";
 import { ToastContainer } from "react-toastify";
+import PrivateRoute from "./Components/shared/PrivateRoute";
 
 
 const Home = lazy(() => import("./Pages/Home"));
@@ -79,7 +80,7 @@ const App = () => {
           <Route path="/Prelims" element={<Prelims />} />
           <Route path="/Decentring" element={<Decentring />} />
           <Route path="/AINETConnect" element={<AINETConnect />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/news/newsDetail" element={<NewsDetails />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
