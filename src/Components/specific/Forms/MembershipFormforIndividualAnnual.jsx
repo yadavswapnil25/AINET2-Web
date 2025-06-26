@@ -103,7 +103,7 @@ export default function MembershipFormforIndividualAnnual() {
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
-    console.log("plan", plan)
+  
 
 
     const [formData, setFormData] = useState({
@@ -378,8 +378,6 @@ export default function MembershipFormforIndividualAnnual() {
         return true;
     };
 
-    console.log("location", location.state)
-
     const checkEmailExists = async () => {
         const email = formData.email;
 
@@ -521,97 +519,7 @@ export default function MembershipFormforIndividualAnnual() {
                 currency={plan?.currency || "INR"}
             />
             
-            <style jsx>{`
-                .toast {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    color: white;
-                    font-weight: 500;
-                    z-index: 9999;
-                    min-width: 300px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    animation: slideIn 0.3s ease-out;
-                }
-                
-                .toast-success {
-                    background-color: #10b981;
-                }
-                
-                .toast-error {
-                    background-color: #ef4444;
-                }
-                
-                .toast-warning {
-                    background-color: #f59e0b;
-                }
-                
-                .toast-info {
-                    background-color: #3b82f6;
-                }
-                
-                @keyframes slideIn {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-
-                /* Date picker custom styles */
-                .react-datepicker-wrapper {
-                    width: 100%;
-                }
-                
-                .react-datepicker {
-                    font-family: inherit;
-                    border-radius: 8px;
-                    border: 1px solid #e2e8f0;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                }
-                
-                .react-datepicker__header {
-                    background-color: #f8fafc;
-                    border-bottom: 1px solid #e2e8f0;
-                    border-top-left-radius: 8px;
-                    border-top-right-radius: 8px;
-                    padding-top: 10px;
-                }
-                
-                .react-datepicker__day--selected {
-                    background-color: #3b82f6;
-                    border-radius: 50%;
-                }
-                
-                .react-datepicker__day:hover {
-                    border-radius: 50%;
-                }
-                
-                .react-datepicker__day--keyboard-selected {
-                    background-color: rgba(59, 130, 246, 0.5);
-                    border-radius: 50%;
-                }
-                
-                .react-datepicker__month-select,
-                .react-datepicker__year-select {
-                    padding: 5px;
-                    border-radius: 4px;
-                    border: 1px solid #e2e8f0;
-                }
-                
-                .react-datepicker__navigation {
-                    top: 12px;
-                }
-                
-                .react-datepicker__day--outside-month {
-                    color: #cbd5e1;
-                }
-            `}</style>
+           
 
             {showSuccessModal && (
                 <PaymentSuccessModal
@@ -634,7 +542,7 @@ export default function MembershipFormforIndividualAnnual() {
                     </Link>
                 </button>
 
-                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for Individual Annual</h1>
+                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for {plan?.type} {plan?.title}</h1>
 
                 <form onSubmit={handleSubmit}>
                     {/* Personal Information Section */}
