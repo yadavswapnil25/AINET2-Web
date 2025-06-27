@@ -4,6 +4,7 @@ import { baseUrl } from "../utils/constant";
 import { FaEdit } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -59,12 +60,39 @@ export default function Profile() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch(`${baseUrl}client/auth/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch profile");
+      const data = await res.json();
+      setProfile(data?.data?.user);
+      setLoading(false);
+      if (data?.data?.user) {
+        setFormData({
+          name: data?.data?.user?.name || "",
+          mobile: data?.data?.user.mobile || "",
+          email: data?.data?.user?.email || "",
+          gender: data?.data?.user?.gender || "",
+          dob: data?.data?.user?.dob || "",
+          address: data?.data?.user?.address || "",
+        });
+      }
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
   const handleEdit = async (e) => {
     e.preventDefault();
 
     try {
       const res = await fetch(`${baseUrl}client/auth/${profile.id}/profile`, {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-type": "application/json",
           Accept: "application/json",
@@ -72,39 +100,22 @@ export default function Profile() {
         },
         body: JSON.stringify(formData),
       });
-      console.log("res>>>", res);
+
+      const data = await res.json();
+      console.log("data", data);
+
+      if (res.ok) {
+        toast.success(data?.message);
+        fetchProfile();
+        setShowEditModal(false);
+      }
     } catch (err) {
       console.log(err);
+      toast.error(data.data.message);
     }
   };
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`${baseUrl}client/auth/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error("Failed to fetch profile");
-        const data = await res.json();
-        setProfile(data?.data?.user);
-        setLoading(false);
-        if (data?.data?.user) {
-          setFormData({
-            name: data?.data?.user?.name || "",
-            mobile: data?.data?.user.mobile || "",
-            email: data?.data?.user?.email || "",
-            gender: data?.data?.user?.gender || "",
-            dob: data?.data?.user?.dob || "",
-            address: data?.data?.user?.address || "",
-          });
-        }
-      } catch (err) {
-        setError(err.message);
-        setLoading(false);
-      }
-    };
     fetchProfile();
   }, []);
 
