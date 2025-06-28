@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import Loader from "../Components/shared/Loader";
 import { useAuth } from "../context/AuthContext";
+import html2canvas from "html2canvas";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -21,8 +22,8 @@ export default function Profile() {
   const fileInputRef = useRef(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const token = localStorage.getItem("token");
-  const { setLoggedIn } = useAuth();
+  const token = localStorage.getItem("ainetToken");
+  const { setProfileData } = useAuth();
 
   const [formData, setFormData] = useState({
     name: profile?.name,
@@ -72,15 +73,17 @@ export default function Profile() {
       });
 
       const data = await res.json();
-      console.log("data", data);
 
       if (res.ok) {
         toast.success(data?.message || "Profile image updated successfully!");
+
+        // Update both user states consistently
+        if (data?.data) {
+        }
         fetchProfile(); // Refresh profile data
         setImageSelected(false);
         setSelectedFile(null);
         setShowModal(false);
-        setLoggedIn(data?.data?.user);
       } else {
         toast.error(data?.message || "Failed to update profile image");
       }
@@ -111,6 +114,7 @@ export default function Profile() {
       });
       if (!res.ok) throw new Error("Failed to fetch profile");
       const data = await res.json();
+      setProfileData(data?.data?.user)
       setProfile(data?.data?.user);
       setLoading(false);
       if (data?.data?.user) {
@@ -162,6 +166,9 @@ export default function Profile() {
 
       if (res.ok) {
         toast.success(data?.message || "Profile updated successfully!");
+        // Update both user states consistently
+        if (data?.data) {
+        }
         fetchProfile();
         setShowEditModal(false);
         setImageSelected(false);
@@ -183,13 +190,36 @@ export default function Profile() {
   let created = new Date(profile?.created_at);
   created = created.toLocaleDateString();
 
+  
+const cardRef = useRef();
+
+  const handleDownload = async () => {
+    const element = cardRef.current;
+    if (!element) return;
+
+    const canvas = await html2canvas(element, {
+      scale: 2, // Better resolution
+      useCORS: true, // allows external image loading (for profile image)
+    });
+
+    const image = canvas.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "AINET_Membership_Card.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       {loading && <Loader />}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Left Column */}
-          <div className="space-y-6 max-w-[472px] col-span-1  ">
+          <div className="space-y-6 max-w-full col-span-1  ">
             {/* Profile Card */}
             <div className="bg-white rounded-2xl border border-[#A6AEBF] ">
               <div className="flex items-center justify-between mb-6 border-b border-[#A6AEBF] p-6">
@@ -232,7 +262,7 @@ export default function Profile() {
                       {/* Modal Profile Image */}
                       <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
                         <img
-                          src={profile?.image_url || previewImage}
+                          src={previewImage ? previewImage : profile?.image_url}
                           alt="Preview"
                           className="w-full h-full object-cover"
                         />
@@ -356,11 +386,10 @@ export default function Profile() {
                       Membership Status :
                     </span>
                     <span
-                      className={`${
-                        profile?.status === 1
-                          ? "text-green-500"
-                          : "text-red-600"
-                      }  font-medium `}
+                      className={`${profile?.status === 1
+                        ? "text-green-500"
+                        : "text-red-600"
+                        }  font-medium `}
                     >
                       {profile?.status === 1 ? "ACTIVE" : "INACTIVE"}
                     </span>
@@ -439,41 +468,53 @@ export default function Profile() {
                 Membership Kit
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {/* Membership ID Card */}
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-4">
                     Membership ID Card
                   </h4>
-                  <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
-                    <div className="bg-blue-500 h-2 mb-4"></div>
-                    <div className="flex items-start gap-4">
-                      <div>
+                  <div className="bg-white border border-gray-200 rounded-lg p-4 pb-0 mb-4 w-full" ref={cardRef}>
+                    <div className="flex gap-2 items-center justify-center h-2.5 mb-4">
+                      <span className=" tracking-widest text-[8px] font-extrabold  text-blue-500 min-w-fit">AINET MEMBERSHIP CARD</span>    <div className="bg-blue-500 h-2 w-full"></div>
+                    </div>
+                   
+                    <div className="flex items-start gap-4 justify-center h-full">
+                      <div className=" h-full flex flex-col items-center">
                         <div className="flex items-center gap-2 mb-2">
-                          <Star className="w-4 h-4 text-yellow-500" />
-                          <span className="font-bold text-lg">ainet</span>
+                          <img src="/logo.svg" alt="logo" className=" w-[14rem]" />
                         </div>
-                        <p className="text-xs text-gray-600 mb-2">
-                          ASSOCIATION OF INDIAN
+                        <p className="text-[9px] text-black text-center mb-2">
+                         <span>MEMBERSHIP ID:{profile?.id}</span>
                           <br />
-                          NETWORK FOR ENGLISH
-                          <br />
-                          TEACHERS
+                         <span>VALID UP TO:{created}</span>
+                         {/* {console.log(profile, "profile")} */}
                         </p>
                         <div className="w-16 h-16 bg-gray-200 border-2 border-dashed border-gray-400 flex items-center justify-center mb-2">
                           <span className="text-xs">QR</span>
                         </div>
-                        <p className="text-xs text-blue-600">
-                          www.ainet.org.in
-                        </p>
+                       
                       </div>
-                      <div className="flex-1 text-right">
-                        <div className="w-16 h-20 bg-gray-200 rounded mb-2 mx-auto"></div>
-                        <p className="font-semibold text-sm">S. RAVIBALAN</p>
+                      <div className="flex flex-col justify-between  items-center gap-1.5 text-center w-full  h-full">
+                        {profile?.image_url ? (
+                            <img src={profile?.image_url} alt={"card image"} className="w-[138px] h-[138px] border border-gray-400  rounded-full mb-2 mx-auto" />
+                        ) : (
+                          <div className="w-20 h-20 bg-gray-200 rounded-full mb-2 mx-auto"></div>
+                        )}
+                        
+                        <p className="font-semibold text-sm">{profile?.name}</p>
+                        <div className="bg-blue-500 w-1/4 h-2"></div>
+                         {/* <div className="bg-blue-500 w-full h-2"></div> */}
                       </div>
                     </div>
+                     <div className="flex gap-2 items-center justify-center h-2.5 my-2">
+                      <span className=" tracking-tight text-[10px] font-bold  text-blue-500 min-w-fit">www.theainet.net</span>    <div className="bg-blue-500 h-2 w-full"></div>
+                    </div>
+                    <div className="flex w-full mb-1">
+                      <span className=" text-[8px] font-semibold">Address:{profile?.address} | Call: {profile?.mobile} | {profile?.email}</span>
+                    </div>
                   </div>
-                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"  onClick={handleDownload}>
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
@@ -758,11 +799,10 @@ export default function Profile() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-6 py-2 rounded-full text-sm font-bold mx-auto  ${
-                    isSubmitting
-                      ? "bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed"
-                      : "bg-amber-200 hover:bg-amber-300 cursor-pointer"
-                  }`}
+                  className={`px-6 py-2 rounded-full text-sm font-bold mx-auto  ${isSubmitting
+                    ? "bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed"
+                    : "bg-amber-200 hover:bg-amber-300 cursor-pointer"
+                    }`}
                   style={{
                     cursor: isSubmitting ? "not-allowed" : "pointer",
                   }}

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 import { useAuth } from "../../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const REMEMBER_EMAIL_KEY = "rememberedEmail";
 const REMEMBER_EMAIL_EXPIRY_KEY = "rememberedEmailExpiry";
@@ -14,12 +15,18 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { fetchProfile, setUserLoggedIn } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const token = localStorage.getItem("ainetToken");
+    // Check if we're not already on the login page due to a redirect
+    const isRedirected = new URLSearchParams(window.location.search).get('from') === 'profile';
+
+    if (token && !isRedirected) {
+      // Set loading state to true to show loading indicator
+      setLoading(true);
+      // Navigate immediately to prevent seeing the login page
       navigate("/profile");
     }
   }, [navigate]);
@@ -63,25 +70,30 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok && data.data.token) {
-        localStorage.setItem("token", data.data.token);
-        await fetchProfile();
+        // Use the login function from AuthContext
+        // This ensures proper state synchronization
+        const token = data.data.token;
+        localStorage.setItem("ainetToken",token)
 
-        toast.success("Login successful!");
-        setUserLoggedIn(data?.data);
+       
+            toast.success("Login successful!");
 
-        // Remember email for 24 hours if checked
-        if (rememberMe) {
-          localStorage.setItem(REMEMBER_EMAIL_KEY, email);
-          localStorage.setItem(
-            REMEMBER_EMAIL_EXPIRY_KEY,
-            (Date.now() + 24 * 60 * 60 * 1000).toString()
-          );
-        } else {
-          localStorage.removeItem(REMEMBER_EMAIL_KEY);
-          localStorage.removeItem(REMEMBER_EMAIL_EXPIRY_KEY);
-        }
+            // Remember email for 24 hours if checked
+            if (rememberMe) {
+              localStorage.setItem(REMEMBER_EMAIL_KEY, email);
+              localStorage.setItem(
+                REMEMBER_EMAIL_EXPIRY_KEY,
+                (Date.now() + 24 * 60 * 60 * 1000).toString()
+              );
+            } else {
+              localStorage.removeItem(REMEMBER_EMAIL_KEY);
+              localStorage.removeItem(REMEMBER_EMAIL_EXPIRY_KEY);
+            }
 
-        navigate("/profile");
+            // Navigate immediately without delay
+            navigate("/profile");
+         
+        
       } else {
         setError(data.message || "Invalid email or password");
         toast.error(data.message || "Invalid email or password");
@@ -149,13 +161,22 @@ export default function Login() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Password
                     </label>
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
-                      className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-transparent backdrop-blur-sm"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-transparent backdrop-blur-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
+                      >
+                        {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">

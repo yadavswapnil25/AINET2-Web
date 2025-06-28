@@ -14,7 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { logout, userLoggedIn,token ,loggedIn} = useAuth();
+  const { logout, token ,profileData} = useAuth();
   const navigate = useNavigate()
 
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,6 @@ const Navbar = () => {
   const [dropdownOpenProfile, setDropdownOpenProfile] = useState(false);
   const dropdownRef = useRef(null);
   const [user, setUser] = useState();
-  console.log("loggedIn",loggedIn)
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -48,8 +47,10 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    setUser(userLoggedIn);
-  }, [token]);
+    setUser(profileData);
+  }, [token,profileData]);
+  
+
 
   const socials = [
     {
@@ -171,17 +172,17 @@ const Navbar = () => {
             {/* AUTH BTNS */}
 
             <div className="relative" ref={dropdownRef}>
-              {userLoggedIn ? (
+              {profileData ? (
                 <div
                   className="flex gap-3 px-3 py-2 cursor-pointer bg-[#A6AEBF] rounded-4xl items-center"
                   onClick={() => setDropdownOpenProfile(!dropdownOpenProfile)}
                 >
                   <img
-                    src={loggedIn?.image_url}
+                    src={profileData?.image_url}
                     alt="profile"
                     className="size-7 rounded-full cursor-pointer"
                   />
-                  <span className=" text-white">{loggedIn?.name}</span>
+                  <span className=" text-white">{profileData?.name}</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 lg:gap-4">
@@ -200,14 +201,14 @@ const Navbar = () => {
                   {/* Profile Info */}
                   <div className="flex flex-col items-center  border-b border-[#A6AEBF] p-5">
                     <img
-                      src={loggedIn?.image_url}
-                      alt={loggedIn?.name}
+                      src={profileData?.image_url}
+                      alt={profileData?.name}
                       className="w-16 h-16 rounded-full object-cover mb-2"
                     />
                     <h3 className="font-semibold text-lg text-gray-800">
-                      {loggedIn?.name}
+                      {profileData?.name}
                     </h3>
-                    <p className="text-sm text-gray-500">{loggedIn?.email}</p>
+                    <p className="text-sm text-gray-500">{profileData?.email}</p>
                   </div>
                   <Link
                     to="/profile"
