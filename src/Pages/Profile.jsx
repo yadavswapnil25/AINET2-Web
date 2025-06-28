@@ -5,6 +5,8 @@ import { FaEdit } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
+import Loader from "../Components/shared/Loader";
+import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -12,6 +14,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [imageSelected, setImageSelected] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null); // Store the actual file
   const [previewImage, setPreviewImage] = useState(
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&h=128&fit=crop&crop=face"
   );
@@ -19,6 +22,7 @@ export default function Profile() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const token = localStorage.getItem("token");
+  const { setLoggedIn } = useAuth();
 
   const [formData, setFormData] = useState({
     name: profile?.name,
@@ -28,7 +32,6 @@ export default function Profile() {
     dob: profile?.dob,
     address: profile?.address,
   });
-  console.log("formData", formData);
 
   const handleProfileClick = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -36,25 +39,64 @@ export default function Profile() {
   const handleEditClick = () => {
     fileInputRef.current.click(); // Trigger hidden file input
   };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl); // Show preview
+      setSelectedFile(file); // Store the actual file
       setImageSelected(true); // Mark that image is selected
     }
   };
-  const handleSaveProfile = () => {
-    // Here you can call an API or handle upload logic
-    console.log("Profile image saved!");
-    setImageSelected(false);
-    setShowModal(false); // Optionally close modal
+
+  const handleSaveProfile = async () => {
+    if (!selectedFile) {
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      // Create FormData for file upload
+      const formDataForUpload = new FormData();
+      formDataForUpload.append("image", selectedFile);
+
+      const res = await fetch(`${baseUrl}client/auth/${profile.id}/profile`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // Don't set Content-Type when using FormData - browser will set it automatically
+        },
+        body: formDataForUpload,
+      });
+
+      const data = await res.json();
+      console.log("data", data);
+
+      if (res.ok) {
+        toast.success(data?.message || "Profile image updated successfully!");
+        fetchProfile(); // Refresh profile data
+        setImageSelected(false);
+        setSelectedFile(null);
+        setShowModal(false);
+        setLoggedIn(data?.data?.user);
+      } else {
+        toast.error(data?.message || "Failed to update profile image");
+      }
+    } catch (err) {
+      toast.error("Failed to upload image");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleEditProfileClick = () => {
     setShowEditModal(true);
   };
+
   const closeEditModal = () => setShowEditModal(false);
+
   const handleEditFormChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -89,29 +131,48 @@ export default function Profile() {
 
   const handleEdit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
+      // Create FormData to handle both text fields and potential file
+      const formDataForSubmit = new FormData();
+
+      // Add text fields
+      Object.keys(formData).forEach((key) => {
+        if (formData[key]) {
+          formDataForSubmit.append(key, formData[key]);
+        }
+      });
+
+      // Add image file if selected
+      if (selectedFile) {
+        formDataForSubmit.append("image", selectedFile);
+      }
+
       const res = await fetch(`${baseUrl}client/auth/${profile.id}/profile`, {
         method: "POST",
         headers: {
-          "Content-type": "application/json",
-          Accept: "application/json",
           Authorization: `Bearer ${token}`,
+          // Don't set Content-Type when using FormData
         },
-        body: JSON.stringify(formData),
+        body: formDataForSubmit,
       });
 
       const data = await res.json();
-      console.log("data", data);
 
       if (res.ok) {
-        toast.success(data?.message);
+        toast.success(data?.message || "Profile updated successfully!");
         fetchProfile();
         setShowEditModal(false);
+        setImageSelected(false);
+        setSelectedFile(null);
+      } else {
+        toast.error(data?.message || "Failed to update profile");
       }
     } catch (err) {
-      console.log(err);
-      toast.error(data.data.message);
+      toast.error("Failed to update profile");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -122,10 +183,9 @@ export default function Profile() {
   let created = new Date(profile?.created_at);
   created = created.toLocaleDateString();
 
-  console.log("profile", profile);
-
   return (
     <div className="min-h-screen bg-gray-100 p-4">
+      {loading && <Loader />}
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Left Column */}
@@ -149,7 +209,7 @@ export default function Profile() {
                   onClick={handleProfileClick}
                 >
                   <img
-                    src={previewImage}
+                    src={profile?.image_url || previewImage}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -172,7 +232,7 @@ export default function Profile() {
                       {/* Modal Profile Image */}
                       <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
                         <img
-                          src={previewImage}
+                          src={profile?.image_url || previewImage}
                           alt="Preview"
                           className="w-full h-full object-cover"
                         />
@@ -481,13 +541,6 @@ export default function Profile() {
 
             {/* Badge Section */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">badge</h3>
-                <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded">
-                  720 x 720
-                </span>
-              </div>
-
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <h4 className="font-semibold text-gray-900 mb-4">badge 1</h4>

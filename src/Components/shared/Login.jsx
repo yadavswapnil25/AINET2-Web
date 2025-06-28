@@ -3,9 +3,10 @@ import { baseUrl } from "../../utils/constant";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import { useAuth } from "../../context/AuthContext";
 
-const REMEMBER_EMAIL_KEY = 'rememberedEmail';
-const REMEMBER_EMAIL_EXPIRY_KEY = 'rememberedEmailExpiry';
+const REMEMBER_EMAIL_KEY = "rememberedEmail";
+const REMEMBER_EMAIL_EXPIRY_KEY = "rememberedEmailExpiry";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,17 +15,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  const { fetchProfile, setUserLoggedIn } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      navigate('/profile');
+      navigate("/profile");
     }
   }, [navigate]);
 
-
-  
   // On mount, check for remembered email
   useEffect(() => {
     const rememberedEmail = localStorage.getItem(REMEMBER_EMAIL_KEY);
@@ -65,16 +64,24 @@ export default function Login() {
 
       if (res.ok && data.data.token) {
         localStorage.setItem("token", data.data.token);
+        await fetchProfile();
+
         toast.success("Login successful!");
+        setUserLoggedIn(data?.data);
+
         // Remember email for 24 hours if checked
         if (rememberMe) {
           localStorage.setItem(REMEMBER_EMAIL_KEY, email);
-          localStorage.setItem(REMEMBER_EMAIL_EXPIRY_KEY, (Date.now() + 24 * 60 * 60 * 1000).toString());
+          localStorage.setItem(
+            REMEMBER_EMAIL_EXPIRY_KEY,
+            (Date.now() + 24 * 60 * 60 * 1000).toString()
+          );
         } else {
           localStorage.removeItem(REMEMBER_EMAIL_KEY);
           localStorage.removeItem(REMEMBER_EMAIL_EXPIRY_KEY);
         }
-        navigate("/profile");   
+
+        navigate("/profile");
       } else {
         setError(data.message || "Invalid email or password");
         toast.error(data.message || "Invalid email or password");
@@ -90,9 +97,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen p-4">
-        {
-            loading && <Loader/>
-        }
+      {loading && <Loader />}
       <div className="max-w-7xl mx-auto">
         {/* Header Logo */}
         <div>
