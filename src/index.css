@@ -123,3 +123,167 @@ button {
               .react-datepicker__day--outside-month {
                   color: #cbd5e1;
               }
+
+              .card-container {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.card-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  height: 0.625rem; /* 2.5 */
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  letter-spacing: 0.1em;
+  font-size: 8px;
+  font-weight: 800;
+  color: rgb(59, 130, 246); /* text-blue-500 */
+  white-space: nowrap;
+}
+
+.card-title-bar {
+  background-color: rgb(59, 130, 246); /* bg-blue-500 */
+  height: 8px;
+  width: 100%;
+}
+
+.card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  justify-content: center;
+  height: 100%;
+}
+
+.card-left {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.logo-image {
+  width: 14rem;
+}
+
+.member-info {
+  font-size: 9px;
+  color: black;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.qr-box {
+  width: 4rem;   /* 16 */
+  height: 4rem;
+  background-color: #e5e7eb; /* gray-200 */
+  border: 2px dashed #9ca3af; /* gray-400 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.qr-text {
+  font-size: 0.75rem; /* text-xs */
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.375rem; /* gap-1.5 */
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.profile-image {
+  width: 138px;
+  height: 138px;
+  border: 1px solid #9ca3af; /* gray-400 */
+  border-radius: 9999px;
+  margin-bottom: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.empty-profile-image {
+  width: 5rem; /* 20 */
+  height: 5rem;
+  background-color: #e5e7eb; /* gray-200 */
+  border-radius: 9999px;
+  margin-bottom: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.member-name {
+  font-weight: 600;
+  font-size: 0.875rem; /* text-sm */
+}
+
+.blue-line {
+  background-color: rgb(59, 130, 246);
+  height: 8px;
+  width: 25%;
+}
+
+.card-footer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  height: 0.625rem;
+  margin: 0.5rem 0;
+}
+
+.footer-text {
+  letter-spacing: -0.01em;
+  font-size: 10px;
+  font-weight: bold;
+  color: rgb(59, 130, 246);
+  white-space: nowrap;
+}
+
+.footer-line {
+  background-color: rgb(59, 130, 246);
+  height: 8px;
+  width: 100%;
+}
+
+.contact-line {
+  display: flex;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.contact-info {
+  font-size: 8px;
+  font-weight: 600;
+}
+
+@media screen and (max-width:768px) {
+  .profile-image{
+    width: 111px;
+    height: 111px;
+  }
+}

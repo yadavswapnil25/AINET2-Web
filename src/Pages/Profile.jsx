@@ -190,27 +190,33 @@ export default function Profile() {
   let created = new Date(profile?.created_at);
   created = created.toLocaleDateString();
 
-  
-const cardRef = useRef();
 
-  const handleDownload = async () => {
-    const element = cardRef.current;
-    if (!element) return;
+  const cardRef = useRef();
 
+ const handleDownload = async () => {
+  const element = cardRef.current;
+  if (!element) return;
+
+  try {
     const canvas = await html2canvas(element, {
-      scale: 2, // Better resolution
-      useCORS: true, // allows external image loading (for profile image)
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      scale: 2, // higher quality
     });
 
-    const image = canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/jpeg", 1.0); // Convert to JPEG
 
+    // ✅ Trigger image download only
     const link = document.createElement("a");
-    link.href = image;
-    link.download = "AINET_Membership_Card.png";
+    link.href = dataUrl;
+    link.download = "AINET_Membership_Card.jpg";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  } catch (err) {
+    console.error("Download failed:", err);
+  }
+};
 
 
   return (
@@ -361,7 +367,7 @@ const cardRef = useRef();
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">Membership ID :</span>
-                    <span className="text-gray-900">{profile?.id}</span>
+                    <span className="text-gray-900">{profile?.m_id}</span>
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">
@@ -474,47 +480,58 @@ const cardRef = useRef();
                   <h4 className="font-semibold text-gray-900 mb-4">
                     Membership ID Card
                   </h4>
-                  <div className="bg-white border border-gray-200 rounded-lg p-4 pb-0 mb-4 w-full" ref={cardRef}>
-                    <div className="flex gap-2 items-center justify-center h-2.5 mb-4">
-                      <span className=" tracking-widest text-[8px] font-extrabold  text-blue-500 min-w-fit">AINET MEMBERSHIP CARD</span>    <div className="bg-blue-500 h-2 w-full"></div>
+                  <div className="card-container" ref={cardRef}>
+                    <div className="card-header">
+                      <span className="card-title">AINET MEMBERSHIP CARD</span>
+                      <div className="card-title-bar"></div>
                     </div>
-                   
-                    <div className="flex items-start gap-4 justify-center h-full">
-                      <div className=" h-full flex flex-col items-center">
-                        <div className="flex items-center gap-2 mb-2">
-                          <img src="/logo.svg" alt="logo" className=" w-[14rem]" />
+
+                    <div className="card-body">
+                      <div className="card-left">
+                        <div className="logo-container">
+                          <img src="/logo.svg" alt="logo" className="logo-image" />
                         </div>
-                        <p className="text-[9px] text-black text-center mb-2">
-                         <span>MEMBERSHIP ID:{profile?.id}</span>
+                        <p className="member-info">
+                          <span>MEMBERSHIP ID: {profile?.m_id}</span>
                           <br />
-                         <span>VALID UP TO:{created}</span>
-                         {/* {console.log(profile, "profile")} */}
+                          <span>VALID UP TO: {created}</span>
                         </p>
-                        <div className="w-16 h-16 bg-gray-200 border-2 border-dashed border-gray-400 flex items-center justify-center mb-2">
-                          <span className="text-xs">QR</span>
+                        <div className="qr-box">
+                          <span className="qr-text">QR</span>
                         </div>
-                       
                       </div>
-                      <div className="flex flex-col justify-between  items-center gap-1.5 text-center w-full  h-full">
+
+                      <div className="card-right">
                         {profile?.image_url ? (
-                            <img src={profile?.image_url} alt={"card image"} className="w-[138px] h-[138px] border border-gray-400  rounded-full mb-2 mx-auto" />
+                          <img
+                            src={
+                              // profile?.image_url|| 
+                              "/logo.svg"}
+                            alt="card image"
+                            className="profile-image "
+                          />
                         ) : (
-                          <div className="w-20 h-20 bg-gray-200 rounded-full mb-2 mx-auto"></div>
+                          <div className="empty-profile-image"></div>
                         )}
-                        
-                        <p className="font-semibold text-sm">{profile?.name}</p>
-                        <div className="bg-blue-500 w-1/4 h-2"></div>
-                         {/* <div className="bg-blue-500 w-full h-2"></div> */}
+
+                        <p className="member-name">{profile?.name}</p>
+                        <div className="blue-line"></div>
                       </div>
                     </div>
-                     <div className="flex gap-2 items-center justify-center h-2.5 my-2">
-                      <span className=" tracking-tight text-[10px] font-bold  text-blue-500 min-w-fit">www.theainet.net</span>    <div className="bg-blue-500 h-2 w-full"></div>
+
+                    <div className="card-footer">
+                      <span className="footer-text">www.theainet.net</span>
+                      <div className="footer-line"></div>
                     </div>
-                    <div className="flex w-full mb-1">
-                      <span className=" text-[8px] font-semibold">Address:{profile?.address} | Call: {profile?.mobile} | {profile?.email}</span>
+
+                    <div className="contact-line">
+                      <span className="contact-info">
+                        Address: {profile?.address} | Call: {profile?.mobile} | {profile?.email}
+                      </span>
                     </div>
                   </div>
-                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"  onClick={handleDownload}>
+
+                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"  onClick={() => handleDownload('png')}>
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>

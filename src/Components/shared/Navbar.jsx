@@ -123,8 +123,9 @@ const Navbar = () => {
     };
   }, []);
   const handleLogout = () => {
+
+    setDropdownOpenProfile(false);
     logout();     
-    setDropdownOpen(false);   
     navigate("/login"); 
   };
 
