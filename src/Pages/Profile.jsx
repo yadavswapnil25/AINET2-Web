@@ -468,9 +468,9 @@ const cardRef = useRef();
                 Membership Kit
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {/* Membership ID Card */}
-                <div>
+                <div className="  col-span-2">
                   <h4 className="font-semibold text-gray-900 mb-4">
                     Membership ID Card
                   </h4>
