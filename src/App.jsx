@@ -1,16 +1,15 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import Footer from "./Components/shared/Footer";
-import Navbar from "./Components/shared/Navbar";
+import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./Components/ScrollToTop";
-import AboutNews from "./Pages/AboutNews";
+import Footer from "./Components/shared/Footer";
 import Loader from "./Components/shared/Loader";
 import Login from "./Components/shared/Login";
-import { ToastContainer } from "react-toastify";
+import Navbar from "./Components/shared/Navbar";
 import PrivateRoute from "./Components/shared/PrivateRoute";
+import AboutNews from "./Pages/AboutNews";
 
 // Layouts
-import AdminLayout from "./Components/Admin/Layout";
 
 const Home = lazy(() => import("./Pages/Home"));
 const About = lazy(() => import("./Pages/About"));
@@ -44,9 +43,6 @@ const AINETConnect = lazy(() => import("./Pages/AINETConnect"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const PageUnderConstruct = lazy(() => import("./Pages/PageUnderConstruct"));
 const AinetOccasionalPapersList = lazy(() => import("./Components/specific/Publication/AinetOccasionalPapersList"));
-
-// Admin Pages
-const AdminDashboard = lazy(() => import("./Pages/Admin/Dashboard"));
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -93,12 +89,6 @@ const App = () => {
           <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Admin Routes with Sidebar Layout */}
-          <Route element={<AdminLayout />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            {/* <Route path="/admin/users/:id" element={<AdminUserView />} />
-            <Route path="/admin/users/:id/edit" element={<AdminUserUpdate />} /> */}
-          </Route>
         </Routes>
       </Suspense>
       <Footer />
