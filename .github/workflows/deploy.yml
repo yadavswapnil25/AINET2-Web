@@ -1,0 +1,58 @@
+name: React App Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 3. Install dependencies and build
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build React app
+        run: npm run build
+
+      # 4. Zip the build output
+      - name: Archive production build
+        run: zip -r react-build.zip dist  # 'build' for CRA, 'dist' for Vite
+
+      # 5. Upload build zip to server
+      - name: Upload build to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "react-build.zip"
+          target: "/root/react/"
+
+      # 6. SSH into server to deploy
+      - name: Deploy on server via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            rm -rf /var/www/ainet2-web-build/*
+            unzip -o /root/react/react-build.zip -d /root/react/
+            mv /root/react/dist/*  /var/www/ainet2-web-build/
+            rm -rf /root/react/
+            find /var/www/ainet2-web-build -type d -exec chmod 755 {} \;
+            find /var/www/ainet2-web-build -type f -exec chmod 644 {} \;
+            sudo systemctl reload nginx

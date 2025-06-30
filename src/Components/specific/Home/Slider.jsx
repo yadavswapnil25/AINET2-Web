@@ -10,7 +10,7 @@ const testimonialsData = [
     image: "/sliderImg1.png",
     date: "10th March 2024",
     testimonial:
-      "Lorem ipsum is a dummy or placeholder text commonly used in graphic design,",
+      "  dummy or placeholder text commonly used in graphic design,",
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const testimonialsData = [
     image: "/sliderImg2.png",
     date: "10th March 2024",
     testimonial:
-      "Lorem ipsum is a dummy or placeholder text commonly used in graphic design,",
+      "Lorem  is a dummy or placeholder text commonly used in graphic design,",
   },
   {
     id: 3,
