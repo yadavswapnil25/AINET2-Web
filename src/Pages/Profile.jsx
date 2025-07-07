@@ -15,9 +15,9 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [imageSelected, setImageSelected] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null); // Store the actual file
+  const [selectedFile, setSelectedFile] = useState(null); 
   const [previewImage, setPreviewImage] = useState(
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&h=128&fit=crop&crop=face"
+    "./placeholder.jpg"
   );
   const fileInputRef = useRef(null);
   const [showEditModal, setShowEditModal] = useState(false);
