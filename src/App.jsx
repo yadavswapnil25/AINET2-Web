@@ -24,7 +24,7 @@ const AinetOccasionalPaperDetailed = lazy(() => import("./Pages/AinetOccasionalP
 const TeacherResearch = lazy(() => import("./Pages/TeacherResearch"));
 const Archives = lazy(() => import("./Pages/Archives"));
 const ArchivesConference = lazy(() => import("./Pages/ArchivesConference"));
-const MembershipFormForIndividualOverseas = lazy(() => import("./Components/specific/Forms/MembershipFormForIndividualOverseas"));
+const MembershipFormForIndividualOverseas = lazy(() => import("./Components/specific/Forms/MembershipFormforIndividualOverseas"));
 const MembershipFormforInstitutionalAnnual = lazy(() => import("./Components/specific/Forms/MembershipFormforInstitutionalAnnual"));
 const Conference = lazy(() => import("./Pages/Conference"));
 const Webinar = lazy(() => import("./Pages/Webinar"));
