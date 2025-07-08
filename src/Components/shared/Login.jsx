@@ -29,6 +29,12 @@ export default function Login() {
       // Navigate immediately to prevent seeing the login page
       navigate("/profile");
     }
+    
+    // Check if user was redirected due to token expiration
+    const expired = new URLSearchParams(window.location.search).get('expired');
+    if (expired === 'true') {
+      toast.error("Your session has expired. Please log in again.");
+    }
   }, [navigate]);
 
   // On mount, check for remembered email
@@ -54,8 +60,17 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      toast.error("Please fill in all fields");
+      return;
+    }
+
     setLoading(true);
     setError("");
+
+
 
     try {
       const res = await fetch(`${baseUrl}client/auth/login`, {
@@ -73,27 +88,27 @@ export default function Login() {
         // Use the login function from AuthContext
         // This ensures proper state synchronization
         const token = data.data.token;
-        localStorage.setItem("ainetToken",token)
+        localStorage.setItem("ainetToken", token)
 
-       
-            toast.success("Login successful!");
 
-            // Remember email for 24 hours if checked
-            if (rememberMe) {
-              localStorage.setItem(REMEMBER_EMAIL_KEY, email);
-              localStorage.setItem(
-                REMEMBER_EMAIL_EXPIRY_KEY,
-                (Date.now() + 24 * 60 * 60 * 1000).toString()
-              );
-            } else {
-              localStorage.removeItem(REMEMBER_EMAIL_KEY);
-              localStorage.removeItem(REMEMBER_EMAIL_EXPIRY_KEY);
-            }
+        toast.success("Login successful!");
 
-            // Navigate immediately without delay
-            navigate("/profile");
-         
-        
+        // Remember email for 24 hours if checked
+        if (rememberMe) {
+          localStorage.setItem(REMEMBER_EMAIL_KEY, email);
+          localStorage.setItem(
+            REMEMBER_EMAIL_EXPIRY_KEY,
+            (Date.now() + 24 * 60 * 60 * 1000).toString()
+          );
+        } else {
+          localStorage.removeItem(REMEMBER_EMAIL_KEY);
+          localStorage.removeItem(REMEMBER_EMAIL_EXPIRY_KEY);
+        }
+
+        // Navigate immediately without delay
+        navigate("/profile");
+
+
       } else {
         setError(data.message || "Invalid email or password");
         toast.error(data.message || "Invalid email or password");
@@ -148,7 +163,7 @@ export default function Login() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Email
                     </label>
-                    <input
+                    <input required
                       type="text"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -163,6 +178,7 @@ export default function Login() {
                     </label>
                     <div className="relative">
                       <input
+                        required
                         type={showPassword ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -195,7 +211,6 @@ export default function Login() {
                   </div>
 
                   <button
-                    onClick={handleLogin}
                     disabled={loading}
                     className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200 disabled:opacity-60"
                   >

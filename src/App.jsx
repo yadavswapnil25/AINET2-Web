@@ -43,8 +43,12 @@ const AINETConnect = lazy(() => import("./Pages/AINETConnect"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const PageUnderConstruct = lazy(() => import("./Pages/PageUnderConstruct"));
 const AinetOccasionalPapersList = lazy(() => import("./Components/specific/Publication/AinetOccasionalPapersList"));
+const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy"));
 
 import 'react-toastify/dist/ReactToastify.css';
+import TermsAndConditions from "./Pages/TermsAndConditions";
+import RefundPolicy from "./Pages/RefundPolicy";
+import ShippingPolicy from "./Pages/ShippingPolicy";
 
 const App = () => {
   return (
@@ -88,6 +92,10 @@ const App = () => {
           <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
           <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/TermsAndConditions" element={<TermsAndConditions />} />
+          <Route path="/RefundPolicy" element={<RefundPolicy />} />
+          <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
 
         </Routes>
       </Suspense>

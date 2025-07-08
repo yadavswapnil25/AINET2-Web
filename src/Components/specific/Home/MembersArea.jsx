@@ -1,5 +1,6 @@
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const types = [
   "Membership Privileges",
@@ -29,9 +30,8 @@ const MembersArea = () => {
         <div className="flex flex-col w-full md:w-1/3 h-full mt-4 md:mt-0 md:pl-14">
           {types?.map((type, index) => (
             <div
-              className={`flex items-center gap-4  ${
-                index === 0 ? "mt-0" : "mt-2"
-              }`}
+              className={`flex items-center gap-4  ${index === 0 ? "mt-0" : "mt-2"
+                }`}
               key={index}
             >
               <FaCheckCircle className="text-white text-[20px]" />
@@ -42,12 +42,12 @@ const MembersArea = () => {
 
         {/* third */}
         <div className="w-full md:w-1/3 flex mt-4 md:mt-0 justify-around flex-col items-center gap-4">
-          <button className="w-full md:w-[340px] bg-[#FFF8DE] text-black font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
+          <Link to="/#membershipplan" className="w-full text-center md:w-[340px] bg-[#FFF8DE] text-black font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
             Not a member? Join in!
-          </button>
-          <button className="w-full md:w-[340px] bg-[#ffffff] text-[#A6AEBF] font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
+          </Link>
+          <Link to="/login" className="w-full text-center md:w-[340px] bg-[#ffffff] text-[#A6AEBF] font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
             ALREADY A MEMBER? LOG IN
-          </button>
+          </Link>
 
         </div>
       </div>
