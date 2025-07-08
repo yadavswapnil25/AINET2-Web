@@ -15,15 +15,16 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [imageSelected, setImageSelected] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null); // Store the actual file
+  const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=128&h=128&fit=crop&crop=face"
+    "/placeholder.jpg"
   );
   const fileInputRef = useRef(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const token = localStorage.getItem("ainetToken");
-  const { setProfileData } = useAuth();
+  const { setProfileData, handleTokenExpiration } = useAuth();
+  const [showInboxModal, setShowInboxModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: profile?.name,
@@ -72,6 +73,12 @@ export default function Profile() {
         body: formDataForUpload,
       });
 
+      // Check if token is expired or invalid
+      if (res.status === 401 || res.status === 403) {
+        handleTokenExpiration();
+        return;
+      }
+
       const data = await res.json();
 
       if (res.ok) {
@@ -112,6 +119,13 @@ export default function Profile() {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      // Check if token is expired or invalid
+      if (res.status === 401 || res.status === 403) {
+        handleTokenExpiration();
+        return;
+      }
+
       if (!res.ok) throw new Error("Failed to fetch profile");
       const data = await res.json();
       setProfileData(data?.data?.user)
@@ -162,6 +176,12 @@ export default function Profile() {
         body: formDataForSubmit,
       });
 
+      // Check if token is expired or invalid
+      if (res.status === 401 || res.status === 403) {
+        handleTokenExpiration();
+        return;
+      }
+
       const data = await res.json();
 
       if (res.ok) {
@@ -190,33 +210,63 @@ export default function Profile() {
   let created = new Date(profile?.created_at);
   created = created.toLocaleDateString();
 
+  let renewed = new Date(profile?.updated_at);
+  renewed = renewed.toLocaleDateString();
+
+  // Calculate expiry date (1 year from renewed date)
+  const renewedDate = new Date(profile?.updated_at);
+  const expiryDate = new Date(renewedDate);
+  expiryDate.setFullYear(renewedDate.getFullYear() + 1);
+
+  const currentDate = new Date();
+
+  // Determine membership status based on expiry date
+  const isActive = currentDate <= expiryDate;
+  const expired = expiryDate.toLocaleDateString();
+
+  // Calculate days difference
+  const timeDiff = expiryDate.getTime() - currentDate.getTime();
+  const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+  const getStatusMessage = () => {
+    if (isActive) {
+      if (daysDiff <= 30) {
+        return `Expires in ${daysDiff} days`;
+      }
+      return `Valid for ${daysDiff} days`;
+    } else {
+      return `Expired ${Math.abs(daysDiff)} days ago`;
+    }
+  };
 
   const cardRef = useRef();
 
- const handleDownload = async () => {
-  const element = cardRef.current;
-  if (!element) return;
+  const handleDownload = async () => {
+    const element = cardRef.current;
+    if (!element) return;
 
-  try {
-    const canvas = await html2canvas(element, {
-      useCORS: true,
-      backgroundColor: "#ffffff",
-      scale: 2, // higher quality
-    });
+    try {
+      const canvas = await html2canvas(element, {
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scale: 2,
+      });
 
-    const dataUrl = canvas.toDataURL("image/jpeg", 1.0); // Convert to JPEG
+      const dataUrl = canvas.toDataURL("image/jpeg", 1.0); // Convert to JPEG
 
-    // ✅ Trigger image download only
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = "AINET_Membership_Card.jpg";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (err) {
-    console.error("Download failed:", err);
-  }
-};
+      // ✅ Trigger image download only
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "AINET_Membership_Card.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Download failed:", err);
+    }
+  };
+
+
 
 
   return (
@@ -245,7 +295,10 @@ export default function Profile() {
                   onClick={handleProfileClick}
                 >
                   <img
-                    src={profile?.image_url || previewImage}
+                    src={profile?.image_url || previewImage || "/placeholder.jpg"}
+                    onError={(e) => {
+                      e.target.src = "/placeholder.jpg";
+                    }}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -268,7 +321,7 @@ export default function Profile() {
                       {/* Modal Profile Image */}
                       <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4">
                         <img
-                          src={previewImage ? previewImage : profile?.image_url}
+                          src={previewImage || profile?.image_url || "/placeholder.jpg"}
                           alt="Preview"
                           className="w-full h-full object-cover"
                         />
@@ -379,32 +432,44 @@ export default function Profile() {
                     <span className="text-gray-600 w-40">
                       Renewed membership on :
                     </span>
-                    <span className="text-gray-900">23-July-2021</span>
+                    <span className="text-gray-900">{renewed}</span>
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">
                       Expire membership on :
                     </span>
-                    <span className="text-gray-900">28-September-2022</span>
+                    <span className="text-gray-900">{expired}</span>
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">
                       Membership Status :
                     </span>
-                    <span
-                      className={`${profile?.status === 1
-                        ? "text-green-500"
-                        : "text-red-600"
-                        }  font-medium `}
-                    >
-                      {profile?.status === 1 ? "ACTIVE" : "INACTIVE"}
-                    </span>
+                    <div className="flex flex-col">
+                      <span
+                        className={`${isActive
+                          ? "text-green-500"
+                          : "text-red-600"
+                          }  font-medium `}
+                      >
+                        {isActive ? "ACTIVE" : "INACTIVE"}
+                      </span>
+                      <span
+                        className={`text-xs ${isActive
+                          ? daysDiff <= 30
+                            ? "text-orange-500"
+                            : "text-gray-500"
+                          : "text-red-500"
+                          }`}
+                      >
+                        {getStatusMessage()}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {profile?.status === 0 && (
-                  <button className="mt-4 px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm hover:bg-gray-200">
-                    Renew Now
+                {!isActive && (
+                  <button className="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 font-semibold">
+                    Renew Now - Membership Expired
                   </button>
                 )}
               </div>
@@ -418,10 +483,6 @@ export default function Profile() {
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-gray-900">Inbox</h3>
-                <button className="flex items-center gap-2 text-gray-500 hover:text-gray-700">
-                  <Edit className="w-4 h-4" />
-                  <span className="text-sm">Edit</span>
-                </button>
               </div>
 
               <div className="space-y-4">
@@ -429,39 +490,19 @@ export default function Profile() {
                   <div className="flex items-start gap-2 mb-2">
                     <span className="text-xs text-gray-500 mt-1">📧</span>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p onClick={() => setShowInboxModal(true)} className="text-sm font-medium text-gray-900 cursor-pointer hover:underline">
                         Apply Now: AINET Scholarships, Grants & Sponsorships for
                         Members!
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 mt-2">
                         06/06/2025 10:00AM 10h Ago
                       </p>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-600 ml-5">
-                    Dear Aman, AINET is pleased to offer exclusive scholarships,
-                    travel grants...
-                  </p>
+
                 </div>
 
-                <div className="border-b border-gray-100 pb-4">
-                  <div className="flex items-start gap-2 mb-2">
-                    <span className="text-xs text-gray-500 mt-1">📧</span>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        Apply Now: AINET Scholarships, Grants & Sponsorships for
-                        Members!
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        06/06/2025 10:00AM 10h Ago
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-600 ml-5">
-                    Dear Aman, AINET is pleased to offer exclusive scholarships,
-                    travel grants...
-                  </p>
-                </div>
+
               </div>
             </div>
           </div>
@@ -480,11 +521,13 @@ export default function Profile() {
                   <h4 className="font-semibold text-gray-900 mb-4">
                     Membership ID Card
                   </h4>
-                  <div className="card-container" ref={cardRef}>
+                  <div className="card-container" ref={cardRef} style={{ position: 'relative' }}>
                     <div className="card-header">
                       <span className="card-title">AINET MEMBERSHIP CARD</span>
                       <div className="card-title-bar"></div>
                     </div>
+
+
 
                     <div className="card-body">
                       <div className="card-left">
@@ -494,7 +537,7 @@ export default function Profile() {
                         <p className="member-info">
                           <span>MEMBERSHIP ID: {profile?.m_id}</span>
                           <br />
-                          <span>VALID UP TO: {created}</span>
+                          <span>VALID UP TO: {expired}</span>
                         </p>
                         <div className="qr-box">
                           <span className="qr-text">QR</span>
@@ -504,14 +547,16 @@ export default function Profile() {
                       <div className="card-right">
                         {profile?.image_url ? (
                           <img
-                            src={
-                              // profile?.image_url|| 
-                              "/logo.svg"}
+                            src={"/logo.svg"}
                             alt="card image"
                             className="profile-image "
                           />
                         ) : (
-                          <div className="empty-profile-image"></div>
+                          <img
+                            src="/logo.svg"
+                            alt="placeholder"
+                            className="profile-image "
+                          />
                         )}
 
                         <p className="member-name">{profile?.name}</p>
@@ -531,7 +576,7 @@ export default function Profile() {
                     </div>
                   </div>
 
-                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"  onClick={() => handleDownload('png')}>
+                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200" onClick={() => handleDownload('png')}>
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
@@ -831,6 +876,38 @@ export default function Profile() {
           </div>
         </div>
       )}
+
+      {showInboxModal && <InboxModal setShowInboxModal={setShowInboxModal} />}
     </div>
   );
 }
+
+
+
+
+const InboxModal = ({ setShowInboxModal }) => {
+  const closeInboxModal = () => {
+    setShowInboxModal(false);
+  };
+
+
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-white rounded-xl p-6 relative w-full max-w-[90%] md:max-w-2xl text-center shadow-lg">
+        <button
+          className="absolute top-2 right-2 text-gray-600 text-4xl font-bold"
+          onClick={closeInboxModal}
+        >
+          &times;
+        </button>
+        <h3 className="text-xl font-semibold mb-4">Inbox</h3>
+        <p>AINET is committed to support its members' professional development. As one way of supporting, AINET offers a range of scholarships, travel grants and sponsorships to attend AINET conferences and activities, events of other organisations, short-term courses, etc.
+
+          Scholarships, sponsorships and grants are available only to members with valid membership. They are announced from time to time for specific events or courses. Please watch out for regular announcements!
+
+          AINET members with innovative ideas may also approach us for small funding support to undertake small-scale projects. For more information or queries, write to <a href="mailto:theainet@gmail.com" className="text-blue-500">theainet@gmail.com</a>.</p>
+      </div>
+    </div>
+  );
+};

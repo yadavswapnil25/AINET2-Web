@@ -1,24 +1,20 @@
 import React, { useEffect } from "react";
 import Highlight from "../Components/shared/Highlight";
-import home_banner_1 from "/home_banner_1.png";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
-import bg3 from "/bg3.png";
 import newh1 from "/newh11.jpg";
 import newh2 from "/newh22.jpg";
 
-import home_banner_2 from "/home_banner_2.png";
-import upcoming from "/upcoming.png";
-import { MdLocationOn, MdCalendarToday } from "react-icons/md";
 import { FaCalendar } from "react-icons/fa";
-import MembersArea from "../Components/specific/Home/MembersArea";
-import CommunityVoicesSlider from "../Components/specific/Home/Slider";
-import Partners from "../Components/specific/Home/Partners";
-import Gallery from "../Components/specific/Home/Gallery";
-import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
-import Archives from "../Components/specific/Home/Archives";
-import MembershipPlans from "../Components/shared/MembershipPlans"
+import { MdLocationOn } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
+import MembershipPlans from "../Components/shared/MembershipPlans";
+import Archives from "../Components/specific/Home/Archives";
+import Gallery from "../Components/specific/Home/Gallery";
+import MembersArea from "../Components/specific/Home/MembersArea";
+import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
+import Partners from "../Components/specific/Home/Partners";
+import upcoming from "/upcoming.png";
 
 const Home = () => {
   const location = useLocation();

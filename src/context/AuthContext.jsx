@@ -10,15 +10,20 @@ export const AuthProvider = ({ children }) => {
   const [profileData, setProfileData] = useState()
   const [token, setToken] = useState(storedToken);
 
-
   const logout = () => {
     localStorage.removeItem("ainetToken");
     setProfileData();
     setToken(null);
   };
 
-
-
+  // Function to handle token expiration
+  const handleTokenExpiration = () => {
+    localStorage.removeItem("ainetToken");
+    setProfileData(null);
+    setToken(null);
+    // Redirect to login with a parameter to show it was due to expiration
+    window.location.href = '/login?from=profile&expired=true';
+  };
 
   return (
     <AuthContext.Provider
@@ -27,6 +32,7 @@ export const AuthProvider = ({ children }) => {
         profileData,
         setProfileData,
         logout,
+        handleTokenExpiration,
       }}
     >
       {children}
