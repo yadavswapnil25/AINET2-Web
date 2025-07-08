@@ -267,7 +267,7 @@ export default function Profile() {
   };
 
 
-  console.log("showInboxModal", showInboxModal)
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -296,6 +296,9 @@ export default function Profile() {
                 >
                   <img
                     src={profile?.image_url || previewImage || "/placeholder.jpg"}
+                    onError={(e) => {
+                      e.target.src = "/placeholder.jpg";
+                    }}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -544,13 +547,13 @@ export default function Profile() {
                       <div className="card-right">
                         {profile?.image_url ? (
                           <img
-                            src={profile?.image_url || "/placeholder.jpg"}
+                            src={"/logo.svg"}
                             alt="card image"
                             className="profile-image "
                           />
                         ) : (
                           <img
-                            src="/placeholder.jpg"
+                            src="/logo.svg"
                             alt="placeholder"
                             className="profile-image "
                           />

@@ -180,6 +180,9 @@ const Navbar = () => {
                 >
                   <img
                     src={profileData?.image_url || "/placeholder.jpg"}
+                    onError={(e) => {
+                      e.target.src = "/placeholder.jpg";
+                    }}
                     alt="profile"
                     className="size-7 rounded-full cursor-pointer"
                   />
@@ -203,6 +206,9 @@ const Navbar = () => {
                   <div className="flex flex-col items-center  border-b border-[#A6AEBF] p-5">
                     <img
                       src={profileData?.image_url || "/placeholder.jpg"}
+                      onError={(e) => {
+                        e.target.src = "/placeholder.jpg";
+                      }}
                       alt={profileData?.name}
                       className="w-16 h-16 rounded-full object-cover mb-2"
                     />
