@@ -211,7 +211,6 @@ export default function Login() {
                   </div>
 
                   <button
-                    onClick={handleLogin}
                     disabled={loading}
                     className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200 disabled:opacity-60"
                   >
