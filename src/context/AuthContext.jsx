@@ -1,49 +1,28 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getValidToken, isTokenExpired } from "../utils/utility";
+import { baseUrl } from "../utils/constant";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [profileData, setProfileData] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const storedToken = localStorage.getItem("ainetToken");
 
-  // Initialize token state and check validity
-  useEffect(() => {
-    const validToken = getValidToken();
-    setToken(validToken);
-    setLoading(false);
-    
-    // If no valid token, clear profile data
-    if (!validToken) {
-      setProfileData(null);
-    }
-  }, []);
-
-  const login = (newToken) => {
-    // Validate token before setting
-    if (newToken && !isTokenExpired(newToken)) {
-      localStorage.setItem("ainetToken", newToken);
-      setToken(newToken);
-    } else {
-      console.error("Invalid or expired token provided to login");
-    }
-  };
+  const [profileData, setProfileData] = useState()
+  const [token, setToken] = useState(storedToken);
 
   const logout = () => {
     localStorage.removeItem("ainetToken");
-    setProfileData(null);
+    setProfileData();
     setToken(null);
   };
 
-  const handleTokenExpired = () => {
-    console.log("Token expired, logging out user");
-    logout();
-  };
-
-  const isAuthenticated = () => {
-    return token && !isTokenExpired(token);
+  // Function to handle token expiration
+  const handleTokenExpiration = () => {
+    localStorage.removeItem("ainetToken");
+    setProfileData(null);
+    setToken(null);
+    // Redirect to login with a parameter to show it was due to expiration
+    window.location.href = '/login?from=profile&expired=true';
   };
 
   return (
@@ -52,11 +31,8 @@ export const AuthProvider = ({ children }) => {
         token,
         profileData,
         setProfileData,
-        login,
         logout,
-        handleTokenExpired,
-        isAuthenticated,
-        loading,
+        handleTokenExpiration,
       }}
     >
       {children}

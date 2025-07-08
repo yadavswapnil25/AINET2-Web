@@ -39,10 +39,12 @@ const Footer = () => {
                 <div className=' w-full  flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">AINET</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
-                        <li><a href="/about" className="hover:underline">About Us</a></li>
-                        <li><a href="/publications" className="hover:underline">Publications</a></li>
-                        <li><a href="/BlogsSection1" className="hover:underline">AINET Adda</a></li>
-                        <li><a href="/resources" className="hover:underline">Resources</a></li>
+                        <li><Link to="/about" className="hover:underline">About Us</Link></li>
+                        <li><Link to="/publications" className="hover:underline">Publications</Link></li>
+                        <li><Link to="/BlogsSection1" className="hover:underline">AINET Adda</Link></li>
+                        <li><Link to="/resources" className="hover:underline">Resources</Link></li>
+                        <li><Link to="/TermsAndConditions" className="hover:underline">Terms & Conditions</Link></li>
+
                     </ul>
                 </div>
 
@@ -50,9 +52,11 @@ const Footer = () => {
                 <div className=' w-full flex flex-col'>
                     <h3 className="text-white text-xl sm:text-2xl font-semibold mb-4">Help</h3>
                     <ul className="space-y-2 text-base sm:text-lg">
-                        <li><a href="/archives" className="hover:underline">Archives</a></li>
-                        <li><a href="/ContactUs" className="hover:underline">Contact Us</a></li>
-                        <li><a href="/privacy-policy" className="hover:underline">Privacy Policy</a></li>
+                        <li><Link to="/archives" className="hover:underline">Archives</Link></li>
+                        <li><Link to="/ContactUs" className="hover:underline">Contact Us</Link></li>
+                        <li><Link to="/PrivacyPolicy" className="hover:underline">Privacy Policy</Link></li>
+                        <li><Link to="/RefundPolicy" className="hover:underline">Refund Policy</Link></li>
+                        <li><Link to="/ShippingPolicy" className="hover:underline">Shipping Policy</Link></li>
                     </ul>
                 </div>
 
@@ -62,10 +66,10 @@ const Footer = () => {
                     <ul className="space-y-4 text-base sm:text-lg flex flex-col">
                         <li className="flex gap-3 ">
                             <FaEnvelope className="text-xl" />
-                            <a href="mailto:theainet@gmail.com" className="hover:underline">theainet@gmail.com</a>
+                            <a href="mailto:support@ainet.com" className="hover:underline">support@ainet.com</a>
                         </li>
                         <li className="flex gap-3 md:items-start">
-                            <FaPhoneAlt className="text-xl" />
+                            <FaPhoneAlt className="text-xl" />  
                             <a href="tel:+919322890031" className="hover:underline">+91 - 9322890031</a>
                         </li>
                         <li className="flex md:items-start  gap-3 w-[60%] md:w-full">

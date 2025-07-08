@@ -179,7 +179,7 @@ const Navbar = () => {
                   onClick={() => setDropdownOpenProfile(!dropdownOpenProfile)}
                 >
                   <img
-                    src={profileData?.image_url}
+                    src={profileData?.image_url || "/placeholder.jpg"}
                     alt="profile"
                     className="size-7 rounded-full cursor-pointer"
                   />
@@ -202,7 +202,7 @@ const Navbar = () => {
                   {/* Profile Info */}
                   <div className="flex flex-col items-center  border-b border-[#A6AEBF] p-5">
                     <img
-                      src={profileData?.image_url}
+                      src={profileData?.image_url || "/placeholder.jpg"}
                       alt={profileData?.name}
                       className="w-16 h-16 rounded-full object-cover mb-2"
                     />
@@ -213,6 +213,7 @@ const Navbar = () => {
                   </div>
                   <Link
                     to="/profile"
+                    onClick={() => setDropdownOpenProfile(false)}
                     className=" w-full text-center flex justify-center py-2 hover:text-gray-500 text-lg border-b border-[#A6AEBF]"
                   >
                     Profile

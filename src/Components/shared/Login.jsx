@@ -29,6 +29,12 @@ export default function Login() {
       // Navigate immediately to prevent seeing the login page
       navigate("/profile");
     }
+    
+    // Check if user was redirected due to token expiration
+    const expired = new URLSearchParams(window.location.search).get('expired');
+    if (expired === 'true') {
+      toast.error("Your session has expired. Please log in again.");
+    }
   }, [navigate]);
 
   // On mount, check for remembered email
