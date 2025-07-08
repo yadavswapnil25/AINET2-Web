@@ -24,6 +24,7 @@ export default function Profile() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const token = localStorage.getItem("ainetToken");
   const { setProfileData, handleTokenExpiration } = useAuth();
+  const [showInboxModal, setShowInboxModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: profile?.name,
@@ -216,17 +217,17 @@ export default function Profile() {
   const renewedDate = new Date(profile?.updated_at);
   const expiryDate = new Date(renewedDate);
   expiryDate.setFullYear(renewedDate.getFullYear() + 1);
-  
+
   const currentDate = new Date();
-  
+
   // Determine membership status based on expiry date
   const isActive = currentDate <= expiryDate;
   const expired = expiryDate.toLocaleDateString();
-  
+
   // Calculate days difference
   const timeDiff = expiryDate.getTime() - currentDate.getTime();
   const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-  
+
   const getStatusMessage = () => {
     if (isActive) {
       if (daysDiff <= 30) {
@@ -265,6 +266,8 @@ export default function Profile() {
     }
   };
 
+
+  console.log("showInboxModal", showInboxModal)
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -447,14 +450,13 @@ export default function Profile() {
                       >
                         {isActive ? "ACTIVE" : "INACTIVE"}
                       </span>
-                      <span 
-                        className={`text-xs ${
-                          isActive 
-                            ? daysDiff <= 30 
-                              ? "text-orange-500" 
-                              : "text-gray-500"
-                            : "text-red-500"
-                        }`}
+                      <span
+                        className={`text-xs ${isActive
+                          ? daysDiff <= 30
+                            ? "text-orange-500"
+                            : "text-gray-500"
+                          : "text-red-500"
+                          }`}
                       >
                         {getStatusMessage()}
                       </span>
@@ -485,36 +487,19 @@ export default function Profile() {
                   <div className="flex items-start gap-2 mb-2">
                     <span className="text-xs text-gray-500 mt-1">📧</span>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p onClick={() => setShowInboxModal(true)} className="text-sm font-medium text-gray-900 cursor-pointer hover:underline">
                         Apply Now: AINET Scholarships, Grants & Sponsorships for
                         Members!
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 mt-2">
                         06/06/2025 10:00AM 10h Ago
                       </p>
                     </div>
                   </div>
-             
+
                 </div>
 
-                {/* <div className="border-b border-gray-100 pb-4">
-                  <div className="flex items-start gap-2 mb-2">
-                    <span className="text-xs text-gray-500 mt-1">📧</span>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        Apply Now: AINET Scholarships, Grants & Sponsorships for
-                        Members!
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        06/06/2025 10:00AM 10h Ago
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-600 ml-5">
-                    Dear Aman, AINET is pleased to offer exclusive scholarships,
-                    travel grants...
-                  </p>
-                </div> */}
+
               </div>
             </div>
           </div>
@@ -538,8 +523,8 @@ export default function Profile() {
                       <span className="card-title">AINET MEMBERSHIP CARD</span>
                       <div className="card-title-bar"></div>
                     </div>
-                    
-                  
+
+
 
                     <div className="card-body">
                       <div className="card-left">
@@ -888,6 +873,38 @@ export default function Profile() {
           </div>
         </div>
       )}
+
+      {showInboxModal && <InboxModal setShowInboxModal={setShowInboxModal} />}
     </div>
   );
 }
+
+
+
+
+const InboxModal = ({ setShowInboxModal }) => {
+  const closeInboxModal = () => {
+    setShowInboxModal(false);
+  };
+
+
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="bg-white rounded-xl p-6 relative w-full max-w-[90%] md:max-w-2xl text-center shadow-lg">
+        <button
+          className="absolute top-2 right-2 text-gray-600 text-4xl font-bold"
+          onClick={closeInboxModal}
+        >
+          &times;
+        </button>
+        <h3 className="text-xl font-semibold mb-4">Inbox</h3>
+        <p>AINET is committed to support its members' professional development. As one way of supporting, AINET offers a range of scholarships, travel grants and sponsorships to attend AINET conferences and activities, events of other organisations, short-term courses, etc.
+
+          Scholarships, sponsorships and grants are available only to members with valid membership. They are announced from time to time for specific events or courses. Please watch out for regular announcements!
+
+          AINET members with innovative ideas may also approach us for small funding support to undertake small-scale projects. For more information or queries, write to <a href="mailto:theainet@gmail.com" className="text-blue-500">theainet@gmail.com</a>.</p>
+      </div>
+    </div>
+  );
+};
