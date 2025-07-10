@@ -27,6 +27,7 @@ jobs:
       - name: Build React app
         env:
           VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+          VITE_RAZORPAY_KEY: ${{ secrets.VITE_RAZORPAY_KEY }}
         run: npm run build
 
       # 4. Zip the build output
