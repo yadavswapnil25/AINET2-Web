@@ -8,7 +8,7 @@ import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmati
 import Loader from '../../../Components/shared/Loader';
 import { toast } from 'react-toastify';
 
-export default function MembershipFormforInstitutionalAnnual() {
+export default function MembershipFormforInstitutionalOverseas() {
   const location = useLocation();
   const navigate = useNavigate();
   const plan = location?.state;
@@ -16,6 +16,7 @@ export default function MembershipFormforInstitutionalAnnual() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
@@ -29,8 +30,7 @@ export default function MembershipFormforInstitutionalAnnual() {
     email: '',
     website: '',
     address: '',
-    state: '',
-    district: '',
+    country: '',
     contact_person_name: '',
     contact_person_no: '',
     contact_person_email: '',
@@ -44,103 +44,19 @@ export default function MembershipFormforInstitutionalAnnual() {
     membership_plan: plan?.title,
   });
 
-  const [states, setStates] = useState([]);
-  const [districts, setDistricts] = useState([]);
-  const [loading, setLoading] = useState({
-    states: false,
-    districts: false
-  });
-  const [error, setError] = useState({
-    states: null,
-    districts: null
-  });
-
-  // Fetch Indian states on component mount
-  useEffect(() => {
-    const fetchStates = async () => {
-      setLoading(prev => ({ ...prev, states: true }));
-      try {
-        // For India, the geonameId is 1269750
-        const response = await fetch(
-          'https://secure.geonames.org/childrenJSON?geonameId=1269750&featureCode=ADM1&username=paresh09'
-        );
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch states');
-        }
-        
-        const data = await response.json();
-        const sortedStates = data.geonames.sort((a, b) => a.name.localeCompare(b.name));
-        setStates(sortedStates);
-        setError(prev => ({ ...prev, states: null }));
-      } catch (err) {
-        console.error('Error fetching states:', err);
-        setError(prev => ({ ...prev, states: err.message }));
-      } finally {
-        setLoading(prev => ({ ...prev, states: false }));
-      }
-    };
-
-    fetchStates();
-  }, []);
-
-  // Fetch districts when state changes
-  useEffect(() => {
-    const fetchDistricts = async () => {
-      if (!formData.state) {
-        setDistricts([]);
-        return;
-      }
-      
-      setLoading(prev => ({ ...prev, districts: true }));
-      try {
-        const selectedState = states.find(state => state.geonameId === parseInt(formData.state));
-        if (!selectedState) return;
-        
-        const response = await fetch(
-          `https://secure.geonames.org/childrenJSON?geonameId=${selectedState.geonameId}&featureCode=ADM2&username=paresh09`
-        );
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch districts');
-        }
-        
-        const data = await response.json();
-        const sortedDistricts = data.geonames.sort((a, b) => a.name.localeCompare(b.name));
-        setDistricts(sortedDistricts);
-        setError(prev => ({ ...prev, districts: null }));
-      } catch (err) {
-        console.error('Error fetching districts:', err);
-        setError(prev => ({ ...prev, districts: err.message }));
-      } finally {
-        setLoading(prev => ({ ...prev, districts: false }));
-      }
-    };
-
-    fetchDistricts();
-  }, [formData.state, states]);
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prevData => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value
     }));
-    
-    // Reset district when state changes
-    if (name === 'state') {
-      setFormData(prevData => ({
-        ...prevData,
-        district: ''
-      }));
-    }
   };
 
   // Form validation
   const validateForm = () => {
     const requiredFields = [
       'institution_name', 'institution_type', 'contact_no', 'email', 'address', 
-      'state', 'district', 'contact_person_name', 'contact_person_no', 
+      'country', 'contact_person_name', 'contact_person_no', 
       'contact_person_email', 'password'
     ];
 
@@ -193,7 +109,7 @@ export default function MembershipFormforInstitutionalAnnual() {
         name: formData.institution_name,
         email: formData.email,
         contact: formData.contact_no,
-        currency: plan?.currency || "INR"
+        currency: plan?.currency || "USD"
       });
 
       toast.success("✅ Payment Successful");
@@ -222,8 +138,7 @@ export default function MembershipFormforInstitutionalAnnual() {
           email: '',
           website: '',
           address: '',
-          state: '',
-          district: '',
+          country: '',
           contact_person_name: '',
           contact_person_no: '',
           contact_person_email: '',
@@ -270,7 +185,7 @@ export default function MembershipFormforInstitutionalAnnual() {
   const isFormValid = () => {
     const requiredFields = [
       'institution_name', 'institution_type', 'contact_no', 'email', 'address', 
-      'state', 'district', 'contact_person_name', 'contact_person_no', 
+      'country', 'contact_person_name', 'contact_person_no', 
       'contact_person_email', 'password', 'password_confirmation'
     ];
 
@@ -293,7 +208,7 @@ export default function MembershipFormforInstitutionalAnnual() {
         onClose={() => setShowPaymentConfirmation(false)}
         onProceed={handlePaymentProceed}
         amount={plan?.price}
-        currency={plan?.currency || "INR"}
+        currency={plan?.currency || "USD"}
       />
 
       {showSuccessModal && (
@@ -303,7 +218,7 @@ export default function MembershipFormforInstitutionalAnnual() {
         />
       )}
 
-      {loading.states && <Loader />}
+      {loading && <Loader />}
 
     <div className="max-w-5xl mx-auto my-10 p-4 border border-blue-500 rounded-lg bg-white shadow-md">
       <div className="relative mb-4 pb-2">
@@ -333,8 +248,8 @@ export default function MembershipFormforInstitutionalAnnual() {
                 name="institution_name"
                 value={formData.institution_name}
                 onChange={handleChange}
-                placeholder="Enter Your Institutional Name"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                placeholder="Enter Your Institute Name"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 required
               />
             </div>
@@ -378,7 +293,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.contact_no}
                   onChange={handleChange}
                   placeholder="Enter Your No."
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -390,7 +305,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.whatsapp_no}
                   onChange={handleChange}
                   placeholder="Enter Your No."
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                 />
               </div>
             </div>
@@ -404,7 +319,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter Your Email"
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -416,7 +331,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="Enter Your Website address"
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                 />
               </div>
             </div>
@@ -428,65 +343,23 @@ export default function MembershipFormforInstitutionalAnnual() {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Enter Your Address"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 rows="2"
                 required
               ></textarea>
             </div>
 
-            <div className="flex gap-2">
-              <div className="w-1/2">
-                <label className="block text-base mb-2 mt-1">State : <span className="text-red-500">*</span></label>
-                <select
-                  name="state"
-                  value={formData.state}
-                  onChange={handleChange}
-                  className="w-full p-2 bg-blue-100 rounded text-base"
-                  disabled={loading.states}
-                  required
-                >
-                  <option value="">
-                    {loading.states 
-                      ? "Loading states..." 
-                      : error.states 
-                        ? "Error loading states" 
-                        : "Select Your State"}
-                  </option>
-                  {states.map(state => (
-                    <option key={state.geonameId} value={state.geonameId}>
-                      {state.name}
-                    </option>
-                  ))}
-                </select>
-                {error.states && <p className="text-red-500 text-xs mt-1">{error.states}</p>}
-              </div>
-              <div className="w-1/2">
-                <label className="block text-base mb-2 mt-1">District : <span className="text-red-500">*</span></label>
-                <select
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
-                  className="w-full p-2 bg-blue-100 rounded text-base"
-                  disabled={loading.districts || !formData.state}
-                  required
-                >
-                  <option value="">
-                    {!formData.state 
-                      ? "Select state first" 
-                      : loading.districts 
-                        ? "Loading districts..." 
-                        : error.districts 
-                          ? "Error loading districts" 
-                          : "Select Your District"}
-                  </option>
-                  {districts.map(district => (
-                    <option key={district.geonameId} value={district.geonameId}>
-                      {district.name}
-                    </option>
-                  ))}
-                </select>
-                {error.districts && <p className="text-red-500 text-xs mt-1">{error.districts}</p>}
-              </div>
+            <div>
+              <label className="block text-base mb-2 mt-1">Country : <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                placeholder="Enter Your Country"
+                className="w-full p-2 bg-white rounded border border-gray-300"
+                required
+              />
             </div>
           </div>
         </div>
@@ -506,7 +379,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 value={formData.contact_person_name}
                 onChange={handleChange}
                 placeholder="Enter Your Name"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 required
               />
             </div>
@@ -520,7 +393,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.contact_person_no}
                   onChange={handleChange}
                   placeholder="Enter Your No."
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -532,7 +405,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.contact_person_email}
                   onChange={handleChange}
                   placeholder="Enter Your Email"
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -544,7 +417,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 name="host_event"
                 value={formData.host_event}
                 onChange={handleChange}
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
               >
                 <option value="YES">YES</option>
                 <option value="NO">NO</option>
@@ -558,7 +431,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 value={formData.expectations}
                 onChange={handleChange}
                 placeholder="Enter your expectations"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 rows="2"
               ></textarea>
             </div>
@@ -569,7 +442,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 name="newsletter"
                 value={formData.newsletter}
                 onChange={handleChange}
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
               >
                 <option value="YES">YES</option>
                 <option value="NO">NO</option>
@@ -587,7 +460,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.password}
                     onChange={e => { handleChange(e); setPasswordTouched(true); }}
                     placeholder="Enter Your Password"
-                    className="w-full p-2 bg-blue-100 rounded text-base pr-10"
+                    className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
                     required
                   />
                   <button
@@ -644,7 +517,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.password_confirmation}
                     onChange={handleChange}
                     placeholder="Re-Enter Your Password"
-                    className="w-full p-2 bg-blue-100 rounded text-base pr-10"
+                    className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
                     required
                   />
                   <button
@@ -703,4 +576,4 @@ export default function MembershipFormforInstitutionalAnnual() {
     </div>
     </>
   );
-}
+} 

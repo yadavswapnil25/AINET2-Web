@@ -8,7 +8,7 @@ import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmati
 import Loader from '../../../Components/shared/Loader';
 import { toast } from 'react-toastify';
 
-export default function MembershipFormforInstitutionalAnnual() {
+export default function MembershipFormforInstitutionalLongTerm() {
   const location = useLocation();
   const navigate = useNavigate();
   const plan = location?.state;
@@ -333,8 +333,8 @@ export default function MembershipFormforInstitutionalAnnual() {
                 name="institution_name"
                 value={formData.institution_name}
                 onChange={handleChange}
-                placeholder="Enter Your Institutional Name"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                placeholder="Enter Your Institute Name"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 required
               />
             </div>
@@ -378,7 +378,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.contact_no}
                   onChange={handleChange}
                   placeholder="Enter Your No."
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -390,7 +390,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.whatsapp_no}
                   onChange={handleChange}
                   placeholder="Enter Your No."
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                 />
               </div>
             </div>
@@ -404,7 +404,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter Your Email"
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -416,7 +416,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="Enter Your Website address"
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                 />
               </div>
             </div>
@@ -428,7 +428,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Enter Your Address"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 rows="2"
                 required
               ></textarea>
@@ -441,7 +441,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   disabled={loading.states}
                   required
                 >
@@ -466,7 +466,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   name="district"
                   value={formData.district}
                   onChange={handleChange}
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   disabled={loading.districts || !formData.state}
                   required
                 >
@@ -506,7 +506,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 value={formData.contact_person_name}
                 onChange={handleChange}
                 placeholder="Enter Your Name"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 required
               />
             </div>
@@ -520,7 +520,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.contact_person_no}
                   onChange={handleChange}
                   placeholder="Enter Your No."
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -532,7 +532,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   value={formData.contact_person_email}
                   onChange={handleChange}
                   placeholder="Enter Your Email"
-                  className="w-full p-2 bg-blue-100 rounded text-base"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
                   required
                 />
               </div>
@@ -544,7 +544,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 name="host_event"
                 value={formData.host_event}
                 onChange={handleChange}
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
               >
                 <option value="YES">YES</option>
                 <option value="NO">NO</option>
@@ -558,7 +558,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 value={formData.expectations}
                 onChange={handleChange}
                 placeholder="Enter your expectations"
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
                 rows="2"
               ></textarea>
             </div>
@@ -569,7 +569,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                 name="newsletter"
                 value={formData.newsletter}
                 onChange={handleChange}
-                className="w-full p-2 bg-blue-100 rounded text-base"
+                className="w-full p-2 bg-white rounded border border-gray-300"
               >
                 <option value="YES">YES</option>
                 <option value="NO">NO</option>
@@ -587,7 +587,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.password}
                     onChange={e => { handleChange(e); setPasswordTouched(true); }}
                     placeholder="Enter Your Password"
-                    className="w-full p-2 bg-blue-100 rounded text-base pr-10"
+                    className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
                     required
                   />
                   <button
@@ -644,7 +644,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.password_confirmation}
                     onChange={handleChange}
                     placeholder="Re-Enter Your Password"
-                    className="w-full p-2 bg-blue-100 rounded text-base pr-10"
+                    className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
                     required
                   />
                   <button
@@ -703,4 +703,4 @@ export default function MembershipFormforInstitutionalAnnual() {
     </div>
     </>
   );
-}
+} 

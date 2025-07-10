@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import 'react-toastify/dist/ReactToastify.css';
-import { baseUrl } from '../utils/constant';
-import { initiatePayment } from '../utils/utility';
-import PaymentSuccessModal from '../Components/PaymentIntegration/Popup';
-import PaymentConfirmationModal from '../Components/PaymentIntegration/PaymentConfirmationModal';
-import Loader from '../Components/shared/Loader';
+import { baseUrl } from '../../../utils/constant';
+import { initiatePayment } from '../../../utils/utility';
+import PaymentSuccessModal from '../../PaymentIntegration/Popup';
+import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
+import Loader from '../../shared/Loader';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';

@@ -1,65 +1,152 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { baseUrl } from '../../../utils/constant';
+import { initiatePayment } from '../../../utils/utility';
+import PaymentSuccessModal from '../../PaymentIntegration/Popup';
+import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
+import Loader from '../../../Components/shared/Loader';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { toast } from 'react-toastify';
+
+// Multi-select dropdown component
+const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const handleToggle = (value) => {
+        const newSelected = selected.includes(value)
+            ? selected.filter(item => item !== value)
+            : [...selected, value];
+        onChange(newSelected);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <div className="relative" ref={dropdownRef}>
+            <div
+                className="w-full p-2 bg-white rounded cursor-pointer border border-gray-300 min-h-[40px] flex items-center justify-between"
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <div className="flex flex-wrap gap-1">
+                    {selected.length > 0 ? (
+                        selected.map((item, index) => (
+                            <span
+                                key={index}
+                                className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                            >
+                                {item}
+                            </span>
+                        ))
+                    ) : (
+                        <span className="text-gray-500">{placeholder}</span>
+                    )}
+                </div>
+                <svg
+                    className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            {isOpen && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {options.map((option, index) => (
+                        <div
+                            key={index}
+                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selected.includes(option) ? 'bg-blue-50 text-blue-600' : ''
+                                }`}
+                            onClick={() => handleToggle(option)}
+                        >
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    checked={selected.includes(option)}
+                                    readOnly
+                                    className="mr-2"
+                                />
+                                {option}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
 
 export default function MembershipFormForIndividualOverseas() {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const plan = location?.state;
+    const [isPaymentDone, setIsPaymentDone] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [passwordTouched, setPasswordTouched] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
+    // Options for multi-select dropdown
+    const areaOfWorkOptions = [
+        "Primary School",
+        "Secondary School",
+        "Junior College (+2)",
+        "Senior College/University",
+        "Teacher Education",
+        "Other"
+    ];
+
     const [formData, setFormData] = useState({
         title: '',
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         gender: '',
-        dateOfBirth: {
-            day: '',
-            month: '',
-            year: ''
-        },
-        contactNo: '',
-        whatsAppNo: '',
+        dob: '',
+        mobile: '',
+        whatsapp_no: '',
         email: '',
-        addressResidential: '',
-        teachingExperience: '',
-        memberOfAssociation: '',
-        associationName: '',
-        areasOfWork: [],
-        addressInstitutional: '',
+        address: '',
+        teaching_exp: '',
+        area_of_work: [],
+        member_of_association: '',
+        association_name: '',
         expectations: '',
-        receiveNewsletter: 'YES',
+        receive_newsletter: 'YES',
         password: '',
-        reEnterPassword: '',
-        agreeToTerms: false
+        password_confirmation: '',
+        agree: false,
+        membership_type: plan?.type,
+        membership_plan: plan?.title,
     });
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
         if (type === 'checkbox') {
-            if (name === 'agreeToTerms') {
+            if (name === 'agree') {
                 setFormData(prev => ({
                     ...prev,
                     [name]: checked
                 }));
-            } else {
-                const fieldName = name.split('-')[0];
-
-                if (checked) {
-                    setFormData(prev => ({
-                        ...prev,
-                        [fieldName]: [...prev[fieldName], value]
-                    }));
-                } else {
-                    setFormData(prev => ({
-                        ...prev,
-                        [fieldName]: prev[fieldName].filter(item => item !== value)
-                    }));
-                }
             }
-        } else if (name.includes('.')) {
-            const [parent, child] = name.split('.');
-            setFormData(prev => ({
-                ...prev,
-                [parent]: {
-                    ...prev[parent],
-                    [child]: value
-                }
-            }));
         } else {
             setFormData(prev => ({
                 ...prev,
@@ -68,218 +155,337 @@ export default function MembershipFormForIndividualOverseas() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleMultiSelectChange = (name, selectedValues) => {
+        setFormData(prev => ({
+            ...prev,
+            [name]: selectedValues
+        }));
+    };
+
+    // Form validation function
+    const validateForm = () => {
+        const requiredFields = [
+            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'whatsapp_no', 'email', 'address', 'teaching_exp', 'password'
+        ];
+
+        for (let field of requiredFields) {
+            if (!formData[field] || formData[field].toString().trim() === '') {
+                toast.error(`Please fill in the ${field.replace('_', ' ')} field.`);
+                return false;
+            }
+        }
+
+        if (formData.area_of_work.length === 0) {
+            toast.error("Please select at least one area of work.");
+            return false;
+        }
+
+        if (formData.password !== formData.password_confirmation) {
+            toast.error("Passwords do not match!");
+            return false;
+        }
+
+        if (formData.password.length < 6) {
+            toast.warning("Password should be at least 6 characters long.");
+            return false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            toast.error("Please enter a valid email address.");
+            return false;
+        }
+
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!mobileRegex.test(formData.mobile)) {
+            toast.error("Please enter a valid 10-digit mobile number.");
+            return false;
+        }
+
+        if (!formData.agree) {
+            toast.error("Please agree to the terms and conditions.");
+            return false;
+        }
+
+        return true;
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        // Handle form submission logic here
+
+        if (!validateForm()) return;
+
+        // Show payment confirmation modal
+        setShowPaymentConfirmation(true);
+    };
+
+    const handlePaymentProceed = async () => {
+        setShowPaymentConfirmation(false);
+        
+        try {
+            const paymentResponse = await initiatePayment({
+                amount: plan?.price,
+                name: `${formData.first_name} ${formData.last_name}`,
+                email: formData.email,
+                contact: formData.mobile,
+                currency: plan?.currency || "INR"
+            });
+
+            toast.success("✅ Payment Successful");
+            setLoading(true);
+            setIsSubmitting(true);
+
+            const res = await fetch(`${baseUrl}client/membership-signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                const responseData = await res.json();
+                setIsPaymentDone(true);
+                setShowSuccessModal(true);
+                setFormData({
+                    title: '',
+                    first_name: '',
+                    last_name: '',
+                    gender: '',
+                    dob: '',
+                    mobile: '',
+                    whatsapp_no: '',
+                    email: '',
+                    address: '',
+                    teaching_exp: '',
+                    area_of_work: [],
+                    member_of_association: '',
+                    association_name: '',
+                    expectations: '',
+                    receive_newsletter: 'YES',
+                    password: '',
+                    password_confirmation: '',
+                    agree: false,
+                    membership_type: "",
+                    membership_plan: "",
+                });
+            } else {
+                const errorData = await res.json();
+                toast.error(`${errorData.message || "Something went wrong. Please try again."}`);
+            }
+
+        } catch (error) {
+            toast.error(`❌ Payment Failed: ${error}`);
+            console.error("Payment or API Error:", error);
+        } finally {
+            setIsSubmitting(false);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!location.state) navigate("/")
+    }, [])
+
+    function getPasswordStrength(password) {
+        return {
+            length: password.length >= 8,
+            upper: /[A-Z]/.test(password),
+            lower: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[^A-Za-z0-9]/.test(password),
+        };
+    }
+    const passwordStrength = getPasswordStrength(formData.password);
+    const allStrong = Object.values(passwordStrength).every(Boolean);
+
+    // Check if form is valid for submit button
+    const isFormValid = () => {
+        const requiredFields = [
+            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'whatsapp_no', 'email', 'address', 'teaching_exp', 'password', 'password_confirmation'
+        ];
+
+        for (let field of requiredFields) {
+            if (!formData[field] || formData[field].toString().trim() === '') {
+                return false;
+            }
+        }
+
+        if (formData.area_of_work.length === 0) return false;
+        if (!formData.agree) return false;
+
+        return true;
     };
 
     return (
+        <>
+            {/* Payment Confirmation Modal */}
+            <PaymentConfirmationModal 
+                show={showPaymentConfirmation}
+                onClose={() => setShowPaymentConfirmation(false)}
+                onProceed={handlePaymentProceed}
+                amount={plan?.price}
+                currency={plan?.currency || "INR"}
+            />
+
+            {showSuccessModal && (
+                <PaymentSuccessModal
+                    show={true}
+                    onClose={() => { setShowSuccessModal(false); navigate("/") }}
+                />
+            )}
+
+            {loading && <Loader />}
+
         <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
             {/* Close button */}
             <button className="absolute top-2 right-2 bg-black rounded-full p-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                </svg>
+                <Link to={{ pathname: '/', hash: '#membershipplan' }}> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                    </svg>
+                </Link>
             </button>
 
-            <h1 className="text-4xl font-bold my-8 text-center">Membership Form for Individual Overseas</h1>
+            <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for {plan?.type} {plan?.title}</h1>
 
             <form onSubmit={handleSubmit}>
                 {/* Personal Information Section */}
                 <div className="mb-6">
-                    <div className="bg-[#A6AEBF] p-2 mb-6">
+                    <div className="bg-[#A6AEBF] p-2 my-8">
                         <h2 className="text-white text-xl">Personal Information</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 Title : <span className="text-red-500">*</span>
                             </label>
-                            <div className="relative">
-                                <select
-                                    name="title"
-                                    value={formData.title}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded appearance-none text-base"
-                                    required
-                                >
-                                    <option value="">Mr</option>
-                                    <option value="mrs">Mrs</option>
-                                    <option value="ms">Ms</option>
-                                    <option value="dr">Dr</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <select
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                required
+                            >
+                                <option value="">Select Title</option>
+                                <option value="mr">Mr</option>
+                                <option value="mrs">Mrs</option>
+                                <option value="ms">Ms</option>
+                                <option value="dr">Dr</option>
+                            </select>
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 First Name : <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
-                                name="firstName"
-                                placeholder="Enter Your Name"
-                                value={formData.firstName}
+                                name="first_name"
+                                placeholder="Enter Your First Name"
+                                value={formData.first_name}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 Last Name : <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
-                                name="lastName"
-                                placeholder="Enter Your Name"
-                                value={formData.lastName}
+                                name="last_name"
+                                placeholder="Enter Your Last Name"
+                                value={formData.last_name}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 Gender : <span className="text-red-500">*</span>
                             </label>
-                            <div className="relative">
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded appearance-none text-base"
-                                    required
-                                >
-                                    <option value="">Select Your Gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="other">Other</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <select
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                required
+                            >
+                                <option value="">Select Your Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 Date of Birth : <span className="text-red-500">*</span>
                             </label>
-                            <div className="flex gap-1">
-                                <div className="relative w-1/3">
-                                    <select
-                                        name="dateOfBirth.day"
-                                        value={formData.dateOfBirth.day}
-                                        onChange={handleChange}
-                                        className="w-full p-2 bg-[#C5D3E8] rounded text-base appearance-none"
-                                        required
-                                    >
-                                        <option value="">DD</option>
-                                        {[...Array(31)].map((_, i) => (
-                                            <option key={i} value={i + 1}>{i + 1}</option>
-                                        ))}
-                                    </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div className="relative w-1/3">
-                                    <select
-                                        name="dateOfBirth.month"
-                                        value={formData.dateOfBirth.month}
-                                        onChange={handleChange}
-                                        className="w-full p-2 bg-[#C5D3E8] rounded text-base appearance-none"
-                                        required
-                                    >
-                                        <option value="">MM</option>
-                                        <option value="1">Jan</option>
-                                        <option value="2">Feb</option>
-                                        <option value="3">Mar</option>
-                                        <option value="4">Apr</option>
-                                        <option value="5">May</option>
-                                        <option value="6">Jun</option>
-                                        <option value="7">Jul</option>
-                                        <option value="8">Aug</option>
-                                        <option value="9">Sep</option>
-                                        <option value="10">Oct</option>
-                                        <option value="11">Nov</option>
-                                        <option value="12">Dec</option>
-                                    </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div className="relative w-1/3">
-                                    <select
-                                        name="dateOfBirth.year"
-                                        value={formData.dateOfBirth.year}
-                                        onChange={handleChange}
-                                        className="w-full p-2 bg-[#C5D3E8] rounded text-base appearance-none"
-                                        required
-                                    >
-                                        <option value="">YYYY</option>
-                                        {[...Array(100)].map((_, i) => {
-                                            const year = new Date().getFullYear() - i;
-                                            return <option key={i} value={year}>{year}</option>;
-                                        })}
-                                    </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                        </svg>
-                                    </div>
-                                </div>
-                            </div>
+                            <DatePicker
+                                selected={formData.dob ? new Date(formData.dob) : null}
+                                onChange={(date) => {
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        dob: date ? date.toISOString().split('T')[0] : ""
+                                    }));
+                                }}
+                                maxDate={new Date(Date.now() - 24 * 60 * 60 * 1000)}
+                                showMonthDropdown
+                                showYearDropdown
+                                yearDropdownItemNumber={100}
+                                scrollableYearDropdown
+                                dropdownMode="select"
+                                placeholderText="Select your date of birth"
+                                dateFormat="yyyy-MM-dd"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                required
+                            />
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 Contact No. : <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="tel"
-                                name="contactNo"
-                                placeholder="Enter Your No."
-                                value={formData.contactNo}
+                                name="mobile"
+                                placeholder="Enter Your Number"
+                                value={formData.mobile}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                maxLength={10}
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 WhatsApp No. : <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="tel"
-                                name="whatsAppNo"
-                                placeholder="Enter Your No."
-                                value={formData.whatsAppNo}
+                                name="whatsapp_no"
+                                placeholder="Enter Your Number"
+                                value={formData.whatsapp_no}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                maxLength={10}
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="block text-lg font-semibold mb-1">
+                            <label className="block text-base font-semibold mb-1">
                                 Email : <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -288,22 +494,22 @@ export default function MembershipFormForIndividualOverseas() {
                                 placeholder="Enter Your Email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
                                 required
                             />
                         </div>
                     </div>
 
                     <div className="mt-4">
-                        <label className="block text-lg font-semibold mb-1">
+                        <label className="block text-base font-semibold mb-1">
                             Address (Residential) : <span className="text-red-500">*</span>
                         </label>
                         <textarea
-                            name="addressResidential"
+                            name="address"
                             placeholder="Enter Your Address"
-                            value={formData.addressResidential}
+                            value={formData.address}
                             onChange={handleChange}
-                            className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                            className="w-full p-2 bg-white rounded border border-gray-300"
                             rows="3"
                             required
                         ></textarea>
@@ -312,206 +518,235 @@ export default function MembershipFormForIndividualOverseas() {
 
                 {/* Other Information Section */}
                 <div>
-                    <div className="bg-[#A6AEBF] p-2 mb-4">
+                    <div className="bg-[#A6AEBF] p-2 my-8">
                         <h2 className="text-white text-xl">Other Information</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Left Side */}
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-lg font-semibold mb-4">
-                                    Teaching Experience (In Years) : <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="teachingExperience"
-                                    placeholder="Enter Your Exp."
-                                    value={formData.teachingExperience}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded text-base"
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-lg font-semibold mb-4">
-                                    If yes the name of the Association(s) : <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="associationName"
-                                    placeholder="Enter Asso."
-                                    value={formData.associationName}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-[#C5D3E8] rounded text-base"
-                                    required={formData.memberOfAssociation === 'YES'}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Right Side */}
-                        <div className='ml-8'>
-                            <label className="block text-lg font-semibold mb-1 ">
-                                Area's of your work : <span className="text-red-500">*</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-base font-semibold mb-1">
+                                Teaching Experience (In Years) : <span className="text-red-500">*</span>
                             </label>
-                            <div className="space-y-2">
-                                {[
-                                    'Primary School',
-                                    'Secondary School',
-                                    'Junior College (+2)',
-                                    'Senior College/University',
-                                    'Teacher Education',
-                                    'Other'
-                                ].map((area) => (
-                                    <div key={area} className="flex items-center ml-5">
-                                        <input
-                                            type="checkbox"
-                                            id={area}
-                                            name="areasOfWork-checkbox"
-                                            value={area}
-                                            checked={formData.areasOfWork.includes(area)}
-                                            onChange={handleChange}
-                                            className="mr-2"
-                                        />
-                                        <label htmlFor={area} className="text-base">{area}</label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className="mt-4">
-                        <label className="block text-lg font-semibold mb-1">
-                            Are you member of any other English Teacher Association(s) : <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative inline-block w-full">
-                            <select
-                                name="memberOfAssociation"
-                                value={formData.memberOfAssociation}
+                            <input
+                                type="text"
+                                name="teaching_exp"
+                                placeholder="Enter Your Experience"
+                                value={formData.teaching_exp}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded appearance-none text-base"
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-base font-semibold mb-1">
+                                Are you member of any other English Teacher Association(s) : <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="member_of_association"
+                                value={formData.member_of_association}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                                 required
                             >
-                                <option value="">YES</option>
+                                <option value="">Select Option</option>
                                 <option value="YES">YES</option>
                                 <option value="NO">NO</option>
                             </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                </svg>
-                            </div>
                         </div>
                     </div>
 
+                    {formData.member_of_association === 'YES' && (
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Name of the Association(s) : <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                name="association_name"
+                                placeholder="Enter Association Name(s)"
+                                value={formData.association_name}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                rows="2"
+                                required={formData.member_of_association === 'YES'}
+                            />
+                        </div>
+                    )}
+
                     <div className="mt-4">
-                        <label className="block text-lg font-semibold mb-1">
-                            Address (Institutional) : <span className="text-red-500">*</span>
+                        <label className="block text-base font-semibold mb-1">
+                            Area's of your work : <span className="text-red-500">*</span>
                         </label>
-                        <textarea
-                            name="addressInstitutional"
-                            placeholder="Enter Your Address"
-                            value={formData.addressInstitutional}
-                            onChange={handleChange}
-                            className="w-full p-2 bg-[#C5D3E8] rounded text-base"
-                            rows="3"
-                            required
-                        ></textarea>
+                        <MultiSelectDropdown
+                            options={areaOfWorkOptions}
+                            selected={formData.area_of_work}
+                            onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
+                            placeholder="Select areas of work"
+                            name="area_of_work"
+                        />
                     </div>
 
                     <div className="mt-4">
-                        <label className="block text-lg font-semibold mb-1">
+                        <label className="block text-base font-semibold mb-1">
                             Your expectations from AINET :
                         </label>
                         <textarea
                             name="expectations"
-                            placeholder="Enter Asso."
+                            placeholder="Enter your expectations"
                             value={formData.expectations}
                             onChange={handleChange}
-                            className="w-full p-2 bg-[#C5D3E8] rounded text-base"
+                            className="w-full p-2 bg-white rounded border border-gray-300"
                             rows="3"
-                        ></textarea>
+                        />
                     </div>
 
                     <div className="mt-4">
-                        <label className="block text-lg font-semibold mb-1">Like to receive newsletter ?</label>
-                        <div className="relative inline-block w-full base:w-auto">
-                            <select
-                                name="receiveNewsletter"
-                                value={formData.receiveNewsletter}
-                                onChange={handleChange}
-                                className="w-full base:w-36 p-2 bg-[#C5D3E8] rounded appearance-none text-base"
-                            >
-                                <option value="YES">YES</option>
-                                <option value="NO">NO</option>
-                            </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                </svg>
+                        <label className="block text-base font-semibold mb-1">Like to receive newsletter ?</label>
+                        <select
+                            name="receive_newsletter"
+                            value={formData.receive_newsletter}
+                            onChange={handleChange}
+                            className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                        >
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                    </div>
+
+                    {/* Enhanced Password Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label className="block text-base font-semibold mb-1">
+                                Password : <span className="text-red-500">*</span>
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    placeholder="Enter Your Password"
+                                    value={formData.password}
+                                    onChange={e => { handleChange(e); setPasswordTouched(true); }}
+                                    className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    tabIndex={-1}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                                    onClick={() => setShowPassword(v => !v)}
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    {showPassword ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12C3.5 7.5 7.5 4.5 12 4.5c4.5 0 8.5 3 9.75 7.5-1.25 4.5-5.25 7.5-9.75 7.5-4.5 0-8.5-3-9.75-7.5z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.5 12c1.25 4.5 5.25 7.5 10.5 7.5 2.042 0 3.97-.488 5.625-1.352M6.228 6.228A9.956 9.956 0 0112 4.5c4.5 0 8.5 3 9.75 7.5-.386 1.386-1.09 2.693-2.06 3.823M6.228 6.228l11.544 11.544M6.228 6.228L4.5 4.5m15 15l-1.728-1.728" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.88 9.88a3 3 0 014.24 4.24" />
+                                        </svg>
+                                    )}
+                                </button>
+                            </div>
+                            {/* Password strength instructions */}
+                            <div className="mt-2 text-xs">
+                                <div className="font-semibold mb-1">Password must contain:</div>
+                                <ul className="space-y-1">
+                                    <li className={passwordTouched ? (passwordStrength.length ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                        • At least 8 characters
+                                    </li>
+                                    <li className={passwordTouched ? (passwordStrength.upper ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                        • An uppercase letter (A-Z)
+                                    </li>
+                                    <li className={passwordTouched ? (passwordStrength.lower ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                        • A lowercase letter (a-z)
+                                    </li>
+                                    <li className={passwordTouched ? (passwordStrength.number ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                        • A number (0-9)
+                                    </li>
+                                    <li className={passwordTouched ? (passwordStrength.special ? 'text-green-600' : 'text-red-500') : 'text-gray-500'}>
+                                        • A special character (!@#$%^&*)
+                                    </li>
+                                </ul>
+                                {passwordTouched && !allStrong && (
+                                    <div className="text-red-500 mt-1">Password is not strong enough.</div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-base font-semibold mb-1">
+                                Re-Enter Password : <span className="text-red-500">*</span>
+                            </label>
+                            <div className="relative">
+                                <input
+                                    type={showPasswordConfirm ? "text" : "password"}
+                                    name="password_confirmation"
+                                    placeholder="Re-Enter Your Password"
+                                    value={formData.password_confirmation}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    tabIndex={-1}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-800"
+                                    onClick={() => setShowPasswordConfirm(v => !v)}
+                                    aria-label={showPasswordConfirm ? 'Hide password' : 'Show password'}
+                                >
+                                    {showPasswordConfirm ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12C3.5 7.5 7.5 4.5 12 4.5c4.5 0 8.5 3 9.75 7.5-1.25 4.5-5.25 7.5-9.75 7.5-4.5 0-8.5-3-9.75-7.5z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.5 12c1.25 4.5 5.25 7.5 10.5 7.5 2.042 0 3.97-.488 5.625-1.352M6.228 6.228A9.956 9.956 0 0112 4.5c4.5 0 8.5 3 9.75 7.5-.386 1.386-1.09 2.693-2.06 3.823M6.228 6.228l11.544 11.544M6.228 6.228L4.5 4.5m15 15l-1.728-1.728" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.88 9.88a3 3 0 014.24 4.24" />
+                                        </svg>
+                                    )}
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div>
-                            <label className="block text-lg font-semibold mb-1">
-                                Password : <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="Enter Your Password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-lg font-semibold mb-1">
-                                Re-Enter Password : <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="password"
-                                name="reEnterPassword"
-                                placeholder="Enter Your Password"
-                                value={formData.reEnterPassword}
-                                onChange={handleChange}
-                                className="w-full p-2 bg-[#C5D3E8] rounded text-base"
-                                required
-                            />
-                        </div>
-                    </div>
-
                     <div className="mt-4 flex items-center">
-                        <input
-                            type="checkbox"
-                            id="agreeToTerms"
-                            name="agreeToTerms"
-                            checked={formData.agreeToTerms}
-                            onChange={handleChange}
-                            className="mr-2"
-                            required
-                        />
-                        <label htmlFor="agreeToTerms" className="text-base">
-                            I agree to the terms and conditions of the membership. <span className="text-red-500">*</span>
+                        <label htmlFor="agreeToTerms" className="flex items-center cursor-pointer select-none gap-2">
+                            <input
+                                type="checkbox"
+                                id="agreeToTerms"
+                                name="agree"
+                                checked={formData.agree}
+                                onChange={handleChange}
+                                required
+                                className="accent-green-600 w-5 h-5 rounded border-2 border-gray-400 checked:border-green-600 focus:ring-2 focus:ring-green-300 transition-all duration-200 shadow-sm hover:shadow-md bg-white"
+                            />
+                            <span className="text-sm">
+                                I agree to the terms and conditions of the membership. <span className="text-red-500">*</span>
+                            </span>
                         </label>
                     </div>
 
                     <div className="flex justify-center mt-6">
                         <button
                             type="submit"
-                            className="px-12 py-3 bg-amber-100 rounded-full text-base font-semibold"
+                            disabled={isSubmitting || !isFormValid()}
+                            className={`px-6 py-2 rounded-full text-sm font-bold ${isSubmitting || !isFormValid()
+                                ? 'bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed'
+                                : 'bg-amber-200 hover:bg-amber-300 cursor-pointer'
+                                }`}
+                            style={{
+                                cursor: isSubmitting || !isFormValid() ? 'not-allowed' : 'pointer'
+                            }}
                         >
-                            SUBMIT APPLICATION FORM
+                            {isSubmitting ? 'SUBMITTING...' : 'SUBMIT APPLICATION FORM'}
                         </button>
                     </div>
                 </div>
             </form>
         </div>
+        </>
     );
 }

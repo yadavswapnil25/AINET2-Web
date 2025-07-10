@@ -26,6 +26,8 @@ const Archives = lazy(() => import("./Pages/Archives"));
 const ArchivesConference = lazy(() => import("./Pages/ArchivesConference"));
 const MembershipFormForIndividualOverseas = lazy(() => import("./Components/specific/Forms/MembershipFormforIndividualOverseas"));
 const MembershipFormforInstitutionalAnnual = lazy(() => import("./Components/specific/Forms/MembershipFormforInstitutionalAnnual"));
+const MembershipFormforInstitutionalLongTerm = lazy(() => import("./Components/specific/Forms/MembershipFormforInstitutionalLongTerm"));
+const MembershipFormforInstitutionalOverseas = lazy(() => import("./Components/specific/Forms/MembershipFormforInstitutionalOverseas"));
 const Conference = lazy(() => import("./Pages/Conference"));
 const Webinar = lazy(() => import("./Pages/Webinar"));
 const Author = lazy(() => import("./Pages/Author"));
@@ -49,7 +51,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import RefundPolicy from "./Pages/RefundPolicy";
 import ShippingPolicy from "./Pages/ShippingPolicy";
-import FormIndLongterm from "./Pages/FormIndLongterm";
+import FormIndLongterm from "./Components/specific/Forms/FormIndLongterm";
 
 const App = () => {
   return (
@@ -74,6 +76,8 @@ const App = () => {
           <Route path="/archives-conference" element={<ArchivesConference />} />
           <Route path="/MembershipFormForIndividualOverseas" element={<MembershipFormForIndividualOverseas />} />
           <Route path="/MembershipFormforInstitutionalAnnual" element={<MembershipFormforInstitutionalAnnual />} />
+          <Route path="/MembershipFormforInstitutionalLongTerm" element={<MembershipFormforInstitutionalLongTerm />} />
+          <Route path="/MembershipFormforInstitutionalOverseas" element={<MembershipFormforInstitutionalOverseas />} />
           <Route path="/Conference" element={<Conference />} />
           <Route path="/webinar" element={<Webinar />} />
           <Route path="/author" element={<Author />} />
