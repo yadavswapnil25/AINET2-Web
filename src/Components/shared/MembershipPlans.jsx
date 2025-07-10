@@ -77,7 +77,14 @@ export default function MembershipPlans() {
 
     const handlePayNow = (plan) => {
         console.log("plan", plan)
-        navigate("/MembershipFormforIndividualAnnual", { state: plan })
+        if (plan.title === "LongTerm") {
+            navigate("/FormIndLongterm")
+        } else if (plan.title === "Overseas") {
+            navigate("/MembershipFormforIndividualOverseas")
+        }
+        else {
+            navigate("/MembershipFormforIndividualAnnual", { state: plan })
+        }
     }
 
     return (

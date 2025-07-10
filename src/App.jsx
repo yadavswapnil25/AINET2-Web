@@ -49,6 +49,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import TermsAndConditions from "./Pages/TermsAndConditions";
 import RefundPolicy from "./Pages/RefundPolicy";
 import ShippingPolicy from "./Pages/ShippingPolicy";
+import FormIndLongterm from "./Pages/FormIndLongterm";
 
 const App = () => {
   return (
@@ -96,6 +97,7 @@ const App = () => {
           <Route path="/RefundPolicy" element={<RefundPolicy />} />
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/FormIndLongterm" element={<FormIndLongterm />} />
 
         </Routes>
       </Suspense>
