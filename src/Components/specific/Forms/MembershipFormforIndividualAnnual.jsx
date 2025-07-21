@@ -125,6 +125,16 @@ export default function MembershipFormforIndividualAnnual() {
         membership_plan: "Annual",
         pin: "",
         password_confirmation: "",
+        has_member_any: false,
+        name_association: '',
+        expectation: '',
+        has_newsletter: false,
+        title: '',
+        address_institution: '',
+        name_institution: '',
+        type_institution: '',
+        other_institution: '',
+        contact_person: '',
     });
 
     // Added state for states and districts data
@@ -442,7 +452,7 @@ export default function MembershipFormforIndividualAnnual() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Accept: "application/json",
+                    "Accept": "application/json",
                 },
                 body: JSON.stringify(formData),
             });
@@ -464,7 +474,7 @@ export default function MembershipFormforIndividualAnnual() {
                     address: "",
                     state: "",
                     district: "",
-                    teaching_exp: 0,
+                    teaching_exp: "",
                     qualification: [],
                     area_of_work: [],
                     password: "",
@@ -473,6 +483,16 @@ export default function MembershipFormforIndividualAnnual() {
                     membership_plan: "",
                     pin: "",
                     password_confirmation: "",
+                    has_member_any: false,
+                    name_association: '',
+                    expectation: '',
+                    has_newsletter: false,
+                    title: '',
+                    address_institution: '',
+                    name_institution: '',
+                    type_institution: '',
+                    other_institution: '',
+                    contact_person: '',
                 });
             } else {
                 const errorData = await res.json();
@@ -480,8 +500,7 @@ export default function MembershipFormforIndividualAnnual() {
             }
 
         } catch (error) {
-            // ❌ Razorpay payment failed or cancelled
-            // toast.dismiss(loadingToastId);
+            console.log("Error>>", error);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {

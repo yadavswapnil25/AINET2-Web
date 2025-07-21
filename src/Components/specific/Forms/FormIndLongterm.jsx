@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import 'react-toastify/dist/ReactToastify.css';
-import { baseUrl } from '../../../utils/constant';
-import { initiatePayment } from '../../../utils/utility';
-import PaymentSuccessModal from '../../PaymentIntegration/Popup';
-import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
-import Loader from '../../shared/Loader';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { baseUrl } from '../../../utils/constant';
+import { initiatePayment } from '../../../utils/utility';
+import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
+import PaymentSuccessModal from '../../PaymentIntegration/Popup';
+import Loader from '../../shared/Loader';
 
 
 
@@ -45,8 +45,8 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <div className="flex flex-wrap gap-1">
-                    {selected.length > 0 ? (
-                        selected.map((item, index) => (
+                    {selected?.length > 0 ? (
+                        selected?.map((item, index) => (
                             <span
                                 key={index}
                                 className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
@@ -73,14 +73,14 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
                     {options.map((option, index) => (
                         <div
                             key={index}
-                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selected.includes(option) ? 'bg-blue-50 text-blue-600' : ''
+                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selected?.includes(option) ? 'bg-blue-50 text-blue-600' : ''
                                 }`}
                             onClick={() => handleToggle(option)}
                         >
                             <div className="flex items-center">
                                 <input
                                     type="checkbox"
-                                    checked={selected.includes(option)}
+                                    checked={selected?.includes(option)}
                                     readOnly
                                     className="mr-2"
                                 />
@@ -97,7 +97,7 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
 
 
 export default function FormIndLongterm() {
- 
+
     const navigate = useNavigate();
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -106,25 +106,28 @@ export default function FormIndLongterm() {
 
 
     const [formData, setFormData] = useState({
-        first_name: "",
-        last_name: "",
-        gender: "",
-        dob: "",
-        mobile: "",
-        whatsapp_no: "",
-        email: "",
-        address: "",
-        state: "",
-        district: "",
-        teaching_exp: "",
-        qualification: [],
+        mobile: '',
+        whatsapp_no: '',
         area_of_work: [],
-        password: "",
+        qualification: [],
+        email: '',
+        address: '',
+        state: '',
+        district: '',
+        password: '',
         agree: false,
         membership_type: "Individual",
         membership_plan: "LongTerm",
-        pin: "",
-        password_confirmation: "",
+        password_confirmation: '',
+        has_member_any: false,
+        name_association: '',
+        expectation: '',
+        has_newsletter: false,
+
+
+
+
+
     });
 
     // Added state for states and districts data
@@ -240,9 +243,15 @@ export default function FormIndLongterm() {
                 }
             }));
         } else {
+            // Convert string values to boolean for specific fields
+            let finalValue = value;
+            if (name === 'has_member_any' || name === 'has_newsletter') {
+                finalValue = value === 'true';
+            }
+
             setFormData(prev => ({
                 ...prev,
-                [name]: value
+                [name]: finalValue
             }));
         }
     };
@@ -406,6 +415,7 @@ export default function FormIndLongterm() {
 
 
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -449,7 +459,6 @@ export default function FormIndLongterm() {
 
             if (res.ok) {
                 const responseData = await res.json();
-
                 setIsPaymentDone(true);
                 setShowSuccessModal(true);
 
@@ -464,7 +473,7 @@ export default function FormIndLongterm() {
                     address: "",
                     state: "",
                     district: "",
-                    teaching_exp: 0,
+                    teaching_exp: "",
                     qualification: [],
                     area_of_work: [],
                     password: "",
@@ -473,6 +482,16 @@ export default function FormIndLongterm() {
                     membership_plan: "",
                     pin: "",
                     password_confirmation: "",
+                    has_member_any: false,
+                    name_association: '',
+                    expectation: '',
+                    has_newsletter: false,
+                    title: '',
+                    address_institution: '',
+                    name_institution: '',
+                    type_institution: '',
+                    other_institution: '',
+                    contact_person: '',
                 });
             } else {
                 const errorData = await res.json();
@@ -482,6 +501,7 @@ export default function FormIndLongterm() {
         } catch (error) {
             // ❌ Razorpay payment failed or cancelled
             // toast.dismiss(loadingToastId);
+            console.log("Error>>", error);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {
@@ -804,6 +824,71 @@ export default function FormIndLongterm() {
                             </div>
                         </div>
 
+
+                        <div className='mt-4'>
+                            <label className="block text-base font-semibold mb-1">
+                                Are you member of any other English Teacher Association(s) : <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="has_member_any"
+                                value={formData.has_member_any}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                required
+                            >
+                                <option value="">Select Option</option>
+                                <option value={true}>YES</option>
+                                <option value={false}>NO</option>
+                            </select>
+                        </div>
+
+
+                        {formData.has_member_any === true && (
+                            <div className="mt-4">
+                                <label className="block text-base font-semibold mb-1">
+                                    Name of the Association(s) : <span className="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    name="name_association"
+                                    placeholder="Enter Association Name(s)"
+                                    value={formData.name_association}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    rows="2"
+                                    required={formData.has_member_any === true}
+                                />
+                            </div>
+                        )}
+
+
+
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Your expectations from AINET :
+                            </label>
+                            <textarea
+                                name="expectation"
+                                placeholder="Enter your expectations"
+                                value={formData.expectation}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                rows="3"
+                            />
+                        </div>
+
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">Like to receive newsletter ?</label>
+                            <select
+                                name="has_newsletter"
+                                value={formData.has_newsletter}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                            >
+                                <option value={true}>YES</option>
+                                <option value={false}>NO</option>
+                            </select>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
@@ -902,6 +987,8 @@ export default function FormIndLongterm() {
                             </div>
                         </div>
 
+
+
                         <div className="mt-4 flex items-center">
                             <label htmlFor="agreeToTerms" className="flex items-center cursor-pointer select-none gap-2">
                                 <input
@@ -936,8 +1023,8 @@ export default function FormIndLongterm() {
 
 
                     </div>
-                </form>
-            </div>
+                </form >
+            </div >
         </>
     );
 }
