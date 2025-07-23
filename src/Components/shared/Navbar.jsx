@@ -190,7 +190,7 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2 lg:gap-4">
-                  <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#A6AEBF] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300">
+                  <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#A6AEBF] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300" onClick={()=> window.location.href="/#membershipplan"}>
                     JOIN US
                   </button>
                   <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-white border border-[#A6AEBF] rounded-full text-[#A6AEBF] hover:bg-gray-100 transition-all duration-300">
