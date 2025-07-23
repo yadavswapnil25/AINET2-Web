@@ -421,6 +421,8 @@ export default function MembershipFormforIndividualAnnual() {
 
         if (!validateForm()) return;
 
+        await checkEmailExists();
+
         // Show payment confirmation modal instead of proceeding directly to payment
         setShowPaymentConfirmation(true);
     };
@@ -500,7 +502,6 @@ export default function MembershipFormforIndividualAnnual() {
             }
 
         } catch (error) {
-            console.log("Error>>", error);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {

@@ -76,7 +76,6 @@ export default function MembershipPlans() {
 
 
     const handlePayNow = (plan) => {
-        console.log("plan", plan)
         
         if (plan.type === "Individual") {
             if (plan.title === "LongTerm") {

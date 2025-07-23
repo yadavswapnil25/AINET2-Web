@@ -228,6 +228,8 @@ export default function MembershipFormforInstitutionalAnnual() {
 
     if (!validateForm()) return;
 
+    await checkEmailExists();
+
     // Show payment confirmation modal
     setShowPaymentConfirmation(true);
   };

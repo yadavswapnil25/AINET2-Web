@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 export default function MembershipFormforInstitutionalOverseas() {
   const location = useLocation();
   const navigate = useNavigate();
-  const plan = location?.state;
+  
   const [isPaymentDone, setIsPaymentDone] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
@@ -25,23 +25,18 @@ export default function MembershipFormforInstitutionalOverseas() {
   const [formData, setFormData] = useState({
     // Individual fields (empty for institutional)
     first_name: '',
-    last_name: '',
-    gender: '',
-    dob: '',
+  
     mobile: '',
     whatsapp_no: '',
     email: '',
     address: '',
-    state: '',
-    district: '',
-    teaching_exp: '',
-    qualification: [],
-    area_of_work: [],
+   
+   
     password: '',
     agree: false,
-    membership_type: plan?.type || "Institutional",
-    membership_plan: plan?.title || "Annual",
-    pin: '',
+    membership_type: "Institutional",
+    membership_plan: "Overseas",
+    
     password_confirmation: '',
     has_member_any: false,
     name_association: '',
@@ -65,7 +60,7 @@ export default function MembershipFormforInstitutionalOverseas() {
     emailperson: '',
     host_event: 'YES',
     expectations: '',
-    newsletter: 'YES',
+
   });
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -80,7 +75,7 @@ export default function MembershipFormforInstitutionalOverseas() {
     const requiredFields = [
       'institution_name', 'institution_type', 'contact_no', 'email', 'address',
       'country', 'contact_person_name', 'mobileperson',
-      'emailperson', 'password'
+      'emailperson', 'password', 'whatsapp_no'
     ];
 
     for (let field of requiredFields) {
@@ -108,6 +103,11 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     if (!formData.agree) {
       toast.error("Please agree to the terms and conditions.");
+      return false;
+    }
+
+    if (!isEmailValid) {
+      // toast.error("Please enter a valid email address.");
       return false;
     }
 
@@ -146,6 +146,8 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     if (!validateForm()) return;
 
+    await checkEmailExists();
+
     // Show payment confirmation modal
     setShowPaymentConfirmation(true);
   };
@@ -155,11 +157,11 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     try {
       const paymentResponse = await initiatePayment({
-        amount: plan?.price,
+        amount: 1725,
         name: formData.institution_name,
         email: formData.email,
         contact: formData.contact_no,
-        currency: plan?.currency || "USD"
+        currency: "INR"
       });
 
       toast.success("✅ Payment Successful");
@@ -207,8 +209,7 @@ export default function MembershipFormforInstitutionalOverseas() {
           whatsapp_no: "",
           email: "",
           address: "",
-          state: "",
-          district: "",
+        
           teaching_exp: "",
           qualification: [],
           area_of_work: [],
@@ -216,7 +217,7 @@ export default function MembershipFormforInstitutionalOverseas() {
           agree: false,
           membership_type: "",
           membership_plan: "",
-          pin: "",
+        
           password_confirmation: "",
           has_member_any: false,
           name_association: '',
@@ -257,9 +258,7 @@ export default function MembershipFormforInstitutionalOverseas() {
     }
   };
 
-  useEffect(() => {
-    if (!location.state) navigate("/")
-  }, [])
+
 
   function getPasswordStrength(password) {
     return {
@@ -289,6 +288,11 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     if (!formData.agree) return false;
 
+    if (!isEmailValid) {
+      // toast.error("Please enter a valid email address.");
+      return false;
+    }
+
     return true;
   };
 
@@ -299,8 +303,8 @@ export default function MembershipFormforInstitutionalOverseas() {
         show={showPaymentConfirmation}
         onClose={() => setShowPaymentConfirmation(false)}
         onProceed={handlePaymentProceed}
-        amount={plan?.price}
-        currency={plan?.currency || "USD"}
+        amount={1725}
+        currency={"INR"}
       />
 
       {showSuccessModal && (
@@ -314,7 +318,7 @@ export default function MembershipFormforInstitutionalOverseas() {
 
       <div className="max-w-5xl mx-auto my-10 p-4 border border-blue-500 rounded-lg bg-white shadow-md">
         <div className="relative mb-4 pb-2">
-          <h1 className="text-4xl font-bold py-4 text-center">Membership Form for {plan?.type} {plan?.title}</h1>
+          <h1 className="text-4xl font-bold py-4 text-center">Membership Form for Institutional Overseas</h1>
           <button className="absolute top-0 right-0 bg-black rounded-full p-2">
             <Link to={{ pathname: '/', hash: '#membershipplan' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -390,7 +394,7 @@ export default function MembershipFormforInstitutionalOverseas() {
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">WhatsApp No. :</label>
+                  <label className="block text-base mb-2 mt-1">WhatsApp No. : <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     name="whatsapp_no"
@@ -408,7 +412,8 @@ export default function MembershipFormforInstitutionalOverseas() {
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    onBlur={checkEmailExists}
+                  
                     onChange={handleChange}
                     placeholder="Enter Your Email"
                     className="w-full p-2 bg-white rounded border border-gray-300"

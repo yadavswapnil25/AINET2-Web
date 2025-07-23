@@ -93,9 +93,9 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
 };
 
 export default function MembershipFormForIndividualOverseas() {
-    const location = useLocation();
+    
     const navigate = useNavigate();
-    const plan = location?.state;
+ 
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
@@ -126,8 +126,7 @@ export default function MembershipFormForIndividualOverseas() {
         whatsapp_no: '',
         email: '',
         address: '',
-        state: '',
-        district: '',
+       
         teaching_exp: '',
 
         area_of_work: [],
@@ -135,7 +134,7 @@ export default function MembershipFormForIndividualOverseas() {
         agree: false,
         membership_type: "Individual",
         membership_plan: "Overseas",
-        pin: '',
+       
         password_confirmation: '',
         has_member_any: false,
         name_association: '',
@@ -222,6 +221,11 @@ export default function MembershipFormForIndividualOverseas() {
             return false;
         }
 
+        if (!isEmailValid) {
+            // toast.error("Please enter a valid email address.");
+            return false;
+        }
+
         return true;
     };
 
@@ -258,6 +262,9 @@ export default function MembershipFormForIndividualOverseas() {
 
         if (!validateForm()) return;
 
+       await checkEmailExists();
+       
+
         // Show payment confirmation modal
         setShowPaymentConfirmation(true);
     };
@@ -267,11 +274,11 @@ export default function MembershipFormForIndividualOverseas() {
 
         try {
             const paymentResponse = await initiatePayment({
-                amount: plan?.price,
+                amount: 1725,
                 name: `${formData.first_name} ${formData.last_name}`,
                 email: formData.email,
                 contact: formData.mobile,
-                currency: plan?.currency || "INR"
+                currency:  "INR"
             });
 
             toast.success("✅ Payment Successful");
@@ -310,16 +317,12 @@ export default function MembershipFormForIndividualOverseas() {
                     whatsapp_no: '',
                     email: '',
                     address: '',
-                    state: "",
-                    district: "",
                     teaching_exp: '',
-
                     area_of_work: [],
                     password: '',
                     agree: false,
                     membership_type: "",
                     membership_plan: "",
-                    pin: "",
                     password_confirmation: '',
                     has_member_any: false,
                     name_association: '',
@@ -338,7 +341,6 @@ export default function MembershipFormForIndividualOverseas() {
             }
 
         } catch (error) {
-            console.log("Error>>", error);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {
@@ -347,9 +349,7 @@ export default function MembershipFormForIndividualOverseas() {
         }
     };
 
-    useEffect(() => {
-        if (!location.state) navigate("/")
-    }, [])
+
 
     function getPasswordStrength(password) {
         return {
@@ -379,6 +379,11 @@ export default function MembershipFormForIndividualOverseas() {
         if (formData.area_of_work.length === 0) return false;
         if (!formData.agree) return false;
 
+        if (!isEmailValid) {
+            // toast.error("Please enter a valid email address.");
+            return false;
+        }
+
         return true;
     };
 
@@ -389,8 +394,8 @@ export default function MembershipFormForIndividualOverseas() {
                 show={showPaymentConfirmation}
                 onClose={() => setShowPaymentConfirmation(false)}
                 onProceed={handlePaymentProceed}
-                amount={plan?.price}
-                currency={plan?.currency || "INR"}
+                amount={1725}
+                currency={"INR"}
             />
 
             {showSuccessModal && (
@@ -412,9 +417,9 @@ export default function MembershipFormForIndividualOverseas() {
                     </Link>
                 </button>
 
-                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for {plan?.type} {plan?.title}</h1>
+                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for Individual Overseas</h1>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} autoComplete="off">
                     {/* Personal Information Section */}
                     <div className="mb-6">
                         <div className="bg-[#A6AEBF] p-2 my-8">
@@ -553,11 +558,12 @@ export default function MembershipFormForIndividualOverseas() {
                                 <input
                                     type="email"
                                     name="email"
+                                    onBlur={checkEmailExists}
                                     placeholder="Enter Your Email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
-                                    required
+                                    required 
                                 />
                             </div>
                         </div>

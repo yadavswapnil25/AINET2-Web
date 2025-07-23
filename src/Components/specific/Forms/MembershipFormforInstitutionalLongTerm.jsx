@@ -232,6 +232,8 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
     if (!validateForm()) return;
 
+    await checkEmailExists();
+
     // Show payment confirmation modal
     setShowPaymentConfirmation(true);
   };

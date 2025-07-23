@@ -106,6 +106,7 @@ export default function FormIndLongterm() {
 
 
     const [formData, setFormData] = useState({
+        name: '',
         mobile: '',
         whatsapp_no: '',
         area_of_work: [],
@@ -421,6 +422,15 @@ export default function FormIndLongterm() {
 
         if (!validateForm()) return;
 
+        await checkEmailExists();
+
+        setFormData(prev => ({
+            ...prev,
+            name: formData.first_name
+        }));
+
+
+
         // Show payment confirmation modal instead of proceeding directly to payment
         setShowPaymentConfirmation(true);
     };
@@ -463,6 +473,7 @@ export default function FormIndLongterm() {
                 setShowSuccessModal(true);
 
                 setFormData({
+                    name: "",
                     first_name: "",
                     last_name: "",
                     gender: "",
@@ -501,7 +512,6 @@ export default function FormIndLongterm() {
         } catch (error) {
             // ❌ Razorpay payment failed or cancelled
             // toast.dismiss(loadingToastId);
-            console.log("Error>>", error);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {

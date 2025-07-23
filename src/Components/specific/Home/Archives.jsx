@@ -71,10 +71,7 @@ const Archives = () => {
   };
 
   const handleLinkClick = (link) => {
-    // For demo purposes, just log the link. In real app, use router navigation
-    console.log('Navigating to:', link);
-    window.location.href = link; // For direct navigation
-    // or use your router: navigate(link);
+    window.location.href = link; 
   };
 
   return (

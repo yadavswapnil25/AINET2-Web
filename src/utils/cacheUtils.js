@@ -19,7 +19,6 @@ export const preloadImages = async (imageUrls) => {
   
   try {
     await Promise.all(promises);
-    console.log('All images preloaded successfully');
   } catch (error) {
     console.warn('Some images failed to preload:', error);
   }
@@ -78,7 +77,7 @@ export const clearCache = async (cacheName) => {
 
   try {
     const deleted = await caches.delete(cacheName);
-    console.log(`Cache ${cacheName} ${deleted ? 'cleared' : 'not found'}`);
+    // console.log(`Cache ${cacheName} ${deleted ? 'cleared' : 'not found'}`);
     return deleted;
   } catch (error) {
     console.error('Error clearing cache:', error);
@@ -101,7 +100,7 @@ export const clearAllCaches = async () => {
     const results = await Promise.all(deletePromises);
     const deletedCount = results.filter(Boolean).length;
     
-    console.log(`Cleared ${deletedCount} out of ${cacheNames.length} caches`);
+    // console.log(`Cleared ${deletedCount} out of ${cacheNames.length} caches`);
     return deletedCount;
   } catch (error) {
     console.error('Error clearing all caches:', error);
@@ -124,7 +123,7 @@ export const updateCache = async (url) => {
     if (response.ok) {
       const cache = await caches.open('images-cache');
       await cache.put(url, response.clone());
-      console.log(`Cache updated for: ${url}`);
+      // console.log(`Cache updated for: ${url}`);
       return true;
     }
   } catch (error) {
