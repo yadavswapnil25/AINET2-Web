@@ -37,8 +37,8 @@ export default function MembershipPlans() {
         },
         {
             title: "Overseas",
-            price: "20.00",
-            currency: "USD",
+            price: "1725.00",
+            currency: "INR",
             duration: "1",
             type: "Individual",
             discountPercentage: 25
@@ -64,8 +64,8 @@ export default function MembershipPlans() {
         },
         {
             title: "Overseas",
-            price: "30.00",
-            currency: "USD",
+            price: "2600.00",
+            currency: "INR",
             duration: "1",
             discountPercentage: 55,
             type: "Institutional"
@@ -76,8 +76,24 @@ export default function MembershipPlans() {
 
 
     const handlePayNow = (plan) => {
-        console.log("plan", plan)
-        navigate("/MembershipFormforIndividualAnnual", { state: plan })
+        
+        if (plan.type === "Individual") {
+            if (plan.title === "LongTerm") {
+                navigate("/FormIndLongterm", { state: plan })
+            } else if (plan.title === "Overseas") {
+                navigate("/MembershipFormforIndividualOverseas", { state: plan })
+            } else if (plan.title === "Annual") {
+                navigate("/MembershipFormforIndividualAnnual", { state: plan })
+            }
+        } else if (plan.type === "Institutional") {
+            if (plan.title === "Annual") {
+                navigate("/MembershipFormforInstitutionalAnnual", { state: plan })
+            } else if (plan.title === "LongTerm") {
+                navigate("/MembershipFormforInstitutionalLongTerm", { state: plan })
+            } else if (plan.title === "Overseas") {
+                navigate("/MembershipFormforInstitutionalOverseas", { state: plan })
+            }
+        }
     }
 
     return (

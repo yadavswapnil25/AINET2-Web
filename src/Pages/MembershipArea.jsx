@@ -68,7 +68,7 @@ const MembershipArea = () => {
         },
         {
           name: "Individual Overseas",
-          price: "$20.00",
+          price: "₹1725.00",
           features: [
             "1-year Membership",
             "Global Access",
@@ -105,7 +105,7 @@ const MembershipArea = () => {
         },
         {
           name: "Institutional Overseas",
-          price: "$30.00",
+          price: "₹2600.00",
           features: [
             "1-year Membership",
             "Global Access only",
@@ -126,8 +126,6 @@ const MembershipArea = () => {
       features: plan.features
     });
 
-    // Example placeholder: Add logic for routing, modal, or payment API
-    // navigate(`/payment?type=${type}&plan=${plan.name}`)
   };
 
   return (

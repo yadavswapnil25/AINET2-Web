@@ -30,9 +30,7 @@ export default function ContactUs() {
     };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Form submitted:', formData);
-        // You can add form validation or send the data to an API here
+        e.preventDefault();        
     };
 
     return (

@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import 'react-toastify/dist/ReactToastify.css';
-import { baseUrl } from '../../../utils/constant';
-import { initiatePayment } from '../../../utils/utility';
-import PaymentSuccessModal from '../../PaymentIntegration/Popup';
-import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
-import Loader from '../../../Components/shared/Loader';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loader from '../../../Components/shared/Loader';
+import { baseUrl } from '../../../utils/constant';
+import { initiatePayment } from '../../../utils/utility';
+import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
+import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 
 
 
@@ -97,13 +97,12 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
 
 
 export default function MembershipFormforIndividualAnnual() {
-    const location = useLocation();
     const navigate = useNavigate();
-    const plan = location?.state;
+
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
-  
+
 
 
     const [formData, setFormData] = useState({
@@ -122,10 +121,20 @@ export default function MembershipFormforIndividualAnnual() {
         area_of_work: [],
         password: "",
         agree: false,
-        membership_type: plan?.type,
-        membership_plan: plan?.title,
+        membership_type: "Individual",
+        membership_plan: "Annual",
         pin: "",
         password_confirmation: "",
+        has_member_any: false,
+        name_association: '',
+        expectation: '',
+        has_newsletter: false,
+        title: '',
+        address_institution: '',
+        name_institution: '',
+        type_institution: '',
+        other_institution: '',
+        contact_person: '',
     });
 
     // Added state for states and districts data
@@ -378,39 +387,47 @@ export default function MembershipFormforIndividualAnnual() {
         return true;
     };
 
+    
     const checkEmailExists = async () => {
         const email = formData.email;
-
+    
         if (!email) return; // skip if empty
-
+    
         try {
-            const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
-
-            if (!res.ok) {
-                console.error("Failed to check email");
-                return;
-            }
-
-            const data = await res.json();
-
-            if (!data.status || data.status === false) {
-                setIsEmailValid(false); // ❌ email not valid
-                toast.warning("❌ Email already exists. Please use a different email.");
-            } else {
-                setIsEmailValid(true); // ✅ email valid
-                // Optional success message
-            }
+          const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
+    
+          if (!res.ok) {
+            console.error("Failed to check email");
+            return false;
+          }
+    
+          const data = await res.json();
+    
+          if (!data.status || data.status === false) {
+            setIsEmailValid(false); // ❌ email not valid
+            toast.warning("❌ Email already exists. Please use a different email.");
+            return false;
+          } else {
+            setIsEmailValid(true); // ✅ email valid
+            return true;
+            // Optional success message
+          } 
         } catch (error) {
-            console.error("Error checking email:", error);
+          console.error("Error checking email:", error);
+          return false;
         }
-    };
-
+      };
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!validateForm()) return;
+
+        const res = await checkEmailExists();
+        if(!res){
+            return;
+        }
 
         // Show payment confirmation modal instead of proceeding directly to payment
         setShowPaymentConfirmation(true);
@@ -419,20 +436,20 @@ export default function MembershipFormforIndividualAnnual() {
     const handlePaymentProceed = async () => {
         // Close the confirmation modal
         setShowPaymentConfirmation(false);
-        
+
 
         try {
-          
+
             const paymentResponse = await initiatePayment({
-                amount: plan?.price, // in INR
+                amount: 500, // in INR
                 name: `${formData.first_name} ${formData.last_name}`,
                 email: formData.email,
                 contact: formData.mobile,
-                currency: plan?.currency || "INR"
+                currency: "INR"
             });
 
-   
-       
+
+
             toast.success("✅ Payment Successful");
 
 
@@ -443,7 +460,7 @@ export default function MembershipFormforIndividualAnnual() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Accept: "application/json",
+                    "Accept": "application/json",
                 },
                 body: JSON.stringify(formData),
             });
@@ -465,7 +482,7 @@ export default function MembershipFormforIndividualAnnual() {
                     address: "",
                     state: "",
                     district: "",
-                    teaching_exp: 0,
+                    teaching_exp: "",
                     qualification: [],
                     area_of_work: [],
                     password: "",
@@ -474,6 +491,16 @@ export default function MembershipFormforIndividualAnnual() {
                     membership_plan: "",
                     pin: "",
                     password_confirmation: "",
+                    has_member_any: false,
+                    name_association: '',
+                    expectation: '',
+                    has_newsletter: false,
+                    title: '',
+                    address_institution: '',
+                    name_institution: '',
+                    type_institution: '',
+                    other_institution: '',
+                    contact_person: '',
                 });
             } else {
                 const errorData = await res.json();
@@ -481,8 +508,6 @@ export default function MembershipFormforIndividualAnnual() {
             }
 
         } catch (error) {
-            // ❌ Razorpay payment failed or cancelled
-            // toast.dismiss(loadingToastId);
             toast.error(`❌ Payment Failed: ${error}`);
             console.error("Payment or API Error:", error);
         } finally {
@@ -492,9 +517,6 @@ export default function MembershipFormforIndividualAnnual() {
     };
 
 
-    useEffect(() => {
-        if (!location.state) navigate("/")
-    }, [])
 
     function getPasswordStrength(password) {
         return {
@@ -511,15 +533,15 @@ export default function MembershipFormforIndividualAnnual() {
     return (
         <>
             {/* Payment Confirmation Modal */}
-            <PaymentConfirmationModal 
+            <PaymentConfirmationModal
                 show={showPaymentConfirmation}
                 onClose={() => setShowPaymentConfirmation(false)}
                 onProceed={handlePaymentProceed}
-                amount={plan?.price}
-                currency={plan?.currency || "INR"}
+                amount={500}
+                currency={"INR"}
             />
-            
-           
+
+
 
             {showSuccessModal && (
                 <PaymentSuccessModal
@@ -535,14 +557,14 @@ export default function MembershipFormforIndividualAnnual() {
             <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
                 {/* Close button */}
                 <button className="absolute top-2 right-2 bg-black rounded-full p-1">
-                    <Link to={{ pathname: '/', hash: '#membershipplan' }}> 
+                    <Link to={{ pathname: '/', hash: '#membershipplan' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
                             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                         </svg>
                     </Link>
                 </button>
 
-                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for {plan?.type} {plan?.title}</h1>
+                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for Individual Annual</h1>
 
                 <form onSubmit={handleSubmit}>
                     {/* Personal Information Section */}
@@ -638,7 +660,7 @@ export default function MembershipFormforIndividualAnnual() {
                                         className="w-full p-2 bg-white rounded border border-gray-300"
                                         required
                                         popperClassName="date-picker-popper"
-                                        
+
                                     />
                                 </div>
                             </div>

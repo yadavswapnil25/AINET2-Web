@@ -140,7 +140,7 @@ export default function Login() {
             {/* Left Image */}
             <div className="lg:w-1/2 relative overflow-hidden flex items-center justify-center">
               <img
-                src="Logban.jpg"
+                src="/LoginBg.jpg"
                 alt="Banner"
                 className="w-[85%] h-[85%] object-cover rounded-3xl"
               />
