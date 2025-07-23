@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 export default function MembershipFormforInstitutionalOverseas() {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const [isPaymentDone, setIsPaymentDone] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
@@ -25,18 +25,18 @@ export default function MembershipFormforInstitutionalOverseas() {
   const [formData, setFormData] = useState({
     // Individual fields (empty for institutional)
     first_name: '',
-  
+
     mobile: '',
     whatsapp_no: '',
     email: '',
     address: '',
-   
-   
+
+
     password: '',
     agree: false,
     membership_type: "Institutional",
     membership_plan: "Overseas",
-    
+
     password_confirmation: '',
     has_member_any: false,
     name_association: '',
@@ -124,7 +124,7 @@ export default function MembershipFormforInstitutionalOverseas() {
 
       if (!res.ok) {
         console.error("Failed to check email");
-        return;
+        return false;
       }
 
       const data = await res.json();
@@ -132,12 +132,15 @@ export default function MembershipFormforInstitutionalOverseas() {
       if (!data.status || data.status === false) {
         setIsEmailValid(false); // ❌ email not valid
         toast.warning("❌ Email already exists. Please use a different email.");
+        return false;
       } else {
         setIsEmailValid(true); // ✅ email valid
+        return true;
         // Optional success message
       }
     } catch (error) {
       console.error("Error checking email:", error);
+      return false;
     }
   };
 
@@ -146,7 +149,10 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     if (!validateForm()) return;
 
-    await checkEmailExists();
+   const res = await checkEmailExists();
+   if(!res){
+    return;
+   }
 
     // Show payment confirmation modal
     setShowPaymentConfirmation(true);
@@ -209,7 +215,7 @@ export default function MembershipFormforInstitutionalOverseas() {
           whatsapp_no: "",
           email: "",
           address: "",
-        
+
           teaching_exp: "",
           qualification: [],
           area_of_work: [],
@@ -217,7 +223,7 @@ export default function MembershipFormforInstitutionalOverseas() {
           agree: false,
           membership_type: "",
           membership_plan: "",
-        
+
           password_confirmation: "",
           has_member_any: false,
           name_association: '',
@@ -357,7 +363,7 @@ export default function MembershipFormforInstitutionalOverseas() {
                     name="institution_type"
                     value={formData.institution_type}
                     onChange={handleChange}
-                    className="w-full p-2 bg-blue-100 rounded text-base"
+                    className="w-full p-2 bg-white rounded border border-gray-300"
                     required
                   >
                     <option value="">Select Type of Institution</option>
@@ -375,7 +381,7 @@ export default function MembershipFormforInstitutionalOverseas() {
                     value={formData.other_type}
                     onChange={handleChange}
                     placeholder="Enter your info"
-                    className="w-full p-2 bg-blue-100 rounded text-base"
+                    className="w-full p-2 bg-white rounded border border-gray-300"
                   />
                 </div>
               </div>
@@ -417,7 +423,7 @@ export default function MembershipFormforInstitutionalOverseas() {
                     type="email"
                     name="email"
                     onBlur={checkEmailExists}
-                  
+
                     onChange={handleChange}
                     placeholder="Enter Your Email"
                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -646,16 +652,17 @@ export default function MembershipFormforInstitutionalOverseas() {
                 </div>
               </div>
 
-              <div className="flex items-start mt-1">
+              <div className="flex items-center mt-1">
                 <input
                   type="checkbox"
                   name="agree"
+                  id="agree"
                   checked={formData.agree}
                   onChange={handleChange}
                   className="mt-1 mr-1 accent-green-600 w-5 h-5"
                   required
                 />
-                <label className="text-xs">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
+                <label className="text-xs" htmlFor="agree">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
               </div>
             </div>
           </div>

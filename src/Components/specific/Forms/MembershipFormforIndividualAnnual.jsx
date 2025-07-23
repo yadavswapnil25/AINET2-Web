@@ -387,33 +387,36 @@ export default function MembershipFormforIndividualAnnual() {
         return true;
     };
 
+    
     const checkEmailExists = async () => {
         const email = formData.email;
-
+    
         if (!email) return; // skip if empty
-
+    
         try {
-            const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
-
-            if (!res.ok) {
-                console.error("Failed to check email");
-                return;
-            }
-
-            const data = await res.json();
-
-            if (!data.status || data.status === false) {
-                setIsEmailValid(false); // ❌ email not valid
-                toast.warning("❌ Email already exists. Please use a different email.");
-            } else {
-                setIsEmailValid(true); // ✅ email valid
-                // Optional success message
-            }
+          const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
+    
+          if (!res.ok) {
+            console.error("Failed to check email");
+            return false;
+          }
+    
+          const data = await res.json();
+    
+          if (!data.status || data.status === false) {
+            setIsEmailValid(false); // ❌ email not valid
+            toast.warning("❌ Email already exists. Please use a different email.");
+            return false;
+          } else {
+            setIsEmailValid(true); // ✅ email valid
+            return true;
+            // Optional success message
+          } 
         } catch (error) {
-            console.error("Error checking email:", error);
+          console.error("Error checking email:", error);
+          return false;
         }
-    };
-
+      };
 
 
     const handleSubmit = async (e) => {
@@ -421,7 +424,10 @@ export default function MembershipFormforIndividualAnnual() {
 
         if (!validateForm()) return;
 
-        await checkEmailExists();
+        const res = await checkEmailExists();
+        if(!res){
+            return;
+        }
 
         // Show payment confirmation modal instead of proceeding directly to payment
         setShowPaymentConfirmation(true);

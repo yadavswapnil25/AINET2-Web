@@ -105,7 +105,7 @@ const MembershipArea = () => {
         },
         {
           name: "Institutional Overseas",
-          price: "2600.00",
+          price: "₹2600.00",
           features: [
             "1-year Membership",
             "Global Access only",

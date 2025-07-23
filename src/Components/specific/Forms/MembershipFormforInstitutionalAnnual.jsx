@@ -9,7 +9,7 @@ import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmati
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 
 export default function MembershipFormforInstitutionalAnnual() {
-  
+
   const navigate = useNavigate();
 
   const [isPaymentDone, setIsPaymentDone] = useState(false);
@@ -206,7 +206,7 @@ export default function MembershipFormforInstitutionalAnnual() {
 
       if (!res.ok) {
         console.error("Failed to check email");
-        return;
+        return false;
       }
 
       const data = await res.json();
@@ -214,12 +214,15 @@ export default function MembershipFormforInstitutionalAnnual() {
       if (!data.status || data.status === false) {
         setIsEmailValid(false); // ❌ email not valid
         toast.warning("❌ Email already exists. Please use a different email.");
+        return false;
       } else {
         setIsEmailValid(true); // ✅ email valid
+        return true;
         // Optional success message
       }
     } catch (error) {
       console.error("Error checking email:", error);
+      return false;
     }
   };
 
@@ -228,7 +231,10 @@ export default function MembershipFormforInstitutionalAnnual() {
 
     if (!validateForm()) return;
 
-    await checkEmailExists();
+    const res = await checkEmailExists();
+    if (!res) {
+      return;
+    }
 
     // Show payment confirmation modal
     setShowPaymentConfirmation(true);
@@ -239,11 +245,11 @@ export default function MembershipFormforInstitutionalAnnual() {
 
     try {
       const paymentResponse = await initiatePayment({
-        amount: plan?.price,
+        amount: 1000,
         name: formData.institution_name,
         email: formData.email,
         contact: formData.contact_no,
-        currency: plan?.currency || "INR"
+        currency: "INR"
       });
 
       toast.success("✅ Payment Successful");
@@ -738,9 +744,9 @@ export default function MembershipFormforInstitutionalAnnual() {
                       value={formData.password_confirmation}
                       onChange={handleChange}
                       placeholder="Re-Enter Your Password"
-                        className="w-full p-2 bg-white border border-gray-300 rounded text-base pr-10"
+                      className="w-full p-2 bg-white border border-gray-300 rounded text-base pr-10"
                       required
-                    />    
+                    />
                     <button
                       type="button"
                       tabIndex={-1}
@@ -764,16 +770,17 @@ export default function MembershipFormforInstitutionalAnnual() {
                 </div>
               </div>
 
-              <div className="flex items-start mt-1">
+              <div className="flex items-center mt-1">
                 <input
                   type="checkbox"
                   name="agree"
+                  id="agree"
                   checked={formData.agree}
                   onChange={handleChange}
                   className="mt-1 mr-1 accent-green-600 w-5 h-5"
                   required
                 />
-                <label className="text-xs">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
+                <label className="text-xs" htmlFor="agree">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
               </div>
             </div>
           </div>
