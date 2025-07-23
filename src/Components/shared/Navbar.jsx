@@ -690,7 +690,7 @@ const Navbar = () => {
           <div className="mt-auto">
             {/* Mobile Auth Buttons */}
             <div className="flex flex-col space-y-3 mb-6">
-              <button className="py-2 text-base font-semibold bg-[#A6AEBF] rounded-full text-white">
+              <button className="py-2 text-base font-semibold bg-[#A6AEBF] rounded-full text-white" onClick={()=> (window.location.href="/#membershipplan" , setIsOpen(false))}>
                 JOIN US
               </button>
               <button className="py-2 text-base font-semibold bg-white border border-[#A6AEBF] rounded-full text-[#A6AEBF]">
