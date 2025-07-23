@@ -26,7 +26,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
   const [formData, setFormData] = useState({
     // Individual fields (empty for institutional)
     first_name: '',
-  
+
     mobile: '',
     whatsapp_no: '',
     email: '',
@@ -37,7 +37,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
     agree: false,
     membership_type: "Institutional",
     membership_plan: "LongTerm",
- 
+
     password_confirmation: '',
     has_member_any: false,
     name_association: '',
@@ -210,7 +210,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
       if (!res.ok) {
         console.error("Failed to check email");
-        return;
+        return false;
       }
 
       const data = await res.json();
@@ -218,12 +218,15 @@ export default function MembershipFormforInstitutionalLongTerm() {
       if (!data.status || data.status === false) {
         setIsEmailValid(false); // ❌ email not valid
         toast.warning("❌ Email already exists. Please use a different email.");
+        return false;
       } else {
         setIsEmailValid(true); // ✅ email valid
+        return true;
         // Optional success message
-      }
+      } 
     } catch (error) {
       console.error("Error checking email:", error);
+      return false;
     }
   };
 
@@ -232,7 +235,11 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
     if (!validateForm()) return;
 
-    await checkEmailExists();
+    const res = await checkEmailExists();
+   
+    if (!res) {
+      return;
+    }
 
     // Show payment confirmation modal
     setShowPaymentConfirmation(true);
@@ -254,14 +261,17 @@ export default function MembershipFormforInstitutionalLongTerm() {
       setLoading(true);
       setIsSubmitting(true);
 
-      // Prepare form data with proper mapping for institutional longterm
+      const selectedState = states.find(state => state.geonameId === parseInt(formData.state));
+      const selectedDistrict = districts.find(district => district.geonameId === parseInt(formData.district));
+
       const submissionData = {
         ...formData,
-        // Map institutional fields to individual field names for consistency
         first_name: formData.institution_name || "",
         email: formData.email,
         mobile: formData.contact_no || "",
         address: formData.address || "",
+        district: selectedDistrict?.name || "",
+        state: selectedState?.name || "",
         expectation: formData.expectations || "",
         has_newsletter: formData.newsletter === 'YES',
         name_institution: formData.institution_name || "",
@@ -285,21 +295,20 @@ export default function MembershipFormforInstitutionalLongTerm() {
         setIsPaymentDone(true);
         setShowSuccessModal(true);
         setFormData({
-          // Reset all fields
           first_name: '',
-         
+
           mobile: '',
           whatsapp_no: '',
           email: '',
           address: '',
           state: '',
           district: '',
-         
+
           password: '',
           agree: false,
           membership_type: "",
           membership_plan: "",
-         
+
           password_confirmation: '',
           has_member_any: false,
           name_association: '',
@@ -312,7 +321,6 @@ export default function MembershipFormforInstitutionalLongTerm() {
           other_institution: '',
           contact_person: '',
 
-          // Institutional specific fields
           institution_name: '',
           institution_type: '',
           other_type: '',
@@ -353,7 +361,6 @@ export default function MembershipFormforInstitutionalLongTerm() {
   const passwordStrength = getPasswordStrength(formData.password);
   const allStrong = Object.values(passwordStrength).every(Boolean);
 
-  // Check if form is valid for submit button
   const isFormValid = () => {
     const requiredFields = [
       'institution_name', 'institution_type', 'contact_no', 'email', 'address',
@@ -434,7 +441,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                     name="institution_type"
                     value={formData.institution_type}
                     onChange={handleChange}
-                    className="w-full p-2 bg-blue-100 rounded text-base"
+                    className="w-full p-2 bg-white rounded border border-gray-300"
                     required
                   >
                     <option value="">Select Type of Institution</option>
@@ -452,7 +459,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                     value={formData.other_type}
                     onChange={handleChange}
                     placeholder="Enter your info"
-                    className="w-full p-2 bg-blue-100 rounded text-base"
+                    className="w-full p-2 bg-white rounded border border-gray-300"
                   />
                 </div>
               </div>
@@ -763,16 +770,17 @@ export default function MembershipFormforInstitutionalLongTerm() {
                 </div>
               </div>
 
-              <div className="flex items-start mt-1">
+              <div className="flex items-center mt-1">
                 <input
                   type="checkbox"
                   name="agree"
+                  id="agree"
                   checked={formData.agree}
                   onChange={handleChange}
                   className="mt-1 mr-1 accent-green-600 w-5 h-5"
                   required
                 />
-                <label className="text-xs">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
+                <label className="text-xs" htmlFor="agree">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
               </div>
             </div>
           </div>

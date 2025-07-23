@@ -64,7 +64,7 @@ export default function MembershipPlans() {
         },
         {
             title: "Overseas",
-            price: "1725.00",
+            price: "2600.00",
             currency: "INR",
             duration: "1",
             discountPercentage: 55,
