@@ -68,7 +68,7 @@ const MembershipArea = () => {
         },
         {
           name: "Individual Overseas",
-          price: "$20.00",
+          price: "₹1725.00",
           features: [
             "1-year Membership",
             "Global Access",
@@ -105,7 +105,7 @@ const MembershipArea = () => {
         },
         {
           name: "Institutional Overseas",
-          price: "$30.00",
+          price: "2600.00",
           features: [
             "1-year Membership",
             "Global Access only",
@@ -119,12 +119,12 @@ const MembershipArea = () => {
 
   // 🔔 Handle individual Pay Now button
   const handlePayNow = (plan, type) => {
-    // console.log("Initiating payment for:", {
-    //   membershipType: type,
-    //   planName: plan.name,
-    //   price: plan.price,
-    //   features: plan.features
-    // });
+    console.log("Initiating payment for:", {
+      membershipType: type,
+      planName: plan.name,
+      price: plan.price,
+      features: plan.features
+    });
 
   };
 

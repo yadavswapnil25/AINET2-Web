@@ -157,7 +157,7 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     try {
       const paymentResponse = await initiatePayment({
-        amount: 1725,
+        amount: 2600,
         name: formData.institution_name,
         email: formData.email,
         contact: formData.contact_no,
@@ -303,7 +303,7 @@ export default function MembershipFormforInstitutionalOverseas() {
         show={showPaymentConfirmation}
         onClose={() => setShowPaymentConfirmation(false)}
         onProceed={handlePaymentProceed}
-        amount={1725}
+        amount={2600}
         currency={"INR"}
       />
 
@@ -384,9 +384,11 @@ export default function MembershipFormforInstitutionalOverseas() {
                 <div className="w-1/2">
                   <label className="block text-base mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
                   <input
-                    type="text"
+                    type="tel"
                     name="contact_no"
                     value={formData.contact_no}
+                    maxLength={10}
+                    minLength={10}
                     onChange={handleChange}
                     placeholder="Enter Your No."
                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -396,9 +398,11 @@ export default function MembershipFormforInstitutionalOverseas() {
                 <div className="w-1/2">
                   <label className="block text-base mb-2 mt-1">WhatsApp No. : <span className="text-red-500">*</span></label>
                   <input
-                    type="text"
+                    type="tel"
                     name="whatsapp_no"
                     value={formData.whatsapp_no}
+                    maxLength={10}
+                    minLength={10}
                     onChange={handleChange}
                     placeholder="Enter Your No."
                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -485,9 +489,11 @@ export default function MembershipFormforInstitutionalOverseas() {
                 <div className="w-1/2">
                   <label className="block text-base mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
                   <input
-                    type="text"
+                    type="tel"
                     name="mobileperson"
                     value={formData.mobileperson}
+                    maxLength={10}
+                    minLength={10}
                     onChange={handleChange}
                     placeholder="Enter Your No."
                     className="w-full p-2 bg-white rounded border border-gray-300"
