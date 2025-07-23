@@ -14,7 +14,6 @@ const RazorpayCheckout = () => {
         });
     };
 
-    console.log("Razorpay Key", razorpayKey);
 
     const handlePayment = async () => {
         const res = await loadRazorpayScript();
@@ -31,7 +30,6 @@ const RazorpayCheckout = () => {
             name: "AINET",
             description: "Membership Payment",
             handler: function (response) {
-                console.log("✅ Payment success:", response);
                 setPaymentStatus("success");
             },
             prefill: {

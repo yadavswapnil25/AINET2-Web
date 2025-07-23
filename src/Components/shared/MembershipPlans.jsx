@@ -76,8 +76,24 @@ export default function MembershipPlans() {
 
 
     const handlePayNow = (plan) => {
-        console.log("plan", plan)
-        navigate("/MembershipFormforIndividualAnnual", { state: plan })
+        
+        if (plan.type === "Individual") {
+            if (plan.title === "LongTerm") {
+                navigate("/FormIndLongterm", { state: plan })
+            } else if (plan.title === "Overseas") {
+                navigate("/MembershipFormforIndividualOverseas", { state: plan })
+            } else if (plan.title === "Annual") {
+                navigate("/MembershipFormforIndividualAnnual", { state: plan })
+            }
+        } else if (plan.type === "Institutional") {
+            if (plan.title === "Annual") {
+                navigate("/MembershipFormforInstitutionalAnnual", { state: plan })
+            } else if (plan.title === "LongTerm") {
+                navigate("/MembershipFormforInstitutionalLongTerm", { state: plan })
+            } else if (plan.title === "Overseas") {
+                navigate("/MembershipFormforInstitutionalOverseas", { state: plan })
+            }
+        }
     }
 
     return (

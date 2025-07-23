@@ -119,15 +119,13 @@ const MembershipArea = () => {
 
   // 🔔 Handle individual Pay Now button
   const handlePayNow = (plan, type) => {
-    console.log("Initiating payment for:", {
-      membershipType: type,
-      planName: plan.name,
-      price: plan.price,
-      features: plan.features
-    });
+    // console.log("Initiating payment for:", {
+    //   membershipType: type,
+    //   planName: plan.name,
+    //   price: plan.price,
+    //   features: plan.features
+    // });
 
-    // Example placeholder: Add logic for routing, modal, or payment API
-    // navigate(`/payment?type=${type}&plan=${plan.name}`)
   };
 
   return (

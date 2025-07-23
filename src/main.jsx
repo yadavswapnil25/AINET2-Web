@@ -10,7 +10,6 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then((registration) => {
-        console.log('SW registered: ', registration);
         
         // Listen for updates
         registration.addEventListener('updatefound', () => {
@@ -18,14 +17,12 @@ if ('serviceWorker' in navigator) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               // New content is available, show notification
-              console.log('New content is available; please refresh.');
               // You can show a toast notification here if needed
             }
           });
         });
       })
       .catch((registrationError) => {
-        console.log('SW registration failed: ', registrationError);
       });
   });
 }

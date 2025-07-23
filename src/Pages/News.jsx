@@ -80,7 +80,6 @@ const News = () => {
            
           {newsItems.map((item) => (
             <div key={item.id} className="border border-[#A6AEBF] rounded-[20px] overflow-hidden shadow-sm w-full" onClick={() => {
-                console.log("Navigating to: ", `/news/${item.id}`);
                 navigate(`/news/${item.id}`);
               }}
               >
