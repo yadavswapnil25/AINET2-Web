@@ -163,23 +163,37 @@ export default function AINET2026DelegateRegistrationForm() {
   const calculateDelegateFee = () => {
     const { delegate_type, is_ainet_member } = formData;
     let baseFee = 0;
+    
+    // Check current date to determine which fee structure to use
+    const currentDate = new Date();
+    const cutoffDate = new Date('2026-01-01');
+    const isEarlyBird = currentDate < cutoffDate;
 
-    // Updated fees for 2026
-    switch (delegate_type) {
-      case 'Indian Delegate':
-        baseFee = 1500;
-        break;
-      case 'SAARC Country Delegate':
-        baseFee = 1500;
-        break;
-      case 'Overseas Delegate':
-        baseFee = 3000; // USD 60 equivalent
-        break;
-      case 'Student or Trainee Teacher':
-        baseFee = 750;
-        break;
-      default:
-        baseFee = 1500;
+    // Fee structure based on date
+    if (isEarlyBird) {
+      // Up to 31 December 2025
+      switch (delegate_type) {
+            case 'Student':
+          baseFee = 500;
+          break;
+        case 'Other':
+          baseFee = 2000; // USD 25 equivalent
+          break;
+        default:
+          baseFee = 1000;
+      }
+    } else {
+      // From 1 Jan 2026
+      switch (delegate_type) {
+            case 'Student':
+          baseFee = 2000;
+          break;
+        case 'Other':
+          baseFee = 4000; // USD 50 equivalent
+          break;
+        default:
+          baseFee = 2000;
+      }
     }
 
     // AINET member discount
@@ -301,7 +315,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
   const isFormValid = () => {
     const requiredFields = [
-      'delegate_type', 'title', 'full_name', 'gender', 'age_group',
+      'delegate_type', 'title', 'full_name', 'gender', 'age_group', 'institution_address',
       'correspondence_address', 'city', 'mobile_no', 'email', 'password', 'password_confirmation'
     ];
 
@@ -313,7 +327,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
     if (!formData.agree) return false;
     if (!isEmailValid) return false;
-    if (formData.delegate_type === 'Student or Trainee Teacher' && !selectedFile) return false;
+        if (formData.delegate_type === 'Student' && !selectedFile) return false;
 
     return true;
   };
@@ -352,7 +366,6 @@ export default function AINET2026DelegateRegistrationForm() {
           <h1 className="text-4xl font-bold text-blue-800 mb-2">7th AINET INTERNATIONAL CONFERENCE</h1>
           <p className="text-lg text-gray-700 mb-1">January 2026</p>
           <p className="text-xl font-semibold text-blue-600 mb-2">"Empowering English Language Education in the Digital Era"</p>
-          <p className="text-sm text-gray-600">Supported by British Council & RELO, American Embassy</p>
           <h2 className="text-2xl font-bold py-2 text-center text-gray-800">DELEGATE REGISTRATION FORM</h2>
         </div>
 
@@ -419,7 +432,7 @@ export default function AINET2026DelegateRegistrationForm() {
               <div>
                 <label className="block text-base font-semibold mb-1">You are registering as: <span className="text-red-500">*</span></label>
                 <div className="space-y-2">
-                  {['Indian Delegate', 'SAARC Country Delegate', 'Overseas Delegate', 'Student or Trainee Teacher'].map((type) => (
+                  {['Student', 'Other'].map((type) => (
                     <label key={type} className="flex items-center">
                       <input
                         type="radio"
@@ -430,7 +443,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         className="mr-2"
                       />
                       {type}
-                      {type === 'Student or Trainee Teacher' && (
+                      {type === 'Student' && (
                         <span className="text-xs text-gray-500 ml-2">(Upload document required)</span>
                       )}
                     </label>
@@ -438,7 +451,7 @@ export default function AINET2026DelegateRegistrationForm() {
                 </div>
               </div>
 
-              {formData.delegate_type === 'Student or Trainee Teacher' && (
+              {formData.delegate_type === 'Student' && (
                 <div>
                   <label className="block text-base font-semibold mb-1">Supporting Document: <span className="text-red-500">*</span></label>
                   <div className="border border-gray-300 rounded p-2 bg-gray-50">
@@ -497,7 +510,7 @@ export default function AINET2026DelegateRegistrationForm() {
               <div>
                 <label className="block text-base font-semibold mb-1">Gender: <span className="text-red-500">*</span></label>
                 <div className="flex gap-4">
-                  {['Male', 'Female', 'Transgender'].map((gender) => (
+                  {['Male', 'Female', 'Other'].map((gender) => (
                     <label key={gender} className="flex items-center">
                       <input
                         type="radio"
@@ -657,17 +670,6 @@ export default function AINET2026DelegateRegistrationForm() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              <div>
-                <label className="block text-base font-semibold mb-1">Areas of your special interest:</label>
-                <textarea
-                  name="areas_of_interest"
-                  value={formData.areas_of_interest}
-                  onChange={handleChange}
-                  placeholder="Enter your areas of interest"
-                  className="w-full p-2 bg-white rounded border border-gray-300"
-                  rows="2"
-                ></textarea>
-              </div>
 
               <div>
                 <label className="block text-base font-semibold mb-1">Area(s) of your work:</label>
@@ -676,7 +678,7 @@ export default function AINET2026DelegateRegistrationForm() {
                     'Not Applicable', 'Primary', 'Secondary', 'Junior College (+2)', 
                     'Senior College/ University', 'Teacher Education', 'Other'
                   ].map((area) => (
-                    <label key={area} className="flex items-center">
+                    <label key={area} className="flex items-center ">
                       <input
                         type="checkbox"
                         name="area_of_work"
@@ -765,7 +767,7 @@ export default function AINET2026DelegateRegistrationForm() {
                 <div>
                   <label className="block text-base font-semibold mb-1">If yes, what are you presenting?</label>
                   <div className="space-y-2">
-                    {['Paper', 'Video', 'Poster', 'Fast-15'].map((type) => (
+                    {['Paper','Poster'].map((type) => (
                       <label key={type} className="flex items-center">
                         <input
                           type="checkbox"
@@ -787,16 +789,32 @@ export default function AINET2026DelegateRegistrationForm() {
           {/* Delegate Fee Information */}
           <div className="mb-6">
             <div className="bg-[#A6AEBF] p-2 my-8">
-              <h2 className="text-white text-xl">Delegate Fee (2026)</h2>
+              <h2 className="text-white text-xl">Delegate Fee</h2>
             </div>
 
             <div className="bg-gray-50 p-4 rounded border">
-              <h4 className="font-semibold mb-3">Registration Fees:</h4>
-              <ul className="space-y-2 text-sm">
-                <li>• Indian & SAARC countries: INR 1,500</li>
-                <li>• Overseas Delegates: INR 3,000 (USD 60)</li>
-                <li>• Students & Trainee Teachers: INR 750</li>
-              </ul>
+              <div className="space-y-4">
+                <div className={`p-3 rounded border ${new Date() < new Date('2026-01-01') ? 'bg-green-50 border-green-200' : 'bg-gray-100 border-gray-200'}`}>
+                  <h4 className={`font-semibold italic mb-2 ${new Date() < new Date('2026-01-01') ? 'text-green-700' : 'text-gray-600'}`}>
+                  Up to 15th December 2023
+                  </h4>
+                  <ol className="list-decimal list-inside space-y-1 text-sm italic">
+                    <li>Others including teachers: INR 2000 (INR 1800 for AINET Members)</li>
+                    <li>Research and PG students: INR 1200 (INR 1080 for AINET Members)</li>
+                  </ol>
+                </div>
+
+                <div className={`p-3 rounded border ${new Date() >= new Date('2026-01-01') ? 'bg-green-50 border-green-200' : 'bg-gray-100 border-gray-200'}`}>
+                  <h4 className={`font-semibold italic mb-2 ${new Date() >= new Date('2026-01-01') ? 'text-green-700' : 'text-gray-600'}`}>
+                  After 15th December 2023
+                  </h4>
+                  <ol className="list-decimal list-inside space-y-1 text-sm italic">
+                    <li>Others including teachers: INR 3000 (INR 2700 for AINET Members)</li>
+                    <li>Research and PG students: INR 2000 (INR 1800 for AINET Members)</li>
+                  </ol>
+                </div>
+              </div>
+              
               <p className="text-xs text-green-700 mt-3 font-semibold">
                 *AINET members are entitled to 20% discount in the delegate fee
               </p>
@@ -816,6 +834,11 @@ export default function AINET2026DelegateRegistrationForm() {
                 </div>
               )}
             </div>
+            
+            <p className="text-red-600 text-sm mt-3">
+              *AINET members are entitled to 20% discount in the delegate fee applicable at the time of payment
+            </p>
+            <hr className="border-gray-300 mt-2" />
           </div>
 
           <div className='mb-6'>
