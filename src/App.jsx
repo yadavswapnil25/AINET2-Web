@@ -52,6 +52,8 @@ import TermsAndConditions from "./Pages/TermsAndConditions";
 import RefundPolicy from "./Pages/RefundPolicy";
 import ShippingPolicy from "./Pages/ShippingPolicy";
 import FormIndLongterm from "./Components/specific/Forms/FormIndLongterm";
+import AINET2026DelegateRegistrationForm from "./Components/specific/Forms/ainet2026drf";
+import AINET2026PresentationProposalForm from "./Components/specific/Forms/ainet2026ppf";
 
 const App = () => {
   return (
@@ -102,7 +104,8 @@ const App = () => {
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/FormIndLongterm" element={<FormIndLongterm />} />
-
+          <Route path="/ainet2026drf" element={<AINET2026DelegateRegistrationForm />} />
+          <Route path="/ainet2026ppf" element={<AINET2026PresentationProposalForm />} />
         </Routes>
       </Suspense>
       <Footer />
