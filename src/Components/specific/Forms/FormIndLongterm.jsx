@@ -397,7 +397,7 @@ export default function FormIndLongterm() {
 
             if (!res.ok) {
                 console.error("Failed to check email");
-                return;
+                return false;
             }
 
             const data = await res.json();
@@ -405,12 +405,15 @@ export default function FormIndLongterm() {
             if (!data.status || data.status === false) {
                 setIsEmailValid(false); // ❌ email not valid
                 toast.warning("❌ Email already exists. Please use a different email.");
+                return false;
             } else {
                 setIsEmailValid(true); // ✅ email valid
+                return true;
                 // Optional success message
             }
         } catch (error) {
             console.error("Error checking email:", error);
+            return false;
         }
     };
 
@@ -422,7 +425,10 @@ export default function FormIndLongterm() {
 
         if (!validateForm()) return;
 
-        await checkEmailExists();
+        const res = await checkEmailExists();
+        if (!res) {
+            return;
+        }
 
         setFormData(prev => ({
             ...prev,
