@@ -52,7 +52,7 @@ const AinetTeam = () => {
             The AINET Team
           </h1>
           <img
-            src="/ainetTeam.png"
+            src="/ainetTeam.jpeg"
             alt="AINET Team"
             className="w-full max-w-4xl mx-auto rounded-md shadow-md"
           />

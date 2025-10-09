@@ -165,6 +165,23 @@ export default function AINET2026DelegateRegistrationForm() {
 
     // Updated fees for 2026
     switch (delegate_type) {
+      case 'Indian Delegate':
+        baseFee = 1500;
+        break;
+      case 'SAARC Country Delegate':
+        baseFee = 1500;
+        break;
+      case 'Overseas Delegate':
+        baseFee = 3000; // USD 60 equivalent
+        break;
+      case 'Student or Trainee Teacher':
+        baseFee = 750;
+        break;
+      default:
+        baseFee = 1500;
+
+    // Updated fees for 2026
+    switch (delegate_type) {
       case "Indian Delegate":
         baseFee = 1500;
         break;
@@ -343,6 +360,8 @@ export default function AINET2026DelegateRegistrationForm() {
 
   const validateStep3 = () => {
     const requiredFields = [
+      'delegate_type', 'title', 'full_name', 'gender', 'age_group',
+      'correspondence_address', 'city', 'mobile_no', 'email', 'password', 'password_confirmation'
       "correspondence_address",
       "city",
       "mobile_no",
@@ -354,6 +373,10 @@ export default function AINET2026DelegateRegistrationForm() {
         return false;
       }
     }
+
+    if (!formData.agree) return false;
+    if (!isEmailValid) return false;
+    if (formData.delegate_type === 'Student or Trainee Teacher' && !selectedFile) return false;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -442,6 +465,23 @@ export default function AINET2026DelegateRegistrationForm() {
 
       {loading && <Loader />}
 
+      <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
+        {/* Close button */}
+        <button className="absolute top-2 right-2 bg-black rounded-full p-1">
+          <Link to={{ pathname: '/', hash: '#conference' }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+          </Link>
+        </button>
+
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-bold text-blue-800 mb-2">7th AINET INTERNATIONAL CONFERENCE</h1>
+          <p className="text-lg text-gray-700 mb-1">January 2026</p>
+          <p className="text-xl font-semibold text-blue-600 mb-2">"Empowering English Language Education in the Digital Era"</p>
+          <p className="text-sm text-gray-600">Supported by British Council & RELO, American Embassy</p>
+          <h2 className="text-2xl font-bold py-2 text-center text-gray-800">DELEGATE REGISTRATION FORM</h2>
+        </div>
       <div className=" w-full relative z-10 mx-auto h-full grid grid-cols-1 lg:grid-cols-2">
          <div className="bg-[url('/formbg.jpg')] bg-cover bg-center py-20">
       {/* Left Side - Event Information */}
@@ -583,6 +623,28 @@ export default function AINET2026DelegateRegistrationForm() {
                     </h2>
                   </div>
 
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-base font-semibold mb-1">You are registering as: <span className="text-red-500">*</span></label>
+                <div className="space-y-2">
+                  {['Indian Delegate', 'SAARC Country Delegate', 'Overseas Delegate', 'Student or Trainee Teacher'].map((type) => (
+                    <label key={type} className="flex items-center">
+                      <input
+                        type="radio"
+                        name="delegate_type"
+                        value={type}
+                        checked={formData.delegate_type === type}
+                        onChange={handleChange}
+                        className="mr-2"
+                      />
+                      {type}
+                      {type === 'Student or Trainee Teacher' && (
+                        <span className="text-xs text-gray-500 ml-2">(Upload document required)</span>
+                      )}
+                    </label>
+                  ))}
+                </div>
+              </div>
                   <div className="flex-1">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
@@ -623,6 +685,31 @@ export default function AINET2026DelegateRegistrationForm() {
                       </div>
                     </div>
 
+              {formData.delegate_type === 'Student or Trainee Teacher' && (
+                <div>
+                  <label className="block text-base font-semibold mb-1">Supporting Document: <span className="text-red-500">*</span></label>
+                  <div className="border border-gray-300 rounded p-2 bg-gray-50">
+                    <input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                      onChange={handleFileChange}
+                      className="w-full p-2 border border-gray-300 rounded bg-white"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">(Upload any document like your student ID, fees receipt, admission slip etc of current year)</p>
+                    {selectedFile && (
+                      <p className="text-sm text-green-600 mt-1">Selected: {selectedFile.name}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Personal Information Section */}
+          <div className="mb-6">
+            <div className="bg-[#A6AEBF] p-2 my-8">
+              <h2 className="text-white text-xl">Personal Information</h2>
+            </div>
                     {formData.delegate_type ===
                       "Student or Trainee Teacher" && (
                       <div className="mt-3">
@@ -662,6 +749,80 @@ export default function AINET2026DelegateRegistrationForm() {
                     </h2>
                   </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-base font-semibold mb-1">Title: <span className="text-red-500">*</span></label>
+                <select
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className="w-full p-2 bg-white rounded border border-gray-300"
+                  required
+                >
+                  <option value="">Select Title</option>
+                  <option value="Mr.">Mr.</option>
+                  <option value="Ms.">Ms.</option>
+                  <option value="Mrs.">Mrs.</option>
+                  <option value="Dr.">Dr.</option>
+                  <option value="Prof.">Prof.</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-base font-semibold mb-1">Full Name: <span className="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="full_name"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  placeholder="This name will appear on your conference certificate"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-base font-semibold mb-1">Gender: <span className="text-red-500">*</span></label>
+                <div className="flex gap-4">
+                  {['Male', 'Female', 'Transgender'].map((gender) => (
+                    <label key={gender} className="flex items-center">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value={gender}
+                        checked={formData.gender === gender}
+                        onChange={handleChange}
+                        className="mr-2"
+                      />
+                      {gender}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-base font-semibold mb-1">Age (Years): <span className="text-red-500">*</span></label>
+                <select
+                  name="age_group"
+                  value={formData.age_group}
+                  onChange={handleChange}
+                  className="w-full p-2 bg-white rounded border border-gray-300"
+                  required
+                >
+                  <option value="">Select Age Group</option>
+                  <option value="Below 20">Below 20</option>
+                  <option value="20-30">20-30</option>
+                  <option value="31-40">31-40</option>
+                  <option value="41-50">41-50</option>
+                  <option value="51-55">51-55</option>
+                  <option value="Over 55">Over 55</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Address Information Section */}
+          <div className="mb-6">
+            <div className="bg-[#A6AEBF] p-2 my-8">
+              <h2 className="text-white text-xl">Address Information</h2>
+            </div>
                   <div className="flex-1 space-y-6">
                     <div className="grid  gap-4">
                       <div>
@@ -884,6 +1045,18 @@ export default function AINET2026DelegateRegistrationForm() {
                     </h2>
                   </div>
 
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-base font-semibold mb-1">Areas of your special interest:</label>
+                <textarea
+                  name="areas_of_interest"
+                  value={formData.areas_of_interest}
+                  onChange={handleChange}
+                  placeholder="Enter your areas of interest"
+                  className="w-full p-2 bg-white rounded border border-gray-300"
+                  rows="2"
+                ></textarea>
+              </div>
                   <div className="flex-1 space-y-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
@@ -899,6 +1072,27 @@ export default function AINET2026DelegateRegistrationForm() {
                       ></input>
                     </div>
 
+              <div>
+                <label className="block text-base font-semibold mb-1">Area(s) of your work:</label>
+                <div className="space-y-2">
+                  {[
+                    'Not Applicable', 'Primary', 'Secondary', 'Junior College (+2)', 
+                    'Senior College/ University', 'Teacher Education', 'Other'
+                  ].map((area) => (
+                    <label key={area} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="area_of_work"
+                        value={area}
+                        checked={formData.area_of_work.includes(area)}
+                        onChange={handleChange}
+                        className="mr-2"
+                      />
+                      {area}
+                    </label>
+                  ))}
+                </div>
+              </div>
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Area(s) of your work:
@@ -1011,6 +1205,28 @@ export default function AINET2026DelegateRegistrationForm() {
                       </div>
                     </div>
 
+              {formData.is_presenting === 'YES' && (
+                <div>
+                  <label className="block text-base font-semibold mb-1">If yes, what are you presenting?</label>
+                  <div className="space-y-2">
+                    {['Paper', 'Video', 'Poster', 'Fast-15'].map((type) => (
+                      <label key={type} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="presentation_type"
+                          value={type}
+                          checked={formData.presentation_type.includes(type)}
+                          onChange={handleChange}
+                          className="mr-2"
+                        />
+                        {type}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
                     {formData.is_presenting === "YES" && (
                       <div>
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
@@ -1040,6 +1256,43 @@ export default function AINET2026DelegateRegistrationForm() {
                     )}
                   </div>
 
+          {/* Delegate Fee Information */}
+          <div className="mb-6">
+            <div className="bg-[#A6AEBF] p-2 my-8">
+              <h2 className="text-white text-xl">Delegate Fee (2026)</h2>
+            </div>
+
+            <div className="bg-gray-50 p-4 rounded border">
+              <h4 className="font-semibold mb-3">Registration Fees:</h4>
+              <ul className="space-y-2 text-sm">
+                <li>• Indian & SAARC countries: INR 1,500</li>
+                <li>• Overseas Delegates: INR 3,000 (USD 60)</li>
+                <li>• Students & Trainee Teachers: INR 750</li>
+              </ul>
+              <p className="text-xs text-green-700 mt-3 font-semibold">
+                *AINET members are entitled to 20% discount in the delegate fee
+              </p>
+              
+              {formData.delegate_type && (
+                <div className="mt-4 p-3 bg-blue-50 rounded">
+                  <p className="font-semibold">Your Registration Fee: 
+                    <span className="text-blue-600 text-lg ml-2">
+                      INR {calculateDelegateFee()}
+                    </span>
+                  </p>
+                  {formData.is_ainet_member === 'Yes' && formData.membership_id && (
+                    <p className="text-xs text-green-600 mt-1">
+                      ✓ AINET Member Discount Applied (20% off)
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className='mb-6'>
+
+          </div>
                   {/* Delegate Fee Information */}
                   {formData.delegate_type && (
                     <div className="bg-blue-50 p-4 rounded border border-blue-200">
