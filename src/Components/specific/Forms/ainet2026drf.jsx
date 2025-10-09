@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../../../utils/constant";
-import { initiatePayment } from "../../../utils/utility";
-import PaymentSuccessModal from "../../PaymentIntegration/Popup";
-import PaymentConfirmationModal from "../../PaymentIntegration/PaymentConfirmationModal";
 import Loader from "../../../Components/shared/Loader";
 import { toast } from "react-toastify";
 import { FaArrowRight } from "react-icons/fa";
@@ -13,14 +10,13 @@ export default function AINET2026DelegateRegistrationForm() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [isPaymentDone, setIsPaymentDone] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [isWorkAreaDropdownOpen, setIsWorkAreaDropdownOpen] = useState(false);
+  const workAreaDropdownRef = useRef(null);
 
   const [formData, setFormData] = useState({
     // Basic Information
@@ -53,6 +49,16 @@ export default function AINET2026DelegateRegistrationForm() {
 
   });
 
+  const workAreas = [
+    'Not Applicable',
+    'Primary',
+    'Secondary',
+    'Junior College (+2)',
+    'Senior College/ University',
+    'Teacher Education',
+    'Other'
+  ];
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -82,6 +88,34 @@ export default function AINET2026DelegateRegistrationForm() {
       supporting_document: file,
     }));
   };
+
+  const toggleWorkAreaDropdown = () => {
+    setIsWorkAreaDropdownOpen(!isWorkAreaDropdownOpen);
+  };
+
+  const getSelectedWorkAreasText = () => {
+    if (formData.area_of_work.length === 0) {
+      return "Select Area(s) of your work";
+    }
+    if (formData.area_of_work.length === 1) {
+      return formData.area_of_work[0];
+    }
+    return `${formData.area_of_work.length} areas selected`;
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (workAreaDropdownRef.current && !workAreaDropdownRef.current.contains(event.target)) {
+        setIsWorkAreaDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Form validation
   const validateForm = () => {
@@ -127,161 +161,92 @@ export default function AINET2026DelegateRegistrationForm() {
     return true;
   };
 
-  const checkEmailExists = async () => {
-    const email = formData.email;
-    if (!email) return;
+  // const checkEmailExists = async () => {
+  //   const email = formData.email;
+  //   if (!email) return;
 
-    try {
-      const res = await fetch(
-        `${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(
-          email
-        )}`
-      );
+  //   // try {
+  //   //   const res = await fetch(
+  //   //     `${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(
+  //   //       email
+  //   //     )}`
+  //   //   );
 
-      if (!res.ok) {
-        console.error("Failed to check email");
-        return false;
-      }
+  //   //   if (!res.ok) {
+  //   //     console.error("Failed to check email");
+  //   //     return false;
+  //   //   }
 
-      const data = await res.json();
+  //   //   const data = await res.json();
 
-      if (!data.status || data.status === false) {
-        setIsEmailValid(false);
-        toast.warning("❌ Email already exists. Please use a different email.");
-        return false;
-      } else {
-        setIsEmailValid(true);
-        return true;
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-      return false;
-    }
-  };
+  //   //   if (!data.status || data.status === false) {
+  //   //     setIsEmailValid(false);
+  //   //     toast.warning("❌ Email already exists. Please use a different email.");
+  //   //     return false;
+  //   //   } else {
+  //   //     setIsEmailValid(true);
+  //   //     return true;
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.error("Error checking email:", error);
+  //   //   return false;
+  //   // }
+  // };
 
-  const calculateDelegateFee = () => {
-    const { delegate_type, is_ainet_member } = formData;
-    let baseFee = 0;
-
-    // Updated fees for 2026
-    switch (delegate_type) {
-      case "Indian Delegate":
-        baseFee = 1500;
-        break;
-      case "SAARC Country Delegate":
-        baseFee = 1500;
-        break;
-      case "Overseas Delegate":
-        baseFee = 3000; // USD 60 equivalent
-        break;
-      case "Student or Trainee Teacher":
-        baseFee = 750;
-        break;
-      default:
-        baseFee = 1500;
-    }
-
-    // AINET member discount
-    if (is_ainet_member === "Yes" && formData.membership_id) {
-      baseFee = baseFee * 0.8; // 20% discount
-    }
-
-    return baseFee;
-  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) return;
 
-    const res = await checkEmailExists();
-    if (!res) {
-      return;
-    }
-
-    setShowPaymentConfirmation(true);
-  };
-
-  const handlePaymentProceed = async () => {
-    setShowPaymentConfirmation(false);
-
     try {
-      const delegateFee = calculateDelegateFee();
-
-      const paymentResponse = await initiatePayment({
-        amount: delegateFee,
-        name: formData.full_name,
-        email: formData.email,
-        contact: formData.mobile_no,
-        currency: "INR",
-      });
-
-      toast.success("✅ Payment Successful");
       setLoading(true);
       setIsSubmitting(true);
 
-      const submissionData = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (Array.isArray(formData[key])) {
-          submissionData.append(key, JSON.stringify(formData[key]));
-        } else {
-          submissionData.append(key, formData[key]);
-        }
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      toast.success("✅ Delegate registration submitted successfully!");
+      navigate('/form-submission-confirmation');
+      
+      // Reset form
+      setFormData({
+        is_ainet_member: "",
+        membership_id: "",
+        delegate_type: "",
+        supporting_document: null,
+        title: "",
+        full_name: "",
+        gender: "",
+        age_group: "",
+        institution_address: "",
+        correspondence_address: "",
+        city: "",
+        pincode: "",
+        state: "",
+        country_code: "",
+        mobile_no: "",
+        email: "",
+        areas_of_interest: "",
+        area_of_work: [],
+        other_work_area: "",
+        teaching_experience: "",
+        is_presenting: "",
+        presentation_type: [],
       });
+      setSelectedFile(null);
 
-      if (selectedFile) {
-        submissionData.append("supporting_document", selectedFile);
-      }
-
-      const res = await fetch(`${baseUrl}client/delegate-registration-2026`, {
-        method: "POST",
-        body: submissionData,
-      });
-
-      if (res.ok) {
-        const responseData = await res.json();
-        setIsPaymentDone(true);
-        setShowSuccessModal(true);
-        // Reset form data
-        setFormData({
-          is_ainet_member: "",
-          membership_id: "",
-          delegate_type: "",
-          supporting_document: null,
-          title: "",
-          full_name: "",
-          gender: "",
-          age_group: "",
-          institution_address: "",
-          correspondence_address: "",
-          city: "",
-          pincode: "",
-          state: "",
-          country_code: "",
-          mobile_no: "",
-          email: "",
-          areas_of_interest: "",
-          area_of_work: [],
-          other_work_area: "",
-          teaching_experience: "",
-          is_presenting: "",
-          presentation_type: [],
-        });
-        setSelectedFile(null);
-      } else {
-        const errorData = await res.json();
-        toast.error(
-          `${errorData.message || "Something went wrong. Please try again."}`
-        );
-      }
     } catch (error) {
       toast.error(`❌ Registration Failed: ${error}`);
-      console.error("Payment or API Error:", error);
+      console.error("Submission Error:", error);
     } finally {
       setIsSubmitting(false);
       setLoading(false);
     }
   };
+
 
   const isFormValid = () => {
     const requiredFields = [
@@ -388,12 +353,12 @@ export default function AINET2026DelegateRegistrationForm() {
         isValid = validateStep2();
         break;
       case 3:
-        isValid = await validateStep3();
+        isValid = validateStep3();
         if (isValid) {
-          const emailCheck = await checkEmailExists();
-          if (!emailCheck) {
-            isValid = false;
-          }
+        //   const emailCheck = await checkEmailExists();
+        //   if (!emailCheck) {
+        //     isValid = false;
+        //   }
         }
         break;
       case 4:
@@ -421,58 +386,43 @@ export default function AINET2026DelegateRegistrationForm() {
 
   return (
     <>
-      {/* Payment Confirmation Modal */}
-      <PaymentConfirmationModal
-        show={showPaymentConfirmation}
-        onClose={() => setShowPaymentConfirmation(false)}
-        onProceed={handlePaymentProceed}
-        amount={calculateDelegateFee()}
-        currency={"INR"}
-      />
-
-      {showSuccessModal && (
-        <PaymentSuccessModal
-          show={true}
-          onClose={() => {
-            setShowSuccessModal(false);
-            navigate("/");
-          }}
-        />
-      )}
-
       {loading && <Loader />}
 
       <div className=" w-full relative z-10 mx-auto h-full grid grid-cols-1 lg:grid-cols-2">
-         <div className="bg-[url('/formbg.jpg')] bg-cover bg-center py-20">
-      {/* Left Side - Event Information */}
-          <div className="lg:sticky lg:top-8 h-full flex justify-center items-center">
-          <div className="bg-[radial-gradient(circle,rgba(165,239,255,1)_0%,rgba(110,191,244,0.22)_40%,rgba(70,144,212,0)_70%,rgba(255,255,255,0.08)_100%)] rounded-3xl p-8 shadow-2xl h-[550px] w-[70%] flex flex-col justify-between backdrop-blur-md">
-          <img
+        <div className="bg-[url('/formbg.jpg')] bg-cover bg-center py-8 md:py-20">
+          {/* Left Side - Event Information */}
+          <div className="lg:sticky lg:top-8 h-full flex justify-center items-center px-4">
+            <div className="rounded-3xl p-4 md:p-6 lg:p-8 shadow-2xl h-[400px] md:h-[500px] lg:h-[550px] w-full max-w-sm sm:max-w-md md:max-w-lg lg:w-[70%] flex flex-col justify-between backdrop-blur-md border border-white/20" style={{
+              background: 'radial-gradient(90.16% 143.01% at 15.32% 21.04%, rgba(165, 239, 255, 0.2) 0%, rgba(110, 191, 244, 0.0447917) 77.08%, rgba(70, 144, 213, 0) 100%)',
+              backgroundBlendMode: 'overlay',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)'
+            }}>
+              <img
                 src="/logo.svg"
                 alt="AINET Logo"
-                className="w-1/3 mx-auto rounded-full"
+                className="w-1/5 sm:w-1/4 md:w-1/3 lg:w-1/3 mx-auto rounded-full"
               />
 
               {/* Conference Details */}
               <div className="text-center flex-1 flex flex-col justify-center">
-                <h1 className="text-3xl text-gray-800 mb-3 leading-tight font-serif italic">
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-800 mb-2 md:mb-3 lg:mb-4 leading-tight font-serif italic">
                   9th AINET INTERNATIONAL CONFERENCE
                 </h1>
-                <p className="text-2xl text-gray-700 mb-2 leading-tight font-serif italic">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
                   January 2026
                 </p>
-                <p className="text-xl mb-3">
+                <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
                   Gateway Education, Sonipat, Delhi NCR
                 </p>
-                <p className="text-2xl font-bold text-gray-800 mb-4 font-serif ">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
                   "Empowering English Language Education in the Digital Era"
                 </p>
-                <p className="text-xs text-gray-500 mb-6">
+                <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
                   Supported by British Council & RELO, American Embassy
                 </p>
 
                 {/* Registration Button */}
-                <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-6 px-6  font-semibold text-xl hover:bg-gray-700 hover:text-white transition-colors mb-6 shadow-lg">
+                <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-gray-700 hover:text-white transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
                   DELEGATE REGISTRATION FORM
                 </button>
               </div>
@@ -482,7 +432,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
         <div className="py-10">
           {/* Right Side - Registration Form */}
-          <div className=" p-10 h-[650px] flex flex-col overflow-y-auto">
+          <div className=" p-4 md:p-10 h-[650px] flex flex-col overflow-y-auto">
             {/* Step Indicator */}
             <div className="flex items-center justify-center mb-6">
               {[1, 2, 3, 4, 5].map((step) => (
@@ -500,7 +450,7 @@ export default function AINET2026DelegateRegistrationForm() {
                   </div>
                   {step < 5 && (
                     <div
-                      className={`w-12 h-0.5 mx-1 transition-all duration-300 ${
+                      className={` md:w-12 w-6 h-0.5 mx-1 transition-all duration-300 ${
                         step < currentStep ? "bg-green-500" : "bg-gray-200"
                       }`}
                     ></div>
@@ -565,7 +515,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.membership_id}
                           onChange={handleChange}
                           placeholder="Enter Your Membership Number"
-                          className="w-full p-2 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                         <p className="text-xs text-gray-500 mt-1">
                           Not sure of your ID?{" "}
@@ -635,7 +585,7 @@ export default function AINET2026DelegateRegistrationForm() {
                             type="file"
                             accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                             onChange={handleFileChange}
-                            className="w-full p-1 border border-gray-300 rounded bg-white text-xs"
+                            className="w-full p-3 border border-gray-300 rounded bg-white text-sm"
                           />
                           <p className="text-xs text-gray-500 mt-1">
                             (Upload any document like your student ID, fees
@@ -662,9 +612,10 @@ export default function AINET2026DelegateRegistrationForm() {
                     </h2>
                   </div>
 
-                  <div className="flex-1 space-y-6">
-                    <div className="grid  gap-4">
-                      <div>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+                      {/* Title */}
+                      <div className="col-span-1 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Title: <span className="text-red-500">*</span>
                         </label>
@@ -672,7 +623,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           name="title"
                           value={formData.title}
                           onChange={handleChange}
-                          className="w-full p-3 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         >
                           <option value="">Select Title</option>
                           <option value="Mr.">Mr.</option>
@@ -683,7 +634,8 @@ export default function AINET2026DelegateRegistrationForm() {
                         </select>
                       </div>
 
-                      <div>
+                      {/* Full Name */}
+                      <div className="col-span-2 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Full Name: <span className="text-red-500">*</span>
                         </label>
@@ -693,13 +645,14 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.full_name}
                           onChange={handleChange}
                           placeholder="Enter Your Name"
-                          className="w-full p-3 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                       </div>
                     </div>
 
-                    <div className="grid gap-4">
-                      <div>
+                    <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+                      {/* Gender */}
+                      <div className="col-span-1 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Gender: <span className="text-red-500">*</span>
                         </label>
@@ -707,16 +660,17 @@ export default function AINET2026DelegateRegistrationForm() {
                           name="gender"
                           value={formData.gender}
                           onChange={handleChange}
-                          className="w-full p-3 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         >
                           <option value="">Select Your Gender</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
-                          <option value="Transgender">Transgender</option>
+                          <option value="Other">Other</option>
                         </select>
                       </div>
 
-                      <div>
+                      {/* Age */}
+                      <div className="col-span-2 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Age (Years): <span className="text-red-500">*</span>
                         </label>
@@ -749,19 +703,19 @@ export default function AINET2026DelegateRegistrationForm() {
                     </h2>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Institution Address:
                       </label>
-                      <input
+                      <textarea
                         name="institution_address"
                         value={formData.institution_address}
                         onChange={handleChange}
                         placeholder="Enter Your Institution Address"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                         rows="3"
-                      ></input>
+                      ></textarea>
                     </div>
 
                     <div>
@@ -769,14 +723,14 @@ export default function AINET2026DelegateRegistrationForm() {
                         Address for Correspondence:{" "}
                         <span className="text-red-500">*</span>
                       </label>
-                      <input
+                      <textarea
                         name="correspondence_address"
                         value={formData.correspondence_address}
                         onChange={handleChange}
                         placeholder="Enter Your Correspondence Address"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                         rows="3"
-                      ></input>
+                      ></textarea>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
@@ -790,7 +744,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.city}
                         onChange={handleChange}
                         placeholder="Enter Your City"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                       />
                     </div>
                     <div>
@@ -803,7 +757,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.pincode}
                         onChange={handleChange}
                         placeholder="Enter Pincode"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                       />
                     </div>
                     <div>
@@ -816,7 +770,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.state}
                         onChange={handleChange}
                         placeholder="Enter Your State"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                       />
                     </div>
                   </div>
@@ -839,7 +793,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.country_code}
                           onChange={handleChange}
                           placeholder="+91"
-                          className="w-full p-2 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                       </div>
                       <div>
@@ -852,7 +806,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.mobile_no}
                           onChange={handleChange}
                           placeholder="Enter Your Mobile Number"
-                          className="w-full p-2 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                       </div>
                     </div>
@@ -865,10 +819,10 @@ export default function AINET2026DelegateRegistrationForm() {
                         type="email"
                         name="email"
                         value={formData.email}
-                        onBlur={checkEmailExists}
+                        // onBlur={checkEmailExists}
                         onChange={handleChange}
                         placeholder="Enter Your Email"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                       />
                     </div>
                   </div>
@@ -884,50 +838,65 @@ export default function AINET2026DelegateRegistrationForm() {
                     </h2>
                   </div>
 
-                  <div className="flex-1 space-y-4">
+                  <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Areas of your special interest:
                       </label>
-                      <input
+                      <textarea
                         name="areas_of_interest"
                         value={formData.areas_of_interest}
                         onChange={handleChange}
                         placeholder="Enter your areas of interest"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                         rows="3"
-                      ></input>
+                      ></textarea>
                     </div>
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Area(s) of your work:
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {[
-                          "Not Applicable",
-                          "Primary",
-                          "Secondary",
-                          "Junior College (+2)",
-                          "Senior College/ University",
-                          "Teacher Education",
-                          "Other",
-                        ].map((area) => (
-                          <label
-                            key={area}
-                            className="flex items-center p-1 rounded cursor-pointer hover:bg-gray-50"
+                      <div className="relative" ref={workAreaDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={toggleWorkAreaDropdown}
+                          className="w-full p-3 border border-gray-300 rounded text-sm bg-white text-left flex items-center justify-between"
+                        >
+                          <span className={formData.area_of_work.length === 0 ? "text-gray-500" : "text-gray-900"}>
+                            {getSelectedWorkAreasText()}
+                          </span>
+                          <svg
+                            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                              isWorkAreaDropdownOpen ? 'rotate-180' : ''
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                           >
-                            <input
-                              type="checkbox"
-                              name="area_of_work"
-                              value={area}
-                              checked={formData.area_of_work.includes(area)}
-                              onChange={handleChange}
-                              className="mr-3"
-                            />
-                            <span className="text-sm">{area}</span>
-                          </label>
-                        ))}
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        
+                        {isWorkAreaDropdownOpen && (
+                          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                            <div className="p-2">
+                              {workAreas.map((area) => (
+                                <label key={area} className="flex items-center p-2 hover:bg-gray-50 cursor-pointer rounded">
+                                  <input
+                                    type="checkbox"
+                                    name="area_of_work"
+                                    value={area}
+                                    checked={formData.area_of_work.includes(area)}
+                                    onChange={handleChange}
+                                    className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                  />
+                                  <span className="text-sm text-gray-900">{area}</span>
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -942,7 +911,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.other_work_area}
                           onChange={handleChange}
                           placeholder="Please specify your work area"
-                          className="w-full p-2 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                       </div>
                     )}
@@ -955,7 +924,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         name="teaching_experience"
                         value={formData.teaching_experience}
                         onChange={handleChange}
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
                       >
                         <option value="">Select Experience</option>
                         <option value="Not Applicable">Not Applicable</option>
