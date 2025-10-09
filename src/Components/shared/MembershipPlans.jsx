@@ -25,7 +25,7 @@ export default function MembershipPlans() {
             currency: "INR",
             duration: "1",
             type: "Individual",
-            discountPercentage: 40
+         
         },
         {
             title: "LongTerm",
@@ -33,7 +33,7 @@ export default function MembershipPlans() {
             currency: "INR",
             duration: "3",
             type: "Individual",
-            discountPercentage: 50
+          
         },
         {
             title: "Overseas",
@@ -41,7 +41,7 @@ export default function MembershipPlans() {
             currency: "INR",
             duration: "1",
             type: "Individual",
-            discountPercentage: 25
+            
         }
     ];
 
@@ -51,7 +51,7 @@ export default function MembershipPlans() {
             price: "1000.00",
             currency: "INR",
             duration: "1",
-            discountPercentage: 40,
+          
             type: "Institutional"
         },
         {
@@ -59,7 +59,7 @@ export default function MembershipPlans() {
             price: "2500.00",
             currency: "INR",
             duration: "3",
-            discountPercentage: 35,
+         
             type: "Institutional"
         },
         {
@@ -67,7 +67,7 @@ export default function MembershipPlans() {
             price: "2600.00",
             currency: "INR",
             duration: "1",
-            discountPercentage: 55,
+          
             type: "Institutional"
         }
     ];
@@ -135,7 +135,7 @@ export default function MembershipPlans() {
                         duration={plan.duration}
                         accessType={plan.accessType}
                         planType={planType}
-                        discountPercentage={plan.discountPercentage}
+                      
                         planFeatures={planFeatures}
                         handleClick={() => handlePayNow(plan)}
                     />
