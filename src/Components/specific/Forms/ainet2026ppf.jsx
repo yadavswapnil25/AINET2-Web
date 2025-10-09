@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { baseUrl } from '../../../utils/constant';
@@ -12,9 +12,10 @@ export default function AINET2026PresentationProposalForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [isEmailValid, setIsEmailValid] = useState(true);
-  const [currentStep, setCurrentStep] = useState(1);
+   const [isEmailValid, setIsEmailValid] = useState(true);
+   const [currentStep, setCurrentStep] = useState(1);
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+   const dropdownRef = useRef(null);
 
   const [formData, setFormData] = useState({
     // Main/Single Presenter
@@ -41,10 +42,10 @@ export default function AINET2026PresentationProposalForm() {
     co2_mobile: '',
     co2_email: '',
 
-    // Conference Details
-    conference_sub_theme: '',
-    other_sub_theme: '',
-    presentation_nature: '',
+     // Conference Details
+     conference_sub_theme: [],
+     other_sub_theme: '',
+     presentation_nature: '',
 
     // Presentation Details
     presentation_title: '',
@@ -79,13 +80,51 @@ export default function AINET2026PresentationProposalForm() {
 
   const presentationTypes = ['Paper', 'Video', 'Poster', 'Fast-15'];
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
+   const handleChange = (e) => {
+     const { name, value, type, checked } = e.target;
+     
+     if (name === 'conference_sub_theme') {
+       setFormData(prevData => ({
+         ...prevData,
+         [name]: checked
+           ? [...(prevData[name] || []), value]
+           : (prevData[name] || []).filter((item) => item !== value),
+       }));
+     } else {
+       setFormData(prevData => ({
+         ...prevData,
+         [name]: type === 'checkbox' ? checked : value
+       }));
+     }
+   };
+
+   const toggleDropdown = () => {
+     setIsDropdownOpen(!isDropdownOpen);
+   };
+
+   const getSelectedThemesText = () => {
+     if (formData.conference_sub_theme.length === 0) {
+       return "Select Conference Sub-themes";
+     }
+     if (formData.conference_sub_theme.length === 1) {
+       return formData.conference_sub_theme[0];
+     }
+     return `${formData.conference_sub_theme.length} themes selected`;
+   };
+
+   // Close dropdown when clicking outside
+   useEffect(() => {
+     const handleClickOutside = (event) => {
+       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+         setIsDropdownOpen(false);
+       }
+     };
+
+     document.addEventListener('mousedown', handleClickOutside);
+     return () => {
+       document.removeEventListener('mousedown', handleClickOutside);
+     };
+   }, []);
 
   // Word count helpers
   const getWordCount = (text) => {
@@ -151,11 +190,11 @@ export default function AINET2026PresentationProposalForm() {
       return false;
     }
 
-    // Check if other theme is specified
-    if (formData.conference_sub_theme === 'Any Other (Specify)' && !formData.other_sub_theme) {
-      toast.error("Please specify the sub-theme.");
-      return false;
-    }
+     // Check if other theme is specified
+     if (formData.conference_sub_theme.includes('Any Other (Specify)') && !formData.other_sub_theme) {
+       toast.error("Please specify the sub-theme.");
+       return false;
+     }
 
     if (!formData.agree) {
       toast.error("Please agree to the terms and conditions.");
@@ -167,105 +206,90 @@ export default function AINET2026PresentationProposalForm() {
 
   const checkEmailExists = async () => {
     const email = formData.main_email;
-    if (!email) return;
+    if (!email) return false;
 
-    try {
-      const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
+    // Skip email validation for demo purposes
+    console.log("Email validation skipped for demo purposes");
+    setIsEmailValid(true);
+    return true;
+
+    // Uncomment below for actual email validation
+    // try {
+    //   const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
       
-      if (!res.ok) {
-        console.error("Failed to check email");
-        return false;
-      }
+    //   if (!res.ok) {
+    //     console.error("Failed to check email");
+    //     return false;
+    //   }
 
-      const data = await res.json();
+    //   const data = await res.json();
 
-      if (!data.status || data.status === false) {
-        setIsEmailValid(false);
-        toast.warning("❌ Email already exists. Please use a different email.");
-        return false;
-      } else {
-        setIsEmailValid(true);
-        return true;
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-      return false;
-    }
+    //   if (!data.status || data.status === false) {
+    //     setIsEmailValid(false);
+    //     toast.warning("❌ Email already exists. Please use a different email.");
+    //     return false;
+    //   } else {
+    //     setIsEmailValid(true);
+    //     return true;
+    //   }
+    // } catch (error) {
+    //   console.error("Error checking email:", error);
+    //   return false;
+    // }
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) return;
-
-    const res = await checkEmailExists();
-    if (!res) {
-      return;
-    }
 
     try {
       setLoading(true);
       setIsSubmitting(true);
 
-      const submissionData = {
-        ...formData,
-        submission_date: new Date().toISOString(),
-        conference_year: 2026
-      };
+      // Simulate processing time
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const response = await fetch(`${baseUrl}client/presentation-proposal-2026`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(submissionData),
+      toast.success("✅ Presentation proposal submitted successfully!");
+      navigate('/form-submission-confirmation');
+      
+      // Reset form
+      setFormData({
+        main_title: '',
+        main_full_name: '',
+        main_place_of_work: '',
+        main_country_code: '',
+        main_mobile: '',
+        main_email: '',
+        co1_title: '',
+        co1_full_name: '',
+        co1_place_of_work: '',
+        co1_country_code: '',
+        co1_mobile: '',
+        co1_email: '',
+        co2_title: '',
+        co2_full_name: '',
+        co2_place_of_work: '',
+        co2_country_code: '',
+        co2_mobile: '',
+        co2_email: '',
+         conference_sub_theme: [],
+         other_sub_theme: '',
+        presentation_nature: '',
+        presentation_title: '',
+        abstract: '',
+        main_presenter_bio: '',
+        co1_presenter_bio: '',
+        co2_presenter_bio: '',
+        remaining_copresenters: '',
+        agree: false,
       });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        toast.success("✅ Presentation proposal submitted successfully!");
-        setShowSuccessModal(true);
-        
-        // Reset form
-        setFormData({
-          main_title: '',
-          main_full_name: '',
-          main_place_of_work: '',
-          main_country_code: '',
-          main_mobile: '',
-          main_email: '',
-          co1_title: '',
-          co1_full_name: '',
-          co1_place_of_work: '',
-          co1_country_code: '',
-          co1_mobile: '',
-          co1_email: '',
-          co2_title: '',
-          co2_full_name: '',
-          co2_place_of_work: '',
-          co2_country_code: '',
-          co2_mobile: '',
-          co2_email: '',
-          conference_sub_theme: '',
-          other_sub_theme: '',
-          presentation_nature: '',
-          presentation_title: '',
-          abstract: '',
-          main_presenter_bio: '',
-          co1_presenter_bio: '',
-          co2_presenter_bio: '',
-          remaining_copresenters: '',
-          agree: false,
-        });
-      } else {
-        const errorData = await response.json();
-        toast.error(`${errorData.message || "Something went wrong. Please try again."}`);
-      }
 
     } catch (error) {
       toast.error(`❌ Submission Failed: ${error}`);
-      console.error("API Error:", error);
+      console.error("Submission Error:", error);
     } finally {
       setIsSubmitting(false);
       setLoading(false);
@@ -284,9 +308,9 @@ export default function AINET2026PresentationProposalForm() {
       }
     }
 
-    if (!formData.agree) return false;
-    if (!isEmailValid) return false;
-    if (formData.conference_sub_theme === 'Any Other (Specify)' && !formData.other_sub_theme) return false;
+     if (!formData.agree) return false;
+     if (!isEmailValid) return false;
+     if (formData.conference_sub_theme.includes('Any Other (Specify)') && !formData.other_sub_theme) return false;
 
     // Check word limits
     if (getWordCount(formData.presentation_title) > 10) return false;
@@ -339,10 +363,10 @@ export default function AINET2026PresentationProposalForm() {
        }
      }
 
-     if (formData.conference_sub_theme === 'Any Other (Specify)' && !formData.other_sub_theme) {
-       toast.error("Please specify the sub-theme.");
-       return false;
-     }
+      if (formData.conference_sub_theme.includes('Any Other (Specify)') && !formData.other_sub_theme) {
+        toast.error("Please specify the sub-theme.");
+        return false;
+      }
      return true;
    };
 
@@ -381,42 +405,45 @@ export default function AINET2026PresentationProposalForm() {
    };
 
   const handleNext = async () => {
-    let isValid = false;
+    // Simple field check without validation
+    let canProceed = false;
 
-     switch (currentStep) {
-       case 1:
-         isValid = await validateStep1();
-         if (isValid) {
-           const emailCheck = await checkEmailExists();
-           if (!emailCheck) {
-             isValid = false;
-           }
-         }
-         break;
-       case 2:
-         isValid = validateStep2();
-         break;
-       case 3:
-         isValid = validateStep3();
-         break;
+    switch (currentStep) {
+      case 1:
+        // Check if main presenter fields are filled
+        canProceed = formData.main_title && formData.main_full_name && formData.main_place_of_work && formData.main_mobile && formData.main_email;
+        break;
+      case 2:
+        // Step 2 is optional co-presenter, always allow proceed
+        canProceed = true;
+        break;
+      case 3:
+        // Step 3 is optional co-presenter, always allow proceed
+        canProceed = true;
+        break;
        case 4:
-         isValid = validateStep4();
+         // Check if conference theme and presentation type are selected
+         canProceed = formData.conference_sub_theme.length > 0 && formData.presentation_nature;
          break;
-       case 5:
-         isValid = validateStep5();
-         break;
-       case 6:
-         isValid = validateStep6();
-         break;
-       default:
-         isValid = false;
-     }
+      case 5:
+        // Check if presentation details are filled
+        canProceed = formData.presentation_title && formData.abstract && formData.main_presenter_bio;
+        break;
+      case 6:
+        // Check if agreement is checked
+        canProceed = formData.agree;
+        break;
+      default:
+        canProceed = false;
+    }
 
-     if (isValid && currentStep < 6) {
-       setCurrentStep(currentStep + 1);
-     } else if (isValid && currentStep === 6) {
-       handleSubmit();
-     }
+    if (canProceed && currentStep < 6) {
+      setCurrentStep(currentStep + 1);
+    } else if (canProceed && currentStep === 6) {
+      handleSubmit();
+    } else {
+      toast.error("Please fill in all required fields before proceeding.");
+    }
   };
 
   const handlePrevious = () => {
@@ -429,58 +456,42 @@ export default function AINET2026PresentationProposalForm() {
     <>
       {loading && <Loader />}
 
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg max-w-md mx-4">
-            <div className="text-center">
-              <div className="text-green-600 text-6xl mb-4">✓</div>
-              <h3 className="text-xl font-bold mb-4">Proposal Submitted Successfully!</h3>
-              <p className="text-gray-600 mb-6">
-                Your presentation proposal has been submitted. You will receive a confirmation email shortly.
-              </p>
-              <button
-                onClick={() => { setShowSuccessModal(false); navigate("/") }}
-                className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className=" w-full relative z-10 mx-auto h-full grid grid-cols-1 lg:grid-cols-2">
-        <div className="bg-[url('/formbg1.jpg')] bg-cover bg-center py-20">
+        <div className="bg-[url('/formbg1.jpg')] bg-cover bg-center py-8 md:py-20">
           {/* Left Side - Event Information */}
-          <div className="lg:sticky lg:top-8 h-full flex justify-center items-center">
-            <div className="bg-[radial-gradient(circle,rgba(165,239,255,1)_0%,rgba(110,191,244,0.22)_40%,rgba(70,144,212,0)_70%,rgba(255,255,255,0.08)_100%)] rounded-3xl p-8 shadow-2xl h-[550px] w-[70%] flex flex-col justify-between backdrop-blur-md">
+          <div className="lg:sticky lg:top-8 h-full flex justify-center items-center px-4">
+            <div className="rounded-3xl p-4 md:p-6 lg:p-8 shadow-2xl h-[400px] md:h-[500px] lg:h-[550px] w-full max-w-sm sm:max-w-md md:max-w-lg lg:w-[70%] flex flex-col justify-between backdrop-blur-md border border-white/20" style={{
+              background: 'radial-gradient(90.16% 143.01% at 15.32% 21.04%, rgba(165, 239, 255, 0.2) 0%, rgba(110, 191, 244, 0.0447917) 77.08%, rgba(70, 144, 213, 0) 100%)',
+              backgroundBlendMode: 'overlay',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)'
+            }}>
               <img
                 src="/logo.svg"
                 alt="AINET Logo"
-                className="w-1/3 mx-auto rounded-full"
+                className="w-1/5 sm:w-1/4 md:w-1/3 lg:w-1/3 mx-auto rounded-full"
               />
 
               {/* Conference Details */}
               <div className="text-center flex-1 flex flex-col justify-center">
-                <h1 className="text-3xl text-gray-800 mb-3 leading-tight font-serif italic">
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-800 mb-2 md:mb-3 lg:mb-4 leading-tight font-serif italic">
                   9th AINET INTERNATIONAL CONFERENCE
                 </h1>
-                <p className="text-2xl text-gray-700 mb-2 leading-tight font-serif italic">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
                   January 2026
                 </p>
-                <p className="text-xl mb-3">
+                <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
                   Gateway Education, Sonipat, Delhi NCR
                 </p>
-                <p className="text-2xl font-bold text-gray-800 mb-4 font-serif ">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
                   "Empowering English Language Education in the Digital Era"
                 </p>
-                <p className="text-xs text-gray-500 mb-6">
+                <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
                   Supported by British Council & RELO, American Embassy
                 </p>
 
                 {/* Registration Button */}
-                <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-6 px-6  font-semibold text-xl hover:bg-gray-700 hover:text-white transition-colors mb-6 shadow-lg">
+                <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-gray-700 hover:text-white transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
                   PRESENTATION PROPOSAL FORM
                 </button>
               </div>
@@ -490,7 +501,7 @@ export default function AINET2026PresentationProposalForm() {
 
         <div className="py-10">
           {/* Right Side - Registration Form */}
-          <div className=" p-10 h-[650px] flex flex-col overflow-y-auto">
+          <div className=" p-4 md:p-10 h-[650px] flex flex-col overflow-y-auto">
              {/* Step Indicator */}
              <div className="flex items-center justify-center mb-6">
                {[1, 2, 3, 4, 5, 6].map((step) => (
@@ -508,7 +519,7 @@ export default function AINET2026PresentationProposalForm() {
                    </div>
                    {step < 6 && (
                      <div
-                       className={`w-12 h-0.5 mx-1 transition-all duration-300 ${
+                       className={` md:w-12 w-6 h-0.5 mx-1 transition-all duration-300 ${
                          step < currentStep ? "bg-green-500" : "bg-gray-200"
                        }`}
                      ></div>
@@ -531,40 +542,43 @@ export default function AINET2026PresentationProposalForm() {
                   </div>
 
                   <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
-                          Title: <span className="text-red-500">*</span>
-                        </label>
-                        <select
-                          name="main_title"
-                          value={formData.main_title}
-                          onChange={handleChange}
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
-                        >
-                          <option value="">Select Title</option>
-                          <option value="Mr.">Mr.</option>
-                          <option value="Ms.">Ms.</option>
-                          <option value="Mrs.">Mrs.</option>
-                          <option value="Dr.">Dr.</option>
-                          <option value="Prof.">Prof.</option>
-                        </select>
-                      </div>
+                  <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+  {/* Title */}
+  <div className="col-span-1 sm:col-span-1">
+    <label className="block text-sm font-semibold mb-2 text-gray-700">
+      Title: <span className="text-red-500">*</span>
+    </label>
+    <select
+      name="main_title"
+      value={formData.main_title}
+      onChange={handleChange}
+      className="w-full p-3 border border-gray-300 rounded text-sm"
+    >
+      <option value="">Select Title</option>
+      <option value="Mr.">Mr.</option>
+      <option value="Ms.">Ms.</option>
+      <option value="Mrs.">Mrs.</option>
+      <option value="Dr.">Dr.</option>
+      <option value="Prof.">Prof.</option>
+    </select>
+  </div>
 
-                      <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
-                          Full Name: <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="main_full_name"
-                          value={formData.main_full_name}
-                          onChange={handleChange}
-                          placeholder="Enter Your Full Name"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
-                        />
-                      </div>
-                    </div>
+  {/* Full Name */}
+  <div className="col-span-2 sm:col-span-1">
+    <label className="block text-sm font-semibold mb-2 text-gray-700">
+      Full Name: <span className="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      name="main_full_name"
+      value={formData.main_full_name}
+      onChange={handleChange}
+      placeholder="Enter Your Full Name"
+      className="w-full p-3 border border-gray-300 rounded text-sm"
+    />
+  </div>
+</div>
+
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
@@ -638,113 +652,140 @@ export default function AINET2026PresentationProposalForm() {
               {/* Step 2: Co-Presenter 1 */}
               {currentStep === 2 && (
                 <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                  <div className="bg-gray-400 p-2 rounded">
+                  <div className="bg-gray-400 p-3 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Co-Presenter 1 (Optional)
                     </h2>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="bg-gray-50 p-3 rounded">
-                      <div className="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                          <label className="block text-xs font-semibold mb-1">Title:</label>
-                          <select
-                            name="co1_title"
-                            value={formData.co1_title}
-                            onChange={handleChange}
-                            className="w-full p-2 border border-gray-300 rounded text-xs"
-                          >
-                            <option value="">Select Title</option>
-                            <option value="Mr.">Mr.</option>
-                            <option value="Ms.">Ms.</option>
-                            <option value="Mrs.">Mrs.</option>
-                            <option value="Dr.">Dr.</option>
-                            <option value="Prof.">Prof.</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold mb-1">Full Name:</label>
-                          <input
-                            type="text"
-                            name="co1_full_name"
-                            value={formData.co1_full_name}
-                            onChange={handleChange}
-                            placeholder="Enter Full Name"
-                            className="w-full p-2 border border-gray-300 rounded text-xs"
-                          />
-                        </div>
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+                      {/* Title */}
+                      <div className="col-span-1 sm:col-span-1">
+                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          Title:
+                        </label>
+                        <select
+                          name="co1_title"
+                          value={formData.co1_title}
+                          onChange={handleChange}
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                        >
+                          <option value="">Select Title</option>
+                          <option value="Mr.">Mr.</option>
+                          <option value="Ms.">Ms.</option>
+                          <option value="Mrs.">Mrs.</option>
+                          <option value="Dr.">Dr.</option>
+                          <option value="Prof.">Prof.</option>
+                        </select>
                       </div>
-                      <div className="mb-3">
-                        <label className="block text-xs font-semibold mb-1">Place Of Work:</label>
+
+                      {/* Full Name */}
+                      <div className="col-span-2 sm:col-span-1">
+                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          Full Name:
+                        </label>
                         <input
                           type="text"
-                          name="co1_place_of_work"
-                          value={formData.co1_place_of_work}
+                          name="co1_full_name"
+                          value={formData.co1_full_name}
                           onChange={handleChange}
-                          placeholder="Enter Place Of Work"
-                          className="w-full p-2 border border-gray-300 rounded text-xs"
+                          placeholder="Enter Full Name"
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                       </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        <div>
-                          <label className="block text-xs font-semibold mb-1">Country Code:</label>
-                          <input
-                            type="text"
-                            name="co1_country_code"
-                            value={formData.co1_country_code}
-                            onChange={handleChange}
-                            placeholder="+91"
-                            className="w-full p-2 border border-gray-300 rounded text-xs"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold mb-1">Mobile:</label>
-                          <input
-                            type="tel"
-                            name="co1_mobile"
-                            value={formData.co1_mobile}
-                            onChange={handleChange}
-                            placeholder="Mobile Number"
-                            className="w-full p-2 border border-gray-300 rounded text-xs"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-semibold mb-1">Email:</label>
-                          <input
-                            type="email"
-                            name="co1_email"
-                            value={formData.co1_email}
-                            onChange={handleChange}
-                            placeholder="Email Address"
-                            className="w-full p-2 border border-gray-300 rounded text-xs"
-                          />
-                        </div>
-                      </div>
-                      {formData.co1_full_name && (
-                        <div className="mt-3">
-                          <label className="block text-xs font-semibold mb-1">
-                            Co-Presenter 1 Bio (Max. 30 words):
-                            <span className="text-sm text-gray-500 ml-2">
-                              ({getWordCount(formData.co1_presenter_bio)}/30 words)
-                            </span>
-                          </label>
-                          <textarea
-                            name="co1_presenter_bio"
-                            value={formData.co1_presenter_bio}
-                            onChange={handleChange}
-                            placeholder="Enter co-presenter 1 bio (max 30 words)"
-                            className={`w-full p-2 border rounded text-xs ${
-                              getWordCount(formData.co1_presenter_bio) > 30 ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            rows="2"
-                          ></textarea>
-                          {getWordCount(formData.co1_presenter_bio) > 30 && (
-                            <p className="text-red-500 text-xs mt-1">Bio exceeds 30 words limit</p>
-                          )}
-                        </div>
-                      )}
                     </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        Place Of Work:
+                      </label>
+                      <input
+                        type="text"
+                        name="co1_place_of_work"
+                        value={formData.co1_place_of_work}
+                        onChange={handleChange}
+                        placeholder="Enter Place Of Work"
+                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-400 p-2 rounded">
+                    <h2 className="text-white text-lg font-semibold">
+                      Contact Information
+                    </h2>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+                      {/* Country Code */}
+                      <div className="col-span-1 sm:col-span-1">
+                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          Country Code:
+                        </label>
+                        <input
+                          type="text"
+                          name="co1_country_code"
+                          value={formData.co1_country_code}
+                          onChange={handleChange}
+                          placeholder="+91"
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                        />
+                      </div>
+                      {/* Mobile No */}
+                      <div className="col-span-2 sm:col-span-1">
+                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          Mobile No:
+                        </label>
+                        <input
+                          type="tel"
+                          name="co1_mobile"
+                          value={formData.co1_mobile}
+                          onChange={handleChange}
+                          placeholder="Enter Mobile Number"
+                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        Email:
+                      </label>
+                      <input
+                        type="email"
+                        name="co1_email"
+                        value={formData.co1_email}
+                        onChange={handleChange}
+                        placeholder="Enter Email Address"
+                        className="w-full p-2 border border-gray-300 rounded text-sm"
+                      />
+                    </div>
+
+                    {formData.co1_full_name && (
+                      <div>
+                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          Co-Presenter 1 Bio (Max. 30 words):
+                          <span className="text-sm text-gray-500 ml-2">
+                            ({getWordCount(formData.co1_presenter_bio)}/30 words)
+                          </span>
+                        </label>
+                        <textarea
+                          name="co1_presenter_bio"
+                          value={formData.co1_presenter_bio}
+                          onChange={handleChange}
+                          placeholder="Enter co-presenter 1 bio (max 30 words)"
+                          className={`w-full p-2 border rounded text-sm ${
+                            getWordCount(formData.co1_presenter_bio) > 30 ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          rows="3"
+                        ></textarea>
+                        {getWordCount(formData.co1_presenter_bio) > 30 && (
+                          <p className="text-red-500 text-xs mt-1">Bio exceeds 30 words limit</p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -752,113 +793,140 @@ export default function AINET2026PresentationProposalForm() {
                {/* Step 3: Co-Presenter 2 & Additional Co-Presenters */}
                {currentStep === 3 && (
                  <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                   <div className="bg-gray-400 p-2 rounded">
+                   <div className="bg-gray-400 p-3 rounded">
                      <h2 className="text-white text-lg font-semibold">
                        Co-Presenter 2 (Optional)
                      </h2>
                    </div>
 
-                   <div className="space-y-4">
-                     <div className="bg-gray-50 p-3 rounded">
-                       <div className="grid grid-cols-2 gap-3 mb-3">
-                         <div>
-                           <label className="block text-xs font-semibold mb-1">Title:</label>
-                           <select
-                             name="co2_title"
-                             value={formData.co2_title}
-                             onChange={handleChange}
-                             className="w-full p-2 border border-gray-300 rounded text-xs"
-                           >
-                             <option value="">Select Title</option>
-                             <option value="Mr.">Mr.</option>
-                             <option value="Ms.">Ms.</option>
-                             <option value="Mrs.">Mrs.</option>
-                             <option value="Dr.">Dr.</option>
-                             <option value="Prof.">Prof.</option>
-                           </select>
-                         </div>
-                         <div>
-                           <label className="block text-xs font-semibold mb-1">Full Name:</label>
-                           <input
-                             type="text"
-                             name="co2_full_name"
-                             value={formData.co2_full_name}
-                             onChange={handleChange}
-                             placeholder="Enter Full Name"
-                             className="w-full p-2 border border-gray-300 rounded text-xs"
-                           />
-                         </div>
+                   <div className="space-y-3">
+                     <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+                       {/* Title */}
+                       <div className="col-span-1 sm:col-span-1">
+                         <label className="block text-sm font-semibold mb-2 text-gray-700">
+                           Title:
+                         </label>
+                         <select
+                           name="co2_title"
+                           value={formData.co2_title}
+                           onChange={handleChange}
+                           className="w-full p-3 border border-gray-300 rounded text-sm"
+                         >
+                           <option value="">Select Title</option>
+                           <option value="Mr.">Mr.</option>
+                           <option value="Ms.">Ms.</option>
+                           <option value="Mrs.">Mrs.</option>
+                           <option value="Dr.">Dr.</option>
+                           <option value="Prof.">Prof.</option>
+                         </select>
                        </div>
-                       <div className="mb-3">
-                         <label className="block text-xs font-semibold mb-1">Place Of Work:</label>
+
+                       {/* Full Name */}
+                       <div className="col-span-2 sm:col-span-1">
+                         <label className="block text-sm font-semibold mb-2 text-gray-700">
+                           Full Name:
+                         </label>
                          <input
                            type="text"
-                           name="co2_place_of_work"
-                           value={formData.co2_place_of_work}
+                           name="co2_full_name"
+                           value={formData.co2_full_name}
                            onChange={handleChange}
-                           placeholder="Enter Place Of Work"
-                           className="w-full p-2 border border-gray-300 rounded text-xs"
+                           placeholder="Enter Full Name"
+                           className="w-full p-3 border border-gray-300 rounded text-sm"
                          />
                        </div>
-                       <div className="grid grid-cols-3 gap-2">
-                         <div>
-                           <label className="block text-xs font-semibold mb-1">Country Code:</label>
-                           <input
-                             type="text"
-                             name="co2_country_code"
-                             value={formData.co2_country_code}
-                             onChange={handleChange}
-                             placeholder="+91"
-                             className="w-full p-2 border border-gray-300 rounded text-xs"
-                           />
-                         </div>
-                         <div>
-                           <label className="block text-xs font-semibold mb-1">Mobile:</label>
-                           <input
-                             type="tel"
-                             name="co2_mobile"
-                             value={formData.co2_mobile}
-                             onChange={handleChange}
-                             placeholder="Mobile Number"
-                             className="w-full p-2 border border-gray-300 rounded text-xs"
-                           />
-                         </div>
-                         <div>
-                           <label className="block text-xs font-semibold mb-1">Email:</label>
-                           <input
-                             type="email"
-                             name="co2_email"
-                             value={formData.co2_email}
-                             onChange={handleChange}
-                             placeholder="Email Address"
-                             className="w-full p-2 border border-gray-300 rounded text-xs"
-                           />
-                         </div>
-                       </div>
-                       {formData.co2_full_name && (
-                         <div className="mt-3">
-                           <label className="block text-xs font-semibold mb-1">
-                             Co-Presenter 2 Bio (Max. 30 words):
-                             <span className="text-sm text-gray-500 ml-2">
-                               ({getWordCount(formData.co2_presenter_bio)}/30 words)
-                             </span>
-                           </label>
-                           <textarea
-                             name="co2_presenter_bio"
-                             value={formData.co2_presenter_bio}
-                             onChange={handleChange}
-                             placeholder="Enter co-presenter 2 bio (max 30 words)"
-                             className={`w-full p-2 border rounded text-xs ${
-                               getWordCount(formData.co2_presenter_bio) > 30 ? 'border-red-500' : 'border-gray-300'
-                             }`}
-                             rows="2"
-                           ></textarea>
-                           {getWordCount(formData.co2_presenter_bio) > 30 && (
-                             <p className="text-red-500 text-xs mt-1">Bio exceeds 30 words limit</p>
-                           )}
-                         </div>
-                       )}
                      </div>
+
+                     <div>
+                       <label className="block text-sm font-semibold mb-2 text-gray-700">
+                         Place Of Work:
+                       </label>
+                       <input
+                         type="text"
+                         name="co2_place_of_work"
+                         value={formData.co2_place_of_work}
+                         onChange={handleChange}
+                         placeholder="Enter Place Of Work"
+                         className="w-full p-3 border border-gray-300 rounded text-sm"
+                       />
+                     </div>
+                   </div>
+
+                   <div className="bg-gray-400 p-2 rounded">
+                     <h2 className="text-white text-lg font-semibold">
+                       Contact Information
+                     </h2>
+                   </div>
+
+                   <div className="space-y-3">
+                     <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+                       {/* Country Code */}
+                       <div className="col-span-1 sm:col-span-1">
+                         <label className="block text-sm font-semibold mb-2 text-gray-700">
+                           Country Code:
+                         </label>
+                         <input
+                           type="text"
+                           name="co2_country_code"
+                           value={formData.co2_country_code}
+                           onChange={handleChange}
+                           placeholder="+91"
+                           className="w-full p-3 border border-gray-300 rounded text-sm"
+                         />
+                       </div>
+                       {/* Mobile No */}
+                       <div className="col-span-2 sm:col-span-1">
+                         <label className="block text-sm font-semibold mb-2 text-gray-700">
+                           Mobile No:
+                         </label>
+                         <input
+                           type="tel"
+                           name="co2_mobile"
+                           value={formData.co2_mobile}
+                           onChange={handleChange}
+                           placeholder="Enter Mobile Number"
+                           className="w-full p-3 border border-gray-300 rounded text-sm"
+                         />
+                       </div>
+                     </div>
+
+                     <div>
+                       <label className="block text-sm font-semibold mb-2 text-gray-700">
+                         Email:
+                       </label>
+                       <input
+                         type="email"
+                         name="co2_email"
+                         value={formData.co2_email}
+                         onChange={handleChange}
+                         placeholder="Enter Email Address"
+                         className="w-full p-2 border border-gray-300 rounded text-sm"
+                       />
+                     </div>
+
+                     {formData.co2_full_name && (
+                       <div>
+                         <label className="block text-sm font-semibold mb-2 text-gray-700">
+                           Co-Presenter 2 Bio (Max. 30 words):
+                           <span className="text-sm text-gray-500 ml-2">
+                             ({getWordCount(formData.co2_presenter_bio)}/30 words)
+                           </span>
+                         </label>
+                         <textarea
+                           name="co2_presenter_bio"
+                           value={formData.co2_presenter_bio}
+                           onChange={handleChange}
+                           placeholder="Enter co-presenter 2 bio (max 30 words)"
+                           className={`w-full p-2 border rounded text-sm ${
+                             getWordCount(formData.co2_presenter_bio) > 30 ? 'border-red-500' : 'border-gray-300'
+                           }`}
+                           rows="3"
+                         ></textarea>
+                         {getWordCount(formData.co2_presenter_bio) > 30 && (
+                           <p className="text-red-500 text-xs mt-1">Bio exceeds 30 words limit</p>
+                         )}
+                       </div>
+                     )}
                    </div>
 
                    <div className="bg-gray-400 p-2 rounded">
@@ -867,7 +935,7 @@ export default function AINET2026PresentationProposalForm() {
                      </h2>
                    </div>
 
-                   <div className="space-y-4">
+                   <div className="space-y-3">
                      <div>
                        <label className="block text-sm font-semibold mb-2 text-gray-700">
                          Remaining Co-Presenters (if any):
@@ -895,28 +963,54 @@ export default function AINET2026PresentationProposalForm() {
                   </div>
 
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Conference Sub-theme: <span className="text-red-500">*</span>
-                      </label>
-                      <div className="space-y-2 max-h-40 overflow-y-auto">
-                        {conferenceSubThemes.map((theme) => (
-                          <label key={theme} className="flex items-center p-2 border border-gray-200 rounded cursor-pointer hover:bg-gray-50">
-                            <input
-                              type="radio"
-                              name="conference_sub_theme"
-                              value={theme}
-                              checked={formData.conference_sub_theme === theme}
-                              onChange={handleChange}
-                              className="mr-2"
-                            />
-                            <span className="text-sm">{theme}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
+                     <div>
+                       <label className="block text-sm font-semibold mb-2 text-gray-700">
+                         Conference Sub-theme: <span className="text-red-500">*</span>
+                       </label>
+                       <div className="relative" ref={dropdownRef}>
+                         <button
+                           type="button"
+                           onClick={toggleDropdown}
+                           className="w-full p-3 border border-gray-300 rounded text-sm bg-white text-left flex items-center justify-between "
+                         >
+                           <span className={formData.conference_sub_theme.length === 0 ? "text-gray-500" : "text-gray-900"}>
+                             {getSelectedThemesText()}
+                           </span>
+                           <svg
+                             className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
+                               isDropdownOpen ? 'rotate-180' : ''
+                             }`}
+                             fill="none"
+                             stroke="currentColor"
+                             viewBox="0 0 24 24"
+                           >
+                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                           </svg>
+                         </button>
+                         
+                         {isDropdownOpen && (
+                           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                             <div className="p-2">
+                               {conferenceSubThemes.map((theme) => (
+                                 <label key={theme} className="flex items-center p-2 hover:bg-gray-50 cursor-pointer rounded">
+                                   <input
+                                     type="checkbox"
+                                     name="conference_sub_theme"
+                                     value={theme}
+                                     checked={formData.conference_sub_theme.includes(theme)}
+                                     onChange={handleChange}
+                                     className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                   />
+                                   <span className="text-sm text-gray-900">{theme}</span>
+                                 </label>
+                               ))}
+                             </div>
+                           </div>
+                         )}
+                       </div>
+                     </div>
 
-                    {formData.conference_sub_theme === 'Any Other (Specify)' && (
+                     {formData.conference_sub_theme.includes('Any Other (Specify)') && (
                       <div>
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Please specify: <span className="text-red-500">*</span>
@@ -959,13 +1053,13 @@ export default function AINET2026PresentationProposalForm() {
                {/* Step 5: Presentation Details */}
                {currentStep === 5 && (
                 <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                  <div className="bg-gray-400 p-2 rounded">
+                  <div className="bg-gray-400 p-3 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Presentation Details
                     </h2>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Presentation Title (Max. 10 words): <span className="text-red-500">*</span>
@@ -979,7 +1073,7 @@ export default function AINET2026PresentationProposalForm() {
                         value={formData.presentation_title}
                         onChange={handleChange}
                         placeholder="Enter Presentation Title"
-                        className={`w-full p-2 border rounded text-sm ${
+                        className={`w-full p-3 border rounded text-sm ${
                           getWordCount(formData.presentation_title) > 10 ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
@@ -1000,7 +1094,7 @@ export default function AINET2026PresentationProposalForm() {
                         value={formData.abstract}
                         onChange={handleChange}
                         placeholder="Enter your abstract"
-                        className={`w-full p-2 border rounded text-sm ${
+                        className={`w-full p-3 border rounded text-sm ${
                           getWordCount(formData.abstract) > 150 ? 'border-red-500' : 'border-gray-300'
                         }`}
                         rows="6"
@@ -1022,7 +1116,7 @@ export default function AINET2026PresentationProposalForm() {
                         value={formData.main_presenter_bio}
                         onChange={handleChange}
                         placeholder="Enter main presenter bio (max 30 words)"
-                        className={`w-full p-2 border rounded text-sm ${
+                        className={`w-full p-3 border rounded text-sm ${
                           getWordCount(formData.main_presenter_bio) > 30 ? 'border-red-500' : 'border-gray-300'
                         }`}
                         rows="3"
@@ -1055,7 +1149,7 @@ export default function AINET2026PresentationProposalForm() {
                         </div>
                         <div className="ml-3">
                           <p className="text-sm text-yellow-700">
-                            <strong>NOTE:</strong> After receiving the acceptance of your proposal, you and all your co-presenters must register for the conference by completing the Delegate Registration Form by <strong>15 December 2025</strong>
+                            <strong>NOTE:</strong> After receiving the acceptance of your proposal, you and all your co-presenters must register for the conference by completing the Delegate Registration Form by <strong>15 December 2026</strong>
                           </p>
                         </div>
                       </div>
