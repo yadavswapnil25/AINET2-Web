@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const FormSubmissionConfirmation = () => {
+const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
@@ -41,20 +41,23 @@ const FormSubmissionConfirmation = () => {
             <ul className="text-left text-blue-800 space-y-2">
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
-                Your proposal will be reviewed by our committee
+               {line1}
               </li>
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
-                You will receive an email confirmation shortly
+                {line2}
               </li>
               <li className="flex items-start">
                 <span className="text-blue-600 mr-2">•</span>
-                We will notify you of the decision within 2-3 weeks
+                {line3}
               </li>
               <li className="flex items-start">
+                {line4===""&&(
                 <span className="text-blue-600 mr-2">•</span>
-                Check your email for further instructions
+                )}
+                {line4}
               </li>
+              
             </ul>
           </div>
 

@@ -8,6 +8,8 @@ import PaymentConfirmationModal from "../../PaymentIntegration/PaymentConfirmati
 import Loader from "../../../Components/shared/Loader";
 import { toast } from "react-toastify";
 import { FaArrowRight } from "react-icons/fa";
+import CountryCodeSelector from "../../shared/CountryCodeSelector";
+import FormSubmissionConfirmation from "../../../Pages/FormSubmissionConfirmation";
 
 export default function AINET2026DelegateRegistrationForm() {
   const location = useLocation();
@@ -21,6 +23,7 @@ export default function AINET2026DelegateRegistrationForm() {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
 
   const [formData, setFormData] = useState({
     // Basic Information
@@ -89,6 +92,7 @@ export default function AINET2026DelegateRegistrationForm() {
       "delegate_type",
       "title",
       "full_name",
+      "country_code",
       "gender",
       "age_group",
       "correspondence_address",
@@ -190,16 +194,116 @@ export default function AINET2026DelegateRegistrationForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!validateForm()) return;
 
-    const res = await checkEmailExists();
-    if (!res) {
-      return;
-    }
+    try {
+      setLoading(true);
+      setIsSubmitting(true);
 
-    setShowPaymentConfirmation(true);
+      // Map form data to API body structure
+      const apiBody = {
+        you_are_register_as: formData.delegate_type,
+        pre_title: formData.title,
+        member: formData.is_ainet_member === "Yes" ? "Yes" : "No",
+        name: formData.full_name,
+        gender: formData.gender,
+        age: parseInt(formData.age_group),
+        institution: formData.institution_address || "",
+        address: formData.correspondence_address,
+        city: formData.city,
+        pincode: formData.pincode || "",
+        state: formData.state || "",
+        country_code: formData.country_code || "91", // Default to India if not selected
+        phone_no: formData.mobile_no,
+        email: formData.email,
+        areas: formData.area_of_work.length > 0 ? formData.area_of_work : [formData.areas_of_interest],
+        other: formData.other_work_area || "",
+        experience: formData.teaching_experience || "",
+        conference: formData.is_presenting === "YES" ? "Yes" : "No",
+        types: formData.presentation_type.length > 0 ? formData.presentation_type : []
+      };
+
+      console.log('Submitting API request with body:', apiBody);
+
+      const response = await fetch(`${baseUrl}client/ainet2020drf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(apiBody)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        // Handle different HTTP error statuses
+        if (response.status === 400) {
+          throw new Error(result.message || 'Invalid form data. Please check your inputs.');
+        } else if (response.status === 401) {
+          throw new Error('Unauthorized access. Please try again.');
+        } else if (response.status === 403) {
+          throw new Error('Access forbidden. Please contact support.');
+        } else if (response.status === 404) {
+          throw new Error('Service not found. Please try again later.');
+        } else if (response.status === 422) {
+          throw new Error(result.message || 'Validation failed. Please check your form data.');
+        } else if (response.status >= 500) {
+          throw new Error('Server error. Please try again later.');
+        } else {
+          throw new Error(result.message || `HTTP error! status: ${response.status}`);
+        }
+      }
+
+      if (result.status === false) {
+        throw new Error(result.message || 'Submission failed');
+      }
+
+      // Additional validation for successful response
+      if (!result.data && !result.message) {
+        console.warn('API response missing expected data structure');
+      }
+
+      toast.success("✅ Delegate registration submitted successfully!");
+      setFormSubmissionConfirmation(true);
+      
+      // Reset form
+      setFormData({
+        is_ainet_member: "",
+        membership_id: "",
+        delegate_type: "",
+        supporting_document: null,
+        title: "",
+        full_name: "",
+        gender: "",
+        age_group: "",
+        institution_address: "",
+        correspondence_address: "",
+        city: "",
+        pincode: "",
+        state: "",
+        country_code: "",
+        mobile_no: "",
+        email: "",
+        areas_of_interest: "",
+        area_of_work: [],
+        other_work_area: "",
+        teaching_experience: "",
+        is_presenting: "",
+        presentation_type: [],
+      });
+      setSelectedFile(null);
+
+    } catch (error) {
+      console.error("Submission Error:", error);
+      toast.error(`❌ Submission Failed: ${error.message || error}`);
+    } finally {
+      setIsSubmitting(false);
+      setLoading(false);
+    }
   };
 
   const handlePaymentProceed = async () => {
@@ -285,6 +389,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
   const isFormValid = () => {
     const requiredFields = [
+      "is_ainet_member",
       "delegate_type",
       "title",
       "full_name",
@@ -292,6 +397,7 @@ export default function AINET2026DelegateRegistrationForm() {
       "age_group",
       "correspondence_address",
       "city",
+      "country_code",
       "mobile_no",
       "email",
     ];
@@ -300,6 +406,29 @@ export default function AINET2026DelegateRegistrationForm() {
       if (!formData[field] || formData[field].toString().trim() === "") {
         return false;
       }
+    }
+
+    // Validate AINET membership ID if member is selected
+    if (formData.is_ainet_member === "Yes" && !formData.membership_id.trim()) {
+      return false;
+    }
+
+    // Validate age is a valid number
+    const age = parseInt(formData.age_group);
+    if (isNaN(age) || age < 1 || age > 120) {
+      return false;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return false;
+    }
+
+    // Validate mobile number format
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(formData.mobile_no.replace(/\D/g, ""))) {
+      return false;
     }
 
     if (!isEmailValid) return false;
@@ -309,15 +438,47 @@ export default function AINET2026DelegateRegistrationForm() {
     )
       return false;
 
+    // Validate conditional fields
+    if (formData.area_of_work.length === 0) {
+      return false;
+    }
+
+    if (formData.area_of_work.includes("Other") && !formData.other_work_area.trim()) {
+      return false;
+    }
+
+    if (!formData.is_presenting) {
+      return false;
+    }
+
+    if (formData.is_presenting === "YES" && formData.presentation_type.length === 0) {
+      return false;
+    }
+
     return true;
   };
 
   // Step validation functions
   const validateStep1 = () => {
+    // Validate AINET membership selection
+    if (!formData.is_ainet_member) {
+      toast.error("Please select if you are an AINET member.");
+      return false;
+    }
+
+    // Validate membership ID if member is selected
+    if (formData.is_ainet_member === "Yes" && !formData.membership_id.trim()) {
+      toast.error("Please enter your AINET membership ID.");
+      return false;
+    }
+
+    // Validate delegate type selection
     if (!formData.delegate_type) {
       toast.error("Please select your registration type.");
       return false;
     }
+
+    // Validate supporting document for student/trainee
     if (
       formData.delegate_type === "Student or Trainee Teacher" &&
       !selectedFile
@@ -327,10 +488,12 @@ export default function AINET2026DelegateRegistrationForm() {
       );
       return false;
     }
+
     return true;
   };
 
   const validateStep2 = () => {
+    // Validate required fields
     const requiredFields = ["title", "full_name", "gender", "age_group"];
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
@@ -338,13 +501,23 @@ export default function AINET2026DelegateRegistrationForm() {
         return false;
       }
     }
+
+    // Validate age is a valid number
+    const age = parseInt(formData.age_group);
+    if (isNaN(age) || age < 1 || age > 120) {
+      toast.error("Please enter a valid age between 1 and 120.");
+      return false;
+    }
+
     return true;
   };
 
   const validateStep3 = () => {
+    // Validate required fields
     const requiredFields = [
       "correspondence_address",
       "city",
+      "country_code",
       "mobile_no",
       "email",
     ];
@@ -355,62 +528,97 @@ export default function AINET2026DelegateRegistrationForm() {
       }
     }
 
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast.error("Please enter a valid email address.");
       return false;
     }
 
-    if (!isEmailValid) {
+    // Validate mobile number format
+    const mobileRegex = /^[0-9]{10}$/;
+    if (!mobileRegex.test(formData.mobile_no.replace(/\D/g, ""))) {
+      toast.error("Please enter a valid 10-digit mobile number.");
       return false;
     }
+
+    // Check email validation status
+    if (!isEmailValid) {
+      toast.error("Please use a different email address.");
+      return false;
+    }
+    
     return true;
   };
 
   const validateStep4 = () => {
-    // Step 4 validates Professional Information - no required fields for this step
-    // All fields in this step are optional, so validation always passes
+    // Step 4 validates Professional Information - user must select at least one work area
+    
+    if (formData.area_of_work.length === 0) {
+      toast.error("Please select at least one area of your work.");
+      return false;
+    }
+    
+    // If "Other" is selected in area of work, validate the specification
+    if (formData.area_of_work.includes("Other") && !formData.other_work_area.trim()) {
+      toast.error("Please specify your work area when 'Other' is selected.");
+      return false;
+    }
+    
     return true;
   };
 
   const validateStep5 = () => {
+    // Step 5 validates Conference Participation - user must select if presenting or not
+    
+    if (!formData.is_presenting) {
+      toast.error("Please select whether you are presenting at the conference or not.");
+      return false;
+    }
+    
+    // If user is presenting, validate presentation types
+    if (formData.is_presenting === "YES" && formData.presentation_type.length === 0) {
+      toast.error("Please select at least one presentation type if you are presenting.");
+      return false;
+    }
+    
     return true;
   };
 
   const handleNext = async () => {
-    let isValid = false;
+    let canProceed = false;
 
     switch (currentStep) {
       case 1:
-        isValid = validateStep1();
+        // Validate Step 1 with proper validation
+        canProceed = validateStep1();
         break;
       case 2:
-        isValid = validateStep2();
+        // Validate Step 2 with proper validation
+        canProceed = validateStep2();
         break;
       case 3:
-        isValid = await validateStep3();
-        if (isValid) {
-          const emailCheck = await checkEmailExists();
-          if (!emailCheck) {
-            isValid = false;
-          }
-        }
+        // Validate Step 3 with proper validation
+        canProceed = validateStep3();
         break;
       case 4:
-        isValid = validateStep4();
+        // Validate Step 4 with proper validation
+        canProceed = validateStep4();
         break;
       case 5:
-        isValid = validateStep5();
+        // Validate Step 5 with proper validation
+        canProceed = validateStep5();
         break;
       default:
-        isValid = false;
+        canProceed = false;
     }
 
-    if (isValid && currentStep < 5) {
+    if (canProceed && currentStep < 5) {
       setCurrentStep(currentStep + 1);
-    } else if (isValid && currentStep === 5) {
+    } else if (canProceed && currentStep === 5) {
       handleSubmit();
     }
+    // Note: Error messages are handled within individual validation functions
   };
 
   const handlePrevious = () => {
@@ -421,27 +629,11 @@ export default function AINET2026DelegateRegistrationForm() {
 
   return (
     <>
-      {/* Payment Confirmation Modal */}
-      <PaymentConfirmationModal
-        show={showPaymentConfirmation}
-        onClose={() => setShowPaymentConfirmation(false)}
-        onProceed={handlePaymentProceed}
-        amount={calculateDelegateFee()}
-        currency={"INR"}
-      />
-
-      {showSuccessModal && (
-        <PaymentSuccessModal
-          show={true}
-          onClose={() => {
-            setShowSuccessModal(false);
-            navigate("/");
-          }}
-        />
-      )}
+ 
+ 
 
       {loading && <Loader />}
-
+      {!formSubmissionConfirmation && 
       <div className=" w-full relative z-10 mx-auto h-full grid grid-cols-1 lg:grid-cols-2">
          <div className="bg-[url('/formbg.jpg')] bg-cover bg-center py-20">
       {/* Left Side - Event Information */}
@@ -720,20 +912,16 @@ export default function AINET2026DelegateRegistrationForm() {
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Age (Years): <span className="text-red-500">*</span>
                         </label>
-                        <select
+                        <input
+                          type="number"
                           name="age_group"
                           value={formData.age_group}
                           onChange={handleChange}
+                          placeholder="Enter your age"
+                          min="1"
+                          max="120"
                           className="w-full p-3 border border-gray-300 rounded text-sm"
-                        >
-                          <option value="">Select Age Range</option>
-                          <option value="Below 20">Below 20</option>
-                          <option value="20-30">20-30</option>
-                          <option value="31-40">31-40</option>
-                          <option value="41-50">41-50</option>
-                          <option value="51-55">51-55</option>
-                          <option value="Over 55">Over 55</option>
-                        </select>
+                        />
                       </div>
                     </div>
                   </div>
@@ -759,7 +947,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.institution_address}
                         onChange={handleChange}
                         placeholder="Enter Your Institution Address"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                         rows="3"
                       ></input>
                     </div>
@@ -774,7 +962,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.correspondence_address}
                         onChange={handleChange}
                         placeholder="Enter Your Correspondence Address"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                         rows="3"
                       ></input>
                     </div>
@@ -790,7 +978,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.city}
                         onChange={handleChange}
                         placeholder="Enter Your City"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                       />
                     </div>
                     <div>
@@ -803,7 +991,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.pincode}
                         onChange={handleChange}
                         placeholder="Enter Pincode"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                       />
                     </div>
                     <div>
@@ -816,7 +1004,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         value={formData.state}
                         onChange={handleChange}
                         placeholder="Enter Your State"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                       />
                     </div>
                   </div>
@@ -828,31 +1016,31 @@ export default function AINET2026DelegateRegistrationForm() {
                   </div>
 
                   <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      <div className="col-span-1 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
-                          Country Code:
+                          Country Code: <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="text"
+                        <CountryCodeSelector
                           name="country_code"
                           value={formData.country_code}
                           onChange={handleChange}
-                          placeholder="+91"
-                          className="w-full p-2 border border-gray-300 rounded text-sm "
+                          placeholder="Select Country"
+                          className="w-full"
                         />
                       </div>
-                      <div>
+                      <div className="col-span-1 sm:col-span-2">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Mobile No: <span className="text-red-500">*</span>
                         </label>
                         <input
-                          type="tel"
+                          type="number"
                           name="mobile_no"
+                          maxLength={10}
                           value={formData.mobile_no}
                           onChange={handleChange}
                           placeholder="Enter Your Mobile Number"
-                          className="w-full p-2 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm "
                         />
                       </div>
                     </div>
@@ -868,7 +1056,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         onBlur={checkEmailExists}
                         onChange={handleChange}
                         placeholder="Enter Your Email"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                       />
                     </div>
                   </div>
@@ -887,21 +1075,21 @@ export default function AINET2026DelegateRegistrationForm() {
                   <div className="flex-1 space-y-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Areas of your special interest:
+                        Areas of your special interest: 
                       </label>
                       <input
                         name="areas_of_interest"
                         value={formData.areas_of_interest}
                         onChange={handleChange}
                         placeholder="Enter your areas of interest"
-                        className="w-full p-2 border border-gray-300 rounded text-sm "
+                        className="w-full p-3 border border-gray-300 rounded text-sm "
                         rows="3"
                       ></input>
                     </div>
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Area(s) of your work:
+                        Area(s) of your work: <span className="text-red-500">*</span>
                       </label>
                       <div className="grid grid-cols-2 gap-2">
                         {[
@@ -934,7 +1122,7 @@ export default function AINET2026DelegateRegistrationForm() {
                     {formData.area_of_work.includes("Other") && (
                       <div>
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
-                          Other - Please Specify:
+                          Other - Please Specify: <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
@@ -942,7 +1130,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.other_work_area}
                           onChange={handleChange}
                           placeholder="Please specify your work area"
-                          className="w-full p-2 border border-gray-300 rounded text-sm "
+                          className="w-full p-3 border border-gray-300 rounded text-sm "
                         />
                       </div>
                     )}
@@ -983,7 +1171,7 @@ export default function AINET2026DelegateRegistrationForm() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Are you presenting anything at the conference?
+                        Are you presenting anything at the conference? <span className="text-red-500">*</span>
                       </label>
                       <div className="flex gap-6">
                         <label className="flex items-center">
@@ -1080,25 +1268,52 @@ export default function AINET2026DelegateRegistrationForm() {
                 </div>
               )}
 
-              {/* Navigation Button - Inside Form */}
-              <div className="flex justify-center items-center mt-4 pt-4 border-t border-gray-200">
+              {/* Navigation Buttons - Inside Form */}
+              <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                {/* Back Button */}
+                {currentStep > 1 && (
+                  <button
+                    type="button"
+                    onClick={handlePrevious}
+                    className="px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span className="text-lg">Back</span>
+                  </button>
+                )}
+                
+                {/* Spacer for single button centering */}
+                {currentStep === 1 && <div></div>}
+                
+                {/* Continue/Submit Button */}
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="px-15 py-4 bg-yellow-200 hover:bg-yellow-300 text-black font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className= {`px-15 py-4 bg-yellow-200 hover:bg-yellow-300 text-black font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 ${currentStep === 1 ? "absolute left-1/2 -translate-x-1/2" : "relative"}`}
                 >
                   <span className="text-lg">
                     {currentStep === 5 ? "Submit" : "Continue"}
                   </span>
                   {currentStep < 5 && (
-                   <FaArrowRight className="ml-2" />
-                  )} 
+                    <FaArrowRight className="ml-2" />
+                  )}
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
+      }
+      {formSubmissionConfirmation && (
+        <FormSubmissionConfirmation
+          line1="You will be added to the delegates database."
+          line2="You will receive conference details and joining instructions nearer the time."
+          line3="Keep checking your email for further updates and instructions."
+          // line4="Thank you for registering for the conference"
+        />
+      )}
     </>
   );
 }
