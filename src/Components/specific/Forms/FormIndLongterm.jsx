@@ -639,7 +639,7 @@ export default function FormIndLongterm() {
                                     className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                                     required
                                 >
-                                    <option value="">Select Your Gender</option>
+                                    <option value="">Select Your Gender</option> 
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
