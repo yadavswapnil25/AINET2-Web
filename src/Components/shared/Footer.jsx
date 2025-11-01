@@ -31,7 +31,7 @@ const Footer = () => {
                         <a href="https://in.pinterest.com/theainet/" target='_blank' aria-label="Pinterest" className="hover:text-white"><FaPinterestP /></a>
                         <a href="https://x.com/ainetindia" target='_blank' aria-label="Twitter" className="hover:text-white"><FaTwitter /></a>
                         <a href="https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" target='_blank' aria-label="WhatsApp" className="hover:text-white"><FaWhatsapp /></a>
-                        <a href="#" aria-label="Telegram" className="hover:text-white"><FaTelegramPlane /></a>
+                        {/* <a href="#" aria-label="Telegram" className="hover:text-white"><FaTelegramPlane /></a> */}
                     </div>
                 </div>
 
@@ -66,7 +66,7 @@ const Footer = () => {
                     <ul className="space-y-4 text-base sm:text-lg flex flex-col">
                         <li className="flex gap-3 ">
                             <FaEnvelope className="text-xl" />
-                            <a href="mailto:support@ainet.com" className="hover:underline">support@ainet.com</a>
+                            <a href="mailto:theainet@gmail.com" className="hover:underline">theainet@gmail.com</a>
                         </li>
                         <li className="flex gap-3 md:items-start">
                             <FaPhoneAlt className="text-xl" />  

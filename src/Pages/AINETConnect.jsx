@@ -42,19 +42,19 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
     };
 
     const socialMediaIcons = [
-        { icon: AiFillInstagram, name: "Instagram", url: "https://www.instagram.com/yourpage" },
-        { icon: FaFacebook, name: "Facebook", url: "https://www.facebook.com/yourpage" },
-        { icon: FaYoutube, name: "YouTube", url: "https://www.youtube.com/yourchannel" },
-        { icon: FaXTwitter, name: "Twitter", url: "https://twitter.com/yourhandle" },
-        { icon: FaTelegram, name: "Telegram", url: "https://t.me/yourgroup" },
-        { icon: FaPinterest, name: "Pinterest", url: "https://www.pinterest.com/yourpage" },
-        { icon: IoLogoWhatsapp, name: "WhatsApp", url: "https://wa.me/yourwhatsapplink" }
+        { icon: AiFillInstagram, name: "Instagram", url: "https://www.instagram.com/ainetindia/" },
+        { icon: FaFacebook, name: "Facebook", url: "https://www.facebook.com/ainetindia/" },
+        { icon: FaYoutube, name: "YouTube", url: "https://www.youtube.com/AINETIndia" },
+        { icon: FaXTwitter, name: "Twitter", url: "https://x.com/ainetindia" },
+        // { icon: FaTelegram, name: "Telegram", url: "https://t.me/yourgroup" },
+        { icon: FaPinterest, name: "Pinterest", url: "https://in.pinterest.com/theainet/" },
+        { icon: IoLogoWhatsapp, name: "WhatsApp", url: "https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" }
     ];
 
     const leadTeamTop = [
-        { name: "Dr. Vivek Joshi", role: "Coordinator", image: null },
-        { name: "Dr. Millind Mane", role: "", image: "/MM.jpg" },
-        { name: "Nadeem Khan", role: "", image: "/NK.jpg" }
+        { name: "Dr. Vivek Joshi", role: "Project Lead", image: "/vivek.jpeg" },
+        { name: "Dr. Millind Mane", role: "Project Lead", image: "/MM.jpg" },
+        { name: "Nadeem Khan", role: "Project Lead", image: "/NK.jpg" }
     ];
 
     const leadTeamBottom = [

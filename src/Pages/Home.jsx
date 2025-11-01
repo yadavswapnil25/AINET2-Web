@@ -138,11 +138,11 @@ const Home = () => {
             <div className=" w-full md:w-1/2 h-full flex items-center  md:items-start justify-center flex-col gap-8">
               <h3 className="font-bold text-3xl md:text-4xl">
                 <strong>9th AINET International Conference </strong>
- <br /> January 2026
+ <br />
               </h3>
               <p className="text-xl text-center md:text-left">
                 
-               January 2026 Lucknow, India
+              16-17 JANUARY 2026 SONIPAT (Delhi-NCR), India
               </p>
               <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
                Coming soon

@@ -8,7 +8,7 @@ const PlanCard = ({
   currency,
   duration,
   planType,
- 
+  discountPercentage,
   planFeatures,
   handleClick
 }) => (
@@ -20,6 +20,13 @@ const PlanCard = ({
         ) : (
           <FaUniversity className="text-gray-900 text-3xl" />
         )}
+        {discountPercentage && (
+          <div className="bg-[#C5D3E8] text-black font-bold text-lg py-2 px-5 rounded-md flex items-center">
+            {discountPercentage}
+          </div>
+        )}
+        
+
       
       </div>
 

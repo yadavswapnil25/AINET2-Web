@@ -15,30 +15,31 @@ export default function ConferencePage() {
 
     // Main conference data
     const conferenceData = {
-        bannerImage: "/8thconfrence.png", // Complete banner image
+        bannerImage: "/9thconference.png",
         details: {
-            startDate: "10TH APRIL, 2025",
+            startDate: "16TH JANUARY 2026",
             startTime: "9:00 AM",
-            endDate: "12TH APRIL, 2025",
+            endDate: "17TH JANUARY 2026",
             endTime: "6:00 PM",
-            location: "Online",
+            location: "SONIPAT (Delhi-NCR)",
             registrationLink: "https://conf.theainet.net/",
-            theme: "ELE at the CROSSROADS",
-            fullTitle: "8th AINET INTERNATIONAL ELT CONFERENCE (ONLINE), APRIL 10-12, 2025"
+            theme: "English Language Education Today: Educate, Empower, Employ, Innovate",
+            fullTitle: "9th AINET INTERNATIONAL CONFERENCE , 16-17 JANUARY 2026"
         },
         subThemes: [
-            "New directions in ELT methodology, materials and assessment",
-            "Multilingualism and ELE",
-            "Changing roles of ELE teachers and teacher education",
-            "New trends & initiatives in research in ELE",
-            "AI and ELE",
-            "Use of social media in English language development",
-            "Communities of Practice in ELE: Teacher networks and associations",
-            "Decentring ELE: Global and local initiatives",
-            "Affordances of digital pedagogies: Materially supporting pedagogical practices",
-            "Assessment practices within the changing ELE paradigms",
-            "New approaches to materials development and teaching-learning resources in ELE",
-            "History and historiography of ELE"
+            "ELE for an Inclusive World",
+            "National and State Education Policies and ELE",
+            "Emerging Trends in the Teaching/Learning of English",
+            "English for Technical, Vocational and Professional Purposes",
+            "ELE in Multilingual Contexts",
+            "Technological Frontiers in ELE",
+            "English for Employability and Entrepreneurship",
+            "Trends and Innovations in ELE – Materials, Methods, Assessment",
+            "Teacher Education and Professional Development",
+            "Alternative and non-formal ELE",
+            "History of ELE in the Global South",
+            "Teaching English Literature in the Global South",
+            "Researching ELE in the Global South"
         ]
     };
 
@@ -46,16 +47,23 @@ export default function ConferencePage() {
     const previousConferences = [
         {
             id: 1,
-            title: "7th AINET INTERNATIONAL ELT CONFERENCE",
+            title: "8th AINET INTERNATIONAL CONFERENCE",
+            location: "ONLINE",
+            dates: "April 10-12, 2025",
+            image: "/8thconfrence.png"
+        },
+        {
+            id: 1,
+            title: "7th AINET INTERNATIONAL CONFERENCE",
             location: "GUWAHATI",
             dates: "FEBRUARY 3-4, 2024",
             image: "/archives1.png"
         },
         {
             id: 2,
-            title: "6th AINET INTERNATIONAL ELT CONFERENCE",
-            location: "NEW DELHI",
-            dates: "DECEMBER 5-6, 2022",
+            title: "6th AINET INTERNATIONAL  CONFERENCE",
+            location: "ONLINE",
+            dates: "JANUARY 7-9, 2022",
             image: "/archives2.png"
         }
     ];
@@ -65,14 +73,14 @@ export default function ConferencePage() {
             {/* Header */}
             <div className="p-4 flex justify-between items-center">
                 <h1 className="text-4xl font-bold">Conference</h1>
-                <div className="flex items-center gap-4">
+                {/* <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1 text-black">
                         <span className="text-sm">event</span>
                         <IoChevronDown />
                     </div>
                     <IoNotificationsOutline className="text-gray-400 text-xl" />
                     <IoFilter className="text-gray-400 text-xl" />
-                </div>
+                </div> */}
 
             </div>
 
@@ -187,9 +195,9 @@ export default function ConferencePage() {
             <div className="p-4">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="font-bold text-3xl">Previous Conferences</h2>
-                    <button className="text-xs text-black flex items-center" onClick={() => setExpanded(!expanded)}>
+                    {/* <button className="text-xs text-black flex items-center" onClick={() => setExpanded(!expanded)}>
                         View All <IoChevronForward className="ml-1" />
-                    </button>
+                    </button> */}
                 </div>
 
                 <div className="flex overflow-x-auto gap-3 pb-4 no-scrollbar">
