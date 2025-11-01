@@ -163,7 +163,7 @@ export default function MembershipFormforInstitutionalOverseas() {
 
     try {
       const paymentResponse = await initiatePayment({
-        amount: 2600,
+        amount: 5000,
         name: formData.institution_name,
         email: formData.email,
         contact: formData.contact_no,
@@ -309,7 +309,7 @@ export default function MembershipFormforInstitutionalOverseas() {
         show={showPaymentConfirmation}
         onClose={() => setShowPaymentConfirmation(false)}
         onProceed={handlePaymentProceed}
-        amount={2600}
+        amount={5000}
         currency={"INR"}
       />
 
