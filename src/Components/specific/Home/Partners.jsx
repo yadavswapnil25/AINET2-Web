@@ -5,7 +5,7 @@ const images = [
   { src: "./logos/BhandaraEnglish.png", title: "Bhandara English Teachers Club" },
   { src: "./logos/BritishCouncil.png", title: "British Council, India" },
   { src: "./logos/DeptofELT.png", title: "Dept. of ELT University of Gauhati" },
-  { src: "./logos/DeptofEnglish.png", title: "Dept. of English Gondwana Universit" },
+  { src: "./logos/DeptofEnglish.png", title: "Dept. of English Gondwana University" },
   { src: "./logos/MumbaiNetwork.png", title: "Mumbai Network of English Teachers" },
   { src: "./logos/ProfessionalOutreach.png", title: "Professional Outreach for English Teachers, WB" },
   { src: "./logos/ProWiggleData.png", title: "ProWiggle Data Solutions Pvt. Ltd." },

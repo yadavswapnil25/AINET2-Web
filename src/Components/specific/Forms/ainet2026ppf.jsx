@@ -62,26 +62,22 @@ export default function AINET2026PresentationProposalForm() {
   });
 
   const conferenceSubThemes = [
-    "Re-imagining Curriculums and syllabuses",
-    "Reforms in testing and evaluation",
-    "Professional development for changing teachers",
-    "Revisiting English for Professional/ Vocational Programmes",
-    "Learner/ Teacher Motivation",
-    "Addressing SDGs in ELE",
+    "ELE for an Inclusive World",
+    "National and State Education Policies and ELE",
+    "Emerging Trends in the Teaching/Learning of English",
+    "English for Technical, Vocational and Professional Purposes",
+    "ELE in Multilingual Contexts",
+    "Technological Frontiers in ELE",
     "New ways of teaching literature",
-    "The future of EMI",
-    "ELE and social equity",
-    "Next-gen materials/ coursebooks",
-    "Towards hybrid teaching/ learning of English",
-    "New challenges in methods and approaches",
-    "Implications of NEP2020 for ELE",
-    "Lessons from history of ELE in India",
-    "Changing ELE policies in India and Asia",
-    "ELE for inclusive world",
-    "Any Other (Specify)",
+    "Trends and Innovations in ELE – Materials, Methods, Assessment",
+    "Teacher Education and Professional Development ",
+    "Alternative and non-formal ELE",
+    "History of ELE in the Global South",
+    "Teaching English Literature in the Global South",
+    "Researching ELE in the Global South"
   ];
 
-  const presentationTypes = ["Paper", "Video", "Poster", "Fast-15"];
+  const presentationTypes = ["Paper (15 mins)", "Workshop (30 mins)", "Poster", "Virtual (15 mins)"];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -1505,7 +1501,7 @@ export default function AINET2026PresentationProposalForm() {
                             acceptance of your proposal, you and all your
                             co-presenters must register for the conference by
                             completing the Delegate Registration Form by{" "}
-                            <strong>15 December 2026</strong>
+                            <strong>25 December 2025</strong>
                           </p>
                         </div>
                       </div>
@@ -1583,7 +1579,7 @@ export default function AINET2026PresentationProposalForm() {
         <FormSubmissionConfirmation
           line1="Your proposal will be reviewed by our committee"
           line2="You will receive an email confirmation shortly"
-          line3="We will notify you of the decision by 15th December 2025"
+          line3="We will notify you of the decision by 25th December 2025"
           line4="Keep checking your email for further instructions"
         />
       )}
