@@ -68,7 +68,7 @@ export default function AINET2026PresentationProposalForm() {
     "English for Technical, Vocational and Professional Purposes",
     "ELE in Multilingual Contexts",
     "Technological Frontiers in ELE",
-    "New ways of teaching literature",
+    "English for Employability and Entrepreneurship",
     "Trends and Innovations in ELE – Materials, Methods, Assessment",
     "Teacher Education and Professional Development ",
     "Alternative and non-formal ELE",
