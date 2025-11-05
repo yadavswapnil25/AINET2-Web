@@ -3,8 +3,8 @@ import Highlight from '../Components/shared/Highlight';
 import Breadcrumbs from '../Components/shared/Breadcrumbs';
 
 const affiliateData = {
-    breadcrumb: ['Home', 'AINET Initiatives', 'Decentring ETC'],
-    title: 'Decentring ETC',
+    breadcrumb: ['Home', 'AINET Initiatives', 'Decentring ELT'],
+    title: 'Decentring ELT',
     subtitle: '',
     description: `AINET is a collaborator in the ‘Decentring ELT’ initiative launched in 2018 by the A.S. Hornby Educational Trust. This initiative aims to support the development and dissemination of ELT ideas and actions that are found to be appropriate in particular contexts by the participants concerned, with an initial specific focus on the needs of learners and teachers of English in public education systems in relatively low-income countries. Activities under this initiative aim to help teachers, on the one hand, to examine and understand if they are subject to any ‘centring’ influences or practices which may adversely affect their own expertise, knowledge, autonomy and agency. On the other hand, they also aim to help teachers investigate and build on their own and others’ ways of countering these centring influences and practices.
 
@@ -48,7 +48,7 @@ const Decentring = ({ data }) => {
                         links={[
                             { label: "Home", to: "/" },
                             { label: "AINET Initiatives", to: null },
-                            { label: "Decentring ETC", to: null },
+                            { label: "Decentring ELT", to: null },
                         ]}
                     />
                 </div>

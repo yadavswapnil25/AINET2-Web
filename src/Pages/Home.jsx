@@ -151,7 +151,7 @@ const Home = () => {
           </div>
 
           {/* bottom */}
-          <h2 className="text-3xl w-full font-medium mt-10">UPCOMING EVENTS</h2>
+          <h2 className="text-3xl w-full font-medium mt-10 font-sans">UPCOMING EVENTS</h2>
 
           <div className="w-full h-1/2  flex flex-col md:flex-row sm:flex-row mt-6 gap-8">
             {eventsData?.map((event, index) => (
@@ -160,14 +160,16 @@ const Home = () => {
                 className={`relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
               >
                 <h2 className="text-2xl font-semibold mb-6">{event.title}</h2>
-                <p className="flex items-center text-black mb-6 text-xl font-medium">
-                  <MdLocationOn className="mr-2 text-xl" />
-                  {event.location}
-                </p>
-                <p className="flex items-center text-black text-xl font-medium">
-                  <FaCalendar className="mr-2 text-xl" />
-                  {event.date}
-                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6">
+                  <p className="flex items-center text-black text-xl font-medium">
+                    <MdLocationOn className="mr-2 text-xl" />
+                    {event.location}
+                  </p>
+                  <p className="flex items-center text-black text-xl font-medium">
+                    <FaCalendar className="mr-2 text-xl" />
+                    {event.date}
+                  </p>
+                </div>
 
                 <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer" onClick={()=>window.location.href=event.link}>
                   <img src="./arrowright.svg" alt="arrowright" />
@@ -177,7 +179,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Section 3  Members Area */}
+        {/* Section 3  Members Area */} 
         <MembersArea />
 
         {/* Section 4 - Membership Plans */}

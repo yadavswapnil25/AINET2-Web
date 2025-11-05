@@ -66,10 +66,10 @@ const Footer = () => {
                     <ul className="space-y-4 text-base sm:text-lg flex flex-col">
                         <li className="flex gap-3 ">
                             <FaEnvelope className="text-xl" />
-                            <a href="mailto:support@ainet.com" className="hover:underline">support@ainet.com</a>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=support@ainet.com" target="_blank" rel="noopener noreferrer" className="hover:underline">support@ainet.com</a>
                         </li>
                         <li className="flex gap-3 md:items-start">
-                            <FaPhoneAlt className="text-xl" />  
+                            <FaPhoneAlt className="text-xl" />
                             <a href="tel:+919322890031" className="hover:underline">+91 - 9322890031</a>
                         </li>
                         <li className="flex md:items-start  gap-3 w-[60%] md:w-full">

@@ -547,13 +547,13 @@ export default function Profile() {
                       <div className="card-right">
                         {profile?.image_url ? (
                           <img
-                            src={"/logo.svg"}
+                            src={profile?.image_url}
                             alt="card image"
                             className="profile-image "
                           />
                         ) : (
                           <img
-                            src="/logo.svg"
+                            src={profile?.image_url}
                             alt="placeholder"
                             className="profile-image "
                           />
@@ -601,7 +601,7 @@ export default function Profile() {
                       This certificate is awarded to
                     </p>
                     <p className="font-semibold text-sm text-yellow-800 mb-2">
-                      S. Ravibalan
+                      {profile?.name}
                     </p>
                     <p className="text-xs text-yellow-700">
                       This certificate testifies that the person mentioned above
@@ -627,12 +627,12 @@ export default function Profile() {
                   </p>
                   <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 overflow-hidden">
                     <img
-                      src="https://images.unsplash.com/photo-1494790108755-2616b612b593?w=80&h=80&fit=crop&crop=face"
+                      src={profile?.image_url}
                       alt="Member"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h5 className="font-bold text-lg mb-1">NADEEM KHAN</h5>
+                  <h5 className="font-bold text-lg mb-1">{profile?.name}</h5>
                   <p className="text-sm opacity-90">I'm an AINETian</p>
                 </div>
                 <button className="w-full flex items-center justify-center gap-2 py-2 mt-4 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">

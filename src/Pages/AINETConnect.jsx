@@ -42,13 +42,13 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
     };
 
     const socialMediaIcons = [
-        { icon: AiFillInstagram, name: "Instagram", url: "https://www.instagram.com/yourpage" },
-        { icon: FaFacebook, name: "Facebook", url: "https://www.facebook.com/yourpage" },
-        { icon: FaYoutube, name: "YouTube", url: "https://www.youtube.com/yourchannel" },
-        { icon: FaXTwitter, name: "Twitter", url: "https://twitter.com/yourhandle" },
-        { icon: FaTelegram, name: "Telegram", url: "https://t.me/yourgroup" },
-        { icon: FaPinterest, name: "Pinterest", url: "https://www.pinterest.com/yourpage" },
-        { icon: IoLogoWhatsapp, name: "WhatsApp", url: "https://wa.me/yourwhatsapplink" }
+        { icon: AiFillInstagram, name: "Instagram", url: "https://www.instagram.com/ainetindia/" },
+        { icon: FaFacebook, name: "Facebook", url: "https://www.facebook.com/ainetindia/" },
+        { icon: FaYoutube, name: "YouTube", url: "https://www.youtube.com/AINETIndia" },
+        { icon: FaXTwitter, name: "Twitter", url: "https://x.com/ainetindia" },
+        { icon: FaTelegram, name: "Telegram", url: "#" },
+        { icon: FaPinterest, name: "Pinterest", url: "https://in.pinterest.com/theainet/" },
+        { icon: IoLogoWhatsapp, name: "WhatsApp", url: "https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" }
     ];
 
     const leadTeamTop = [
@@ -157,7 +157,7 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
                         </p>
                         <p>
                             If you are an active social media user and want to contribute to AINET, we invite you to join the AINET Connect team. Write to us at{' '}
-                            <a href={`mailto:${projectData.contactEmail}`} className="text-blue-600 hover:text-blue-800 underline">
+                            <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${projectData.contactEmail}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">
                                 {projectData.contactEmail}
                             </a>
                             . [Mention 'AINET Connect' in the subject.]
