@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../../../utils/constant";
@@ -16,9 +16,7 @@ export default function AINET2026PresentationProposalForm() {
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [currentStep, setCurrentStep] = useState(1);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
-  const dropdownRef = useRef(null);
 
   const [formData, setFormData] = useState({
     // Main/Single Presenter
@@ -46,7 +44,7 @@ export default function AINET2026PresentationProposalForm() {
     co2_email: "",
 
     // Conference Details
-    conference_sub_theme: [],
+    conference_sub_theme: "",
     other_sub_theme: "",
     presentation_nature: "",
 
@@ -74,56 +72,21 @@ export default function AINET2026PresentationProposalForm() {
     "Alternative and non-formal ELE",
     "History of ELE in the Global South",
     "Teaching English Literature in the Global South",
-    "Researching ELE in the Global South"
+    "Researching ELE in the Global South",
+    "Any Other (Specify)"
   ];
 
   const presentationTypes = ["Paper (15 mins)", "Workshop (30 mins)", "Poster", "Virtual (15 mins)"];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    if (name === "conference_sub_theme") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: checked
-          ? [...(prevData[name] || []), value]
-          : (prevData[name] || []).filter((item) => item !== value),
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
-  const getSelectedThemesText = () => {
-    if (formData.conference_sub_theme.length === 0) {
-      return "Select Conference Sub-themes";
-    }
-    if (formData.conference_sub_theme.length === 1) {
-      return formData.conference_sub_theme[0];
-    }
-    return `${formData.conference_sub_theme.length} themes selected`;
-  };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   // Word count helpers
   const getWordCount = (text) => {
@@ -241,7 +204,7 @@ export default function AINET2026PresentationProposalForm() {
 
     // Check if other theme is specified
     if (
-      formData.conference_sub_theme.includes("Any Other (Specify)") &&
+      formData.conference_sub_theme === "Any Other (Specify)" &&
       !formData.other_sub_theme.trim()
     ) {
       toast.error("Please specify the sub-theme.");
@@ -315,7 +278,7 @@ export default function AINET2026PresentationProposalForm() {
         presenter_main_country_code: formData.main_country_code || "91", // Default to India if not selected
         main_phone: formData.main_mobile,
         presenter_main_email: formData.main_email,
-        pr_area: formData.conference_sub_theme.join(", "), // Join multiple themes
+        pr_area: formData.conference_sub_theme, // Single theme selection
         pr_area_specify: formData.other_sub_theme || "",
         pr_nature: formData.presentation_nature,
         pr_abstract: formData.abstract,
@@ -407,7 +370,7 @@ export default function AINET2026PresentationProposalForm() {
         co2_country_code: "",
         co2_mobile: "",
         co2_email: "",
-        conference_sub_theme: [],
+        conference_sub_theme: "",
         other_sub_theme: "",
         presentation_nature: "",
         presentation_title: "",
@@ -448,12 +411,12 @@ export default function AINET2026PresentationProposalForm() {
     }
 
     // Check conference sub-theme selection
-    if (formData.conference_sub_theme.length === 0) return false;
+    if (!formData.conference_sub_theme || formData.conference_sub_theme.trim() === "") return false;
 
     if (!formData.agree) return false;
     if (!isEmailValid) return false;
     if (
-      formData.conference_sub_theme.includes("Any Other (Specify)") &&
+      formData.conference_sub_theme === "Any Other (Specify)" &&
       !formData.other_sub_theme.trim()
     )
       return false;
@@ -631,8 +594,8 @@ export default function AINET2026PresentationProposalForm() {
 
   const validateStep4 = () => {
     // Validate conference sub-theme selection
-    if (formData.conference_sub_theme.length === 0) {
-      toast.error("Please select at least one conference sub-theme.");
+    if (!formData.conference_sub_theme || formData.conference_sub_theme.trim() === "") {
+      toast.error("Please select a conference sub-theme.");
       return false;
     }
 
@@ -644,7 +607,7 @@ export default function AINET2026PresentationProposalForm() {
 
     // Check if other theme is specified when "Any Other (Specify)" is selected
     if (
-      formData.conference_sub_theme.includes("Any Other (Specify)") &&
+      formData.conference_sub_theme === "Any Other (Specify)" &&
       !formData.other_sub_theme.trim()
     ) {
       toast.error("Please specify the sub-theme.");
@@ -1267,70 +1230,23 @@ export default function AINET2026PresentationProposalForm() {
                         Conference Sub-theme:{" "}
                         <span className="text-red-500">*</span>
                       </label>
-                      <div className="relative" ref={dropdownRef}>
-                        <button
-                          type="button"
-                          onClick={toggleDropdown}
-                          className="w-full p-3 border border-gray-300 rounded text-sm bg-white text-left flex items-center justify-between "
-                        >
-                          <span
-                            className={
-                              formData.conference_sub_theme.length === 0
-                                ? "text-gray-500"
-                                : "text-gray-900"
-                            }
-                          >
-                            {getSelectedThemesText()}
-                          </span>
-                          <svg
-                            className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                              isDropdownOpen ? "rotate-180" : ""
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </button>
-
-                        {isDropdownOpen && (
-                          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                            <div className="p-2">
-                              {conferenceSubThemes.map((theme) => (
-                                <label
-                                  key={theme}
-                                  className="flex items-center p-2 hover:bg-gray-50 cursor-pointer rounded"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    name="conference_sub_theme"
-                                    value={theme}
-                                    checked={formData.conference_sub_theme.includes(
-                                      theme
-                                    )}
-                                    onChange={handleChange}
-                                    className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                  />
-                                  <span className="text-sm text-gray-900">
-                                    {theme}
-                                  </span>
-                                </label>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      <select
+                        name="conference_sub_theme"
+                        value={formData.conference_sub_theme}
+                        onChange={handleChange}
+                        className="w-full p-3 border border-gray-300 rounded text-sm bg-white"
+                      >
+                        <option value="">Select Conference Sub-theme</option>
+                        {conferenceSubThemes.map((theme) => (
+                          <option key={theme} value={theme}>
+                            {theme}
+                          </option>
+                        ))}
+                      </select>
                     </div>
 
-                    {formData.conference_sub_theme.includes(
-                      "Any Other (Specify)"
-                    ) && (
+                    {formData.conference_sub_theme ===
+                      "Any Other (Specify)" && (
                       <div>
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Please specify:{" "}
