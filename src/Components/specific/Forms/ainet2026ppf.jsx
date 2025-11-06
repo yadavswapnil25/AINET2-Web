@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { baseUrl } from "../../../utils/constant";
@@ -15,10 +15,22 @@ export default function AINET2026PresentationProposalForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = localStorage.getItem("ainet2026ppf_currentStep");
+    return savedStep ? parseInt(savedStep, 10) : 1;
+  });
   const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem("ainet2026ppf_formData");
+    if (savedData) {
+      try {
+        return JSON.parse(savedData);
+      } catch (e) {
+        console.error("Error parsing saved form data:", e);
+      }
+    }
+    return {
     // Main/Single Presenter
     main_title: "",
     main_full_name: "",
@@ -57,7 +69,17 @@ export default function AINET2026PresentationProposalForm() {
     remaining_copresenters: "",
 
     agree: false,
+    };
   });
+
+  // Auto-save functionality: Save form data and current step to localStorage
+  useEffect(() => {
+    localStorage.setItem("ainet2026ppf_formData", JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem("ainet2026ppf_currentStep", currentStep.toString());
+  }, [currentStep]);
 
   const conferenceSubThemes = [
     "ELE for an Inclusive World",
@@ -80,10 +102,33 @@ export default function AINET2026PresentationProposalForm() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    setFormData((prevData) => {
+      const newData = {
+        ...prevData,
+        [name]: type === "checkbox" ? checked : value,
+      };
+      // Auto-save to localStorage
+      localStorage.setItem("ainet2026ppf_formData", JSON.stringify(newData));
+      return newData;
+    });
+  };
+
+  // Helper function to get user-friendly field names
+  const getFieldDisplayName = (fieldName) => {
+    const fieldMap = {
+      main_title: "title",
+      main_full_name: "full name",
+      main_place_of_work: "place of work",
+      main_mobile: "mobile number",
+      main_email: "email",
+      main_country_code: "country code",
+      conference_sub_theme: "conference sub-theme",
+      presentation_nature: "presentation type",
+      presentation_title: "presentation title",
+      abstract: "abstract",
+      main_presenter_bio: "presenter bio",
+    };
+    return fieldMap[fieldName] || fieldName.replace(/_/g, " ").replace(/main /g, "");
   };
 
 
@@ -113,14 +158,14 @@ export default function AINET2026PresentationProposalForm() {
 
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
+        toast.error(`Please fill in the ${getFieldDisplayName(field)} field.`);
         return false;
       }
     }
 
     // Validate conference sub-theme selection
     if (formData.conference_sub_theme.length === 0) {
-      toast.error("Please select at least one conference sub-theme.");
+      toast.error("Please select at any one conference sub-theme.");
       return false;
     }
 
@@ -347,8 +392,12 @@ export default function AINET2026PresentationProposalForm() {
         console.warn("API response missing expected data structure");
       }
 
-      toast.success("✅ Presentation proposal submitted successfully!");
+      toast.success("Presentation proposal submitted successfully!");
       setFormSubmissionConfirmation(true);
+
+      // Clear auto-saved data from localStorage after successful submission
+      localStorage.removeItem("ainet2026ppf_formData");
+      localStorage.removeItem("ainet2026ppf_currentStep");
 
       // Reset form
       setFormData({
@@ -444,12 +493,19 @@ export default function AINET2026PresentationProposalForm() {
       "main_place_of_work",
       "main_mobile",
       "main_email",
+      "main_presenter_bio",
     ];
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
+        toast.error(`Please fill in the ${getFieldDisplayName(field)} field.`);
         return false;
       }
+    }
+
+    // Validate bio word count
+    if (getWordCount(formData.main_presenter_bio) > 30) {
+      toast.error("Main presenter bio must be maximum 30 words.");
+      return false;
     }
 
     // Validate email format
@@ -492,13 +548,40 @@ export default function AINET2026PresentationProposalForm() {
       return true; // No fields filled, step is valid
     }
 
-    // If any field is filled, validate required fields for co-presenter 1
-    if (
-      formData.co1_full_name &&
-      (!formData.co1_title || !formData.co1_place_of_work)
-    ) {
-      toast.error("Please fill in title and place of work for co-presenter 1.");
-      return false;
+    // If Full Name or Place of Work is filled, contact fields become compulsory
+    const hasNameOrWork = (formData.co1_full_name && formData.co1_full_name.trim()) || 
+                          (formData.co1_place_of_work && formData.co1_place_of_work.trim());
+    
+    if (hasNameOrWork) {
+      // Validate required fields for co-presenter 1
+      if (!formData.co1_title || !formData.co1_title.trim()) {
+        toast.error("Please fill in title for co-presenter 1.");
+        return false;
+      }
+      if (!formData.co1_full_name || !formData.co1_full_name.trim()) {
+        toast.error("Please fill in full name for co-presenter 1.");
+        return false;
+      }
+      if (!formData.co1_place_of_work || !formData.co1_place_of_work.trim()) {
+        toast.error("Please fill in place of work for co-presenter 1.");
+        return false;
+      }
+
+      // Contact fields are now compulsory
+      if (!formData.co1_country_code || (typeof formData.co1_country_code === 'string' && !formData.co1_country_code.trim())) {
+        toast.error("Please fill in country code for co-presenter 1.");
+        return false;
+      }
+
+      if (!formData.co1_mobile || !formData.co1_mobile.toString().trim()) {
+        toast.error("Please fill in mobile number for co-presenter 1.");
+        return false;
+      }
+
+      if (!formData.co1_email || !formData.co1_email.trim()) {
+        toast.error("Please fill in email for co-presenter 1.");
+        return false;
+      }
     }
 
     // Validate email format if provided
@@ -551,13 +634,40 @@ export default function AINET2026PresentationProposalForm() {
       return true; // No fields filled, step is valid
     }
 
-    // If any field is filled, validate required fields for co-presenter 2
-    if (
-      formData.co2_full_name &&
-      (!formData.co2_title || !formData.co2_place_of_work)
-    ) {
-      toast.error("Please fill in title and place of work for co-presenter 2.");
-      return false;
+    // If Full Name or Place of Work is filled, contact fields become compulsory
+    const hasNameOrWork = (formData.co2_full_name && formData.co2_full_name.trim()) || 
+                          (formData.co2_place_of_work && formData.co2_place_of_work.trim());
+    
+    if (hasNameOrWork) {
+      // Validate required fields for co-presenter 2
+      if (!formData.co2_title || !formData.co2_title.trim()) {
+        toast.error("Please fill in title for co-presenter 2.");
+        return false;
+      }
+      if (!formData.co2_full_name || !formData.co2_full_name.trim()) {
+        toast.error("Please fill in full name for co-presenter 2.");
+        return false;
+      }
+      if (!formData.co2_place_of_work || !formData.co2_place_of_work.trim()) {
+        toast.error("Please fill in place of work for co-presenter 2.");
+        return false;
+      }
+
+      // Contact fields are now compulsory
+      if (!formData.co2_country_code || (typeof formData.co2_country_code === 'string' && !formData.co2_country_code.trim())) {
+        toast.error("Please fill in country code for co-presenter 2.");
+        return false;
+      }
+
+      if (!formData.co2_mobile || !formData.co2_mobile.toString().trim()) {
+        toast.error("Please fill in mobile number for co-presenter 2.");
+        return false;
+      }
+
+      if (!formData.co2_email || !formData.co2_email.trim()) {
+        toast.error("Please fill in email for co-presenter 2.");
+        return false;
+      }
     }
 
     // Validate email format if provided
@@ -626,7 +736,7 @@ export default function AINET2026PresentationProposalForm() {
     ];
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
+        toast.error(`Please fill in the ${getFieldDisplayName(field)} field.`);
         return false;
       }
     }
@@ -738,7 +848,7 @@ export default function AINET2026PresentationProposalForm() {
                 <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
                   Gateway Education, Sonipat, Delhi NCR
                 </p>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-900 mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
                   "Empowering English Language Education in the Digital Era"
                 </p>
                 <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
@@ -756,7 +866,7 @@ export default function AINET2026PresentationProposalForm() {
 
         <div className="py-10">
           {/* Right Side - Registration Form */}
-          <div className=" p-4 md:p-10 h-[650px] flex flex-col overflow-y-auto">
+          <div className=" p-4 md:p-10 flex flex-col">
             {/* Step Indicator */}
             <div className="flex items-center justify-center mb-6">
               {[1, 2, 3, 4, 5, 6].map((step) => (
@@ -789,7 +899,7 @@ export default function AINET2026PresentationProposalForm() {
             >
               {/* Step 1: Main Presenter Information & Contact */}
               {currentStep === 1 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4">
                   <div className="bg-gray-400 p-3 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Main Presenter Information
@@ -846,6 +956,34 @@ export default function AINET2026PresentationProposalForm() {
                         placeholder="Enter Your Place Of Work"
                         className="w-full p-3 border border-gray-300 rounded text-sm"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        Main Presenter's BIO (Max. 30 words):{" "}
+                        <span className="text-red-500">*</span>
+                        <span className="text-sm text-gray-500 ml-2">
+                          ({getWordCount(formData.main_presenter_bio)}/30 words)
+                        </span>
+                      </label>
+                      <textarea
+                        name="main_presenter_bio"
+                        value={formData.main_presenter_bio}
+                        onChange={handleChange}
+                        placeholder="Enter main presenter bio (max 30 words)"
+                        className={`w-full pt-3 pb-4 px-3 border-2 rounded text-sm leading-relaxed ${
+                          getWordCount(formData.main_presenter_bio) > 30
+                            ? "border-red-500 bg-red-50"
+                            : "border-gray-300"
+                        }`}
+                        rows="3"
+                        style={{ lineHeight: '1.5' }}
+                      ></textarea>
+                      {getWordCount(formData.main_presenter_bio) > 30 && (
+                        <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
+                          Bio exceeds 30 words limit
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -905,7 +1043,7 @@ export default function AINET2026PresentationProposalForm() {
 
               {/* Step 2: Co-Presenter 1 */}
               {currentStep === 2 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4">
                   <div className="bg-gray-400 p-3 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Co-Presenter 1 (Optional)
@@ -977,6 +1115,9 @@ export default function AINET2026PresentationProposalForm() {
                       <div className="col-span-1 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Country Code:
+                          {(formData.co1_full_name || formData.co1_place_of_work) && (
+                            <span className="text-red-500">*</span>
+                          )}
                         </label>
                         <CountryCodeSelector
                           name="co1_country_code"
@@ -990,6 +1131,9 @@ export default function AINET2026PresentationProposalForm() {
                       <div className="col-span-1 sm:col-span-2">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Mobile No:
+                          {(formData.co1_full_name || formData.co1_place_of_work) && (
+                            <span className="text-red-500">*</span>
+                          )}
                         </label>
                         <input
                           type="tel"
@@ -1005,6 +1149,9 @@ export default function AINET2026PresentationProposalForm() {
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Email:
+                        {(formData.co1_full_name || formData.co1_place_of_work) && (
+                          <span className="text-red-500">*</span>
+                        )}
                       </label>
                       <input
                         type="email"
@@ -1030,15 +1177,15 @@ export default function AINET2026PresentationProposalForm() {
                           value={formData.co1_presenter_bio}
                           onChange={handleChange}
                           placeholder="Enter co-presenter 1 bio (max 30 words)"
-                          className={`w-full p-2 border rounded text-sm ${
+                          className={`w-full p-2 border-2 rounded text-sm ${
                             getWordCount(formData.co1_presenter_bio) > 30
-                              ? "border-red-500"
+                              ? "border-red-500 bg-red-50"
                               : "border-gray-300"
                           }`}
                           rows="3"
                         ></textarea>
                         {getWordCount(formData.co1_presenter_bio) > 30 && (
-                          <p className="text-red-500 text-xs mt-1">
+                          <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
                             Bio exceeds 30 words limit
                           </p>
                         )}
@@ -1050,7 +1197,7 @@ export default function AINET2026PresentationProposalForm() {
 
               {/* Step 3: Co-Presenter 2 & Additional Co-Presenters */}
               {currentStep === 3 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4">
                   <div className="bg-gray-400 p-3 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Co-Presenter 2 (Optional)
@@ -1122,6 +1269,9 @@ export default function AINET2026PresentationProposalForm() {
                       <div className="col-span-1 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Country Code:
+                          {(formData.co2_full_name || formData.co2_place_of_work) && (
+                            <span className="text-red-500">*</span>
+                          )}
                         </label>
                         <CountryCodeSelector
                           name="co2_country_code"
@@ -1135,6 +1285,9 @@ export default function AINET2026PresentationProposalForm() {
                       <div className="col-span-1 sm:col-span-2">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
                           Mobile No:
+                          {(formData.co2_full_name || formData.co2_place_of_work) && (
+                            <span className="text-red-500">*</span>
+                          )}
                         </label>
                         <input
                           type="tel"
@@ -1150,6 +1303,9 @@ export default function AINET2026PresentationProposalForm() {
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         Email:
+                        {(formData.co2_full_name || formData.co2_place_of_work) && (
+                          <span className="text-red-500">*</span>
+                        )}
                       </label>
                       <input
                         type="email"
@@ -1175,15 +1331,15 @@ export default function AINET2026PresentationProposalForm() {
                           value={formData.co2_presenter_bio}
                           onChange={handleChange}
                           placeholder="Enter co-presenter 2 bio (max 30 words)"
-                          className={`w-full p-2 border rounded text-sm ${
+                          className={`w-full p-2 border-2 rounded text-sm ${
                             getWordCount(formData.co2_presenter_bio) > 30
-                              ? "border-red-500"
+                              ? "border-red-500 bg-red-50"
                               : "border-gray-300"
                           }`}
                           rows="3"
                         ></textarea>
                         {getWordCount(formData.co2_presenter_bio) > 30 && (
-                          <p className="text-red-500 text-xs mt-1">
+                          <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
                             Bio exceeds 30 words limit
                           </p>
                         )}
@@ -1217,7 +1373,7 @@ export default function AINET2026PresentationProposalForm() {
 
               {/* Step 4: Conference Theme & Presentation Type */}
               {currentStep === 4 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4">
                   <div className="bg-gray-400 p-2 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Conference Theme & Presentation Type
@@ -1293,7 +1449,7 @@ export default function AINET2026PresentationProposalForm() {
 
               {/* Step 5: Presentation Details */}
               {currentStep === 5 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4">
                   <div className="bg-gray-400 p-3 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Presentation Details
@@ -1315,14 +1471,14 @@ export default function AINET2026PresentationProposalForm() {
                         value={formData.presentation_title}
                         onChange={handleChange}
                         placeholder="Enter Presentation Title"
-                        className={`w-full p-3 border rounded text-sm ${
+                        className={`w-full p-3 border-2 rounded text-sm ${
                           getWordCount(formData.presentation_title) > 10
-                            ? "border-red-500"
+                            ? "border-red-500 bg-red-50"
                             : "border-gray-300"
                         }`}
                       />
                       {getWordCount(formData.presentation_title) > 10 && (
-                        <p className="text-red-500 text-xs mt-1">
+                        <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
                           Title exceeds 10 words limit
                         </p>
                       )}
@@ -1341,15 +1497,15 @@ export default function AINET2026PresentationProposalForm() {
                         value={formData.abstract}
                         onChange={handleChange}
                         placeholder="Enter your abstract"
-                        className={`w-full p-3 border rounded text-sm ${
+                        className={`w-full p-3 border-2 rounded text-sm ${
                           getWordCount(formData.abstract) > 150
-                            ? "border-red-500"
+                            ? "border-red-500 bg-red-50"
                             : "border-gray-300"
                         }`}
                         rows="6"
                       ></textarea>
                       {getWordCount(formData.abstract) > 150 && (
-                        <p className="text-red-500 text-xs mt-1">
+                        <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
                           Abstract exceeds 150 words limit
                         </p>
                       )}
@@ -1368,15 +1524,15 @@ export default function AINET2026PresentationProposalForm() {
                         value={formData.main_presenter_bio}
                         onChange={handleChange}
                         placeholder="Enter main presenter bio (max 30 words)"
-                        className={`w-full p-3 border rounded text-sm ${
+                        className={`w-full p-3 border-2 rounded text-sm ${
                           getWordCount(formData.main_presenter_bio) > 30
-                            ? "border-red-500"
+                            ? "border-red-500 bg-red-50"
                             : "border-gray-300"
                         }`}
                         rows="3"
                       ></textarea>
                       {getWordCount(formData.main_presenter_bio) > 30 && (
-                        <p className="text-red-500 text-xs mt-1">
+                        <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
                           Bio exceeds 30 words limit
                         </p>
                       )}
@@ -1387,7 +1543,7 @@ export default function AINET2026PresentationProposalForm() {
 
               {/* Step 6: Agreement & Terms */}
               {currentStep === 6 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4">
                   <div className="bg-gray-400 p-2 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Agreement & Terms
