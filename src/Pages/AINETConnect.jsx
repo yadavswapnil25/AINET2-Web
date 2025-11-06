@@ -52,9 +52,9 @@ AINET Connect brings you immense opportunities to network with ELT communities, 
     ];
 
     const leadTeamTop = [
-        { name: "Dr. Vivek Joshi", role: "Coordinator", image: null },
-        { name: "Dr. Millind Mane", role: "", image: "/MM.jpg" },
-        { name: "Nadeem Khan", role: "", image: "/NK.jpg" }
+        { name: "Dr. Vivek Joshi", role: "Project Lead", image: "/vivek.jpeg" },
+        { name: "Dr. Millind Mane", role: "Project Lead", image: "/MM.jpg" },
+        { name: "Nadeem Khan", role: "Project Lead", image: "/NK.jpg" }
     ];
 
     const leadTeamBottom = [

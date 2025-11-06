@@ -31,7 +31,7 @@ const Footer = () => {
                         <a href="https://in.pinterest.com/theainet/" target='_blank' aria-label="Pinterest" className="hover:text-white"><FaPinterestP /></a>
                         <a href="https://x.com/ainetindia" target='_blank' aria-label="Twitter" className="hover:text-white"><FaTwitter /></a>
                         <a href="https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" target='_blank' aria-label="WhatsApp" className="hover:text-white"><FaWhatsapp /></a>
-                        <a href="#" aria-label="Telegram" className="hover:text-white"><FaTelegramPlane /></a>
+                        {/* <a href="#" aria-label="Telegram" className="hover:text-white"><FaTelegramPlane /></a> */}
                     </div>
                 </div>
 

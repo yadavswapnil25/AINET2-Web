@@ -25,7 +25,7 @@ export default function MembershipPlans() {
             currency: "INR",
             duration: "1",
             type: "Individual",
-            discountPercentage: 40
+            discountPercentage: "Basic",
         },
         {
             title: "LongTerm",
@@ -33,7 +33,8 @@ export default function MembershipPlans() {
             currency: "INR",
             duration: "3",
             type: "Individual",
-            discountPercentage: 50
+            discountPercentage: "20 % OFF",
+          
         },
         {
             title: "Overseas",
@@ -41,7 +42,8 @@ export default function MembershipPlans() {
             currency: "INR",
             duration: "1",
             type: "Individual",
-            discountPercentage: 25
+            discountPercentage: "",
+
         }
     ];
 
@@ -51,24 +53,24 @@ export default function MembershipPlans() {
             price: "1000.00",
             currency: "INR",
             duration: "1",
-            discountPercentage: 40,
-            type: "Institutional"
+            type: "Institutional",
+            discountPercentage: "Basic",
         },
         {
             title: "LongTerm",
             price: "2500.00",
             currency: "INR",
             duration: "3",
-            discountPercentage: 35,
-            type: "Institutional"
+            type: "Institutional",
+            discountPercentage: "20 % OFF",
         },
         {
             title: "Overseas",
-            price: "2600.00",
+            price: "5000.00",
             currency: "INR",
             duration: "1",
-            discountPercentage: 55,
-            type: "Institutional"
+            type: "Institutional",
+            discountPercentage: "",
         }
     ];
 

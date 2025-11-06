@@ -20,10 +20,14 @@ const PlanCard = ({
         ) : (
           <FaUniversity className="text-gray-900 text-3xl" />
         )}
-        <div className="bg-[#C5D3E8] text-black font-bold text-lg py-2 px-5 rounded-md flex items-center">
-          <TbCirclePercentageFilled className="mr-1 text-black" />
-          {discountPercentage}% OFF
-        </div>
+        {discountPercentage && (
+          <div className="bg-[#C5D3E8] text-black font-bold text-lg py-2 px-5 rounded-md flex items-center">
+            {discountPercentage}
+          </div>
+        )}
+        
+
+      
       </div>
 
       <h3 className="text-2xl md:text-3xl font-semibold mb-10 mt-10">

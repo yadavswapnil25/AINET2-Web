@@ -69,7 +69,7 @@ const Navbar = () => {
       link: "https://www.youtube.com/AINETIndia",
     },
     { name: "X", icon: <RiTwitterXLine />, link: "https://x.com/ainetindia" },
-    { name: "telegram", icon: <RiTelegramFill />, link: "#" },
+    // { name: "telegram", icon: <RiTelegramFill />, link: "#" },
     {
       name: "pinterest",
       icon: <FaPinterest />,
