@@ -88,8 +88,10 @@ export default function Login() {
         // Use the login function from AuthContext
         // This ensures proper state synchronization
         const token = data.data.token;
-        localStorage.setItem("ainetToken", token)
+        localStorage.setItem("ainetToken", token);
 
+        // Trigger a custom event to notify AuthContext about the token change
+        window.dispatchEvent(new CustomEvent("authTokenChanged", { detail: { token } }));
 
         toast.success("Login successful!");
 

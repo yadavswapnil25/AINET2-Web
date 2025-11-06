@@ -3,7 +3,7 @@ import { AiFillYoutube } from "react-icons/ai";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { FaPinterest } from "react-icons/fa6";
 import { IoLogoFacebook } from "react-icons/io5";
-import { MdMail, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdMail, MdOutlineKeyboardArrowDown, MdSearch } from "react-icons/md";
 import {
   RiInstagramFill,
   RiTelegramFill,
@@ -12,7 +12,7 @@ import {
 } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-
+    
 const Navbar = () => {
   const { logout, token ,profileData} = useAuth();
   const navigate = useNavigate()
@@ -190,10 +190,13 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-2 lg:gap-4">
-                  <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#A6AEBF] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300" onClick={()=> window.location.href="/#membershipplan"}>
+                  <Link 
+                    to="/#membershipplan"
+                    className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#000000] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300 inline-block text-center"
+                  >
                     JOIN US
-                  </button>
-                  <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-white border border-[#A6AEBF] rounded-full text-[#A6AEBF] hover:bg-gray-100 transition-all duration-300">
+                  </Link>
+                  <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-white border border-[#000000] rounded-full text-[#000000] hover:bg-gray-100 transition-all duration-300">
                     <Link to="/login">LOG IN</Link>
                   </button>
                 </div>
@@ -261,11 +264,7 @@ const Navbar = () => {
                     autoFocus
                   />
                   <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-                    <img
-                      src="/searchIcon.svg"
-                      alt="Search"
-                      className="w-6 h-6 "
-                    />
+                    <MdSearch className="w-5 h-5 text-gray-700" />
                   </div>
                 </div>
               )}
@@ -276,11 +275,7 @@ const Navbar = () => {
                   className="p-1"
                   aria-label="Search"
                 >
-                  <img
-                    src="/searchIcon.svg"
-                    alt="Search"
-                    className="w-8 h-8 "
-                  />
+                  <MdSearch className="w-8 h-8 text-gray-700" />
                 </button>
               )}
             </div>
@@ -486,7 +481,7 @@ const Navbar = () => {
                 className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none"
               />
               <button className="absolute right-3 top-2.5">
-                <img src="./searchIcon.svg" alt="Search" className="w-5 h-5" />
+                <MdSearch className="w-5 h-5 text-gray-700" />
               </button>
             </div>
 
@@ -690,9 +685,13 @@ const Navbar = () => {
           <div className="mt-auto">
             {/* Mobile Auth Buttons */}
             <div className="flex flex-col space-y-3 mb-6">
-              <button className="py-2 text-base font-semibold bg-[#A6AEBF] rounded-full text-white" onClick={()=> (window.location.href="/#membershipplan" , setIsOpen(false))}>
+              <Link 
+                to="/#membershipplan"
+                className="py-2 text-base font-semibold bg-[#A6AEBF] rounded-full text-white text-center"
+                onClick={() => setIsOpen(false)}
+              >
                 JOIN US
-              </button>
+              </Link>
               <button className="py-2 text-base font-semibold bg-white border border-[#A6AEBF] rounded-full text-[#A6AEBF]">
                 <Link to="/Login" onClick={() => setIsOpen(false)}>
                   LOG IN

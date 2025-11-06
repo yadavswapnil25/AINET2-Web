@@ -129,8 +129,11 @@ export default function AINET2026DelegateRegistrationForm() {
       "country_code",
       "gender",
       "age_group",
+      "institution_address",
       "correspondence_address",
       "city",
+      "pincode",
+      "state",
       "mobile_no",
       "email",
     ];
@@ -145,16 +148,6 @@ export default function AINET2026DelegateRegistrationForm() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       toast.error("Please enter a valid email address.");
-      return false;
-    }
-
-    if (
-      formData.delegate_type === "Student or Trainee Teacher" &&
-      !selectedFile
-    ) {
-      toast.error(
-        "Please upload supporting document for student/trainee registration."
-      );
       return false;
     }
 
@@ -260,8 +253,11 @@ export default function AINET2026DelegateRegistrationForm() {
       "full_name",
       "gender",
       "age_group",
+      "institution_address",
       "correspondence_address",
       "city",
+      "pincode",
+      "state",
       "country_code",
       "mobile_no",
       "email",
@@ -297,11 +293,6 @@ export default function AINET2026DelegateRegistrationForm() {
     }
 
     if (!isEmailValid) return false;
-    if (
-      formData.delegate_type === "Student or Trainee Teacher" &&
-      !selectedFile
-    )
-      return false;
 
     // Validate conditional fields
     if (formData.area_of_work.length === 0) {
@@ -343,17 +334,6 @@ export default function AINET2026DelegateRegistrationForm() {
       return false;
     }
 
-    // Validate supporting document for student/trainee
-    if (
-      formData.delegate_type === "Student or Trainee Teacher" &&
-      !selectedFile
-    ) {
-      toast.error(
-        "Please upload supporting document for student/trainee registration."
-      );
-      return false;
-    }
-
     return true;
   };
 
@@ -380,8 +360,11 @@ export default function AINET2026DelegateRegistrationForm() {
   const validateStep3 = () => {
     // Validate required fields
     const requiredFields = [
+      "institution_address",
       "correspondence_address",
       "city",
+      "pincode",
+      "state",
       "country_code",
       "mobile_no",
       "email",
@@ -463,11 +446,11 @@ export default function AINET2026DelegateRegistrationForm() {
         canProceed = validateStep2();
         break;
       case 3:
-        isValid = validateStep3();
-        if (isValid) {
+        canProceed = validateStep3();
+        if (canProceed) {
         //   const emailCheck = await checkEmailExists();
         //   if (!emailCheck) {
-        //     isValid = false;
+        //     canProceed = false;
         //   }
         }
         break;
@@ -632,9 +615,9 @@ export default function AINET2026DelegateRegistrationForm() {
                         />
                         <p className="text-xs text-gray-500 mt-1">
                           Not sure of your ID?{" "}
-                          <a href="#" className="text-blue-600">
+                          <Link to="/login" className="text-blue-600">
                             Login here
-                          </a>
+                          </Link>
                         </p>
                       </div>
                     )}
@@ -652,12 +635,11 @@ export default function AINET2026DelegateRegistrationForm() {
                         You are registering as:{" "}
                         <span className="text-red-500">*</span>
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
+                      <div className="grid grid-cols-1 gap-2">
                         {[
-                          "Indian Delegate",
-                          "SAARC Country Delegate",
-                          "Overseas Delegate",
-                          "Student or Trainee Teacher",
+                          "Research & PG Students (Indian)",
+                          "Others, Including Teachers (Indian)",
+                          "Overseas Participants",
                         ].map((type) => (
                           <label
                             key={type}
@@ -675,43 +657,12 @@ export default function AINET2026DelegateRegistrationForm() {
                               <span className="text-sm font-medium">
                                 {type}
                               </span>
-                              {type === "Student or Trainee Teacher" && (
-                                <p className="text-xs text-gray-500">
-                                  (Upload document required)
-                                </p>
-                              )}
                             </div>
                           </label>
                         ))}
                       </div>
                     </div>
 
-                    {formData.delegate_type ===
-                      "Student or Trainee Teacher" && (
-                      <div className="mt-3">
-                        <label className="block text-xs font-semibold mb-1 text-gray-700">
-                          Supporting Document:{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                        <div className="border-2 border-dashed border-gray-300 rounded p-2 bg-gray-50">
-                          <input
-                            type="file"
-                            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                            onChange={handleFileChange}
-                            className="w-full p-3 border border-gray-300 rounded bg-white text-sm"
-                          />
-                          <p className="text-xs text-gray-500 mt-1">
-                            (Upload any document like your student ID, fees
-                            receipt, admission slip etc of current year)
-                          </p>
-                          {selectedFile && (
-                            <p className="text-xs text-green-600 mt-1">
-                              Selected: {selectedFile.name}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               )}
@@ -815,7 +766,8 @@ export default function AINET2026DelegateRegistrationForm() {
                   <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Institution Address:
+                        Institution Address:{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <textarea
                         name="institution_address"
@@ -858,7 +810,7 @@ export default function AINET2026DelegateRegistrationForm() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Pincode:
+                        Pincode: <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -871,7 +823,7 @@ export default function AINET2026DelegateRegistrationForm() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        State:
+                        State: <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -891,9 +843,9 @@ export default function AINET2026DelegateRegistrationForm() {
                   </div>
 
                   <div className="space-y-3">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      <div className="col-span-1 sm:col-span-1">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 items-end">
+                      <div className="col-span-1 sm:col-span-1 flex flex-col">
+                        <label className="block text-sm font-semibold mb-2 text-gray-700 leading-tight">
                           Country Code: <span className="text-red-500">*</span>
                         </label>
                         <CountryCodeSelector
@@ -901,11 +853,11 @@ export default function AINET2026DelegateRegistrationForm() {
                           value={formData.country_code}
                           onChange={handleChange}
                           placeholder="+91"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full"
                         />
                       </div>
-                      <div className="col-span-1 sm:col-span-2">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <div className="col-span-1 sm:col-span-2 flex flex-col">
+                        <label className="block text-sm font-semibold mb-2 text-gray-700 leading-tight">
                           Mobile No: <span className="text-red-500">*</span>
                         </label>
                         <input
