@@ -18,6 +18,18 @@ export default function AINET2026PresentationProposalForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
 
+  // Helper function to format field names for error messages
+  const formatFieldName = (fieldName) => {
+    return fieldName
+      .replace(/^main_/i, "") // Remove "main_" prefix (case insensitive)
+      .replace(/^co1_/i, "") // Remove "co1_" prefix (case insensitive)
+      .replace(/^co2_/i, "") // Remove "co2_" prefix (case insensitive)
+      .replace(/_/g, " ") // Replace all underscores with spaces
+      .split(" ") // Split into words
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+      .join(" "); // Join back with spaces
+  };
+
   const [formData, setFormData] = useState({
     // Main/Single Presenter
     main_title: "",
@@ -113,7 +125,7 @@ export default function AINET2026PresentationProposalForm() {
 
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
+        toast.error(`Please fill in the ${formatFieldName(field)} field.`);
         return false;
       }
     }
@@ -447,7 +459,7 @@ export default function AINET2026PresentationProposalForm() {
     ];
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
+        toast.error(`Please fill in the ${formatFieldName(field)} field.`);
         return false;
       }
     }
@@ -626,7 +638,7 @@ export default function AINET2026PresentationProposalForm() {
     ];
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
+        toast.error(`Please fill in the ${formatFieldName(field)} field.`);
         return false;
       }
     }
