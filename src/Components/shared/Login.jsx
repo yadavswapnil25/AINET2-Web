@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { baseUrl } from "../../utils/constant";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
 import { useAuth } from "../../context/AuthContext";
@@ -207,9 +207,9 @@ export default function Login() {
                       />
                       <span className="ml-2">Remember me</span>
                     </label>
-                    <button className="text-sm text-black hover:text-gray-800">
+                    <Link to="/forgot-password" className="text-sm text-black hover:text-gray-800">
                       Forgot password?
-                    </button>
+                    </Link>
                   </div>
 
                   <button

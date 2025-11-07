@@ -5,6 +5,7 @@ import ScrollToTop from "./Components/ScrollToTop";
 import Footer from "./Components/shared/Footer";
 import Loader from "./Components/shared/Loader";
 import Login from "./Components/shared/Login";
+import ForgotPassword from "./Components/shared/ForgotPassword";
 import Navbar from "./Components/shared/Navbar";
 import PrivateRoute from "./Components/shared/PrivateRoute";
 import AboutNews from "./Pages/AboutNews";
@@ -100,6 +101,7 @@ const App = () => {
           <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
           <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/TermsAndConditions" element={<TermsAndConditions />} />
           <Route path="/RefundPolicy" element={<RefundPolicy />} />
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />

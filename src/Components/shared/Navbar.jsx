@@ -472,6 +472,17 @@ const Navbar = () => {
             isOpen ? "translate-x-0" : "translate-x-full"
           } md:hidden`}
         >
+          {/* Mobile Logo */}
+          <div className="mb-6 pb-4 border-b border-gray-200">
+            <Link to="/" onClick={() => setIsOpen(false)}>
+              <img
+                src="/logo.svg"
+                alt="logo ainet"
+                className="h-[60px]"
+              />
+            </Link>
+          </div>
+
           <div className="flex flex-col space-y-4 mb-6">
             {/* Mobile Search */}
             <div className="relative flex border-b border-gray-200 pb-4">
@@ -681,23 +692,77 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Contact */}
-          <div className="mt-auto">
-            {/* Mobile Auth Buttons */}
-            <div className="flex flex-col space-y-3 mb-6">
-              <Link 
-                to="/#membershipplan"
-                className="py-2 text-base font-semibold bg-[#A6AEBF] rounded-full text-white text-center"
-                onClick={() => setIsOpen(false)}
-              >
-                JOIN US
-              </Link>
-              <button className="py-2 text-base font-semibold bg-white border border-[#A6AEBF] rounded-full text-[#A6AEBF]">
-                <Link to="/Login" onClick={() => setIsOpen(false)}>
-                  LOG IN
-                </Link>
-              </button>
-            </div>
+           {/* Mobile Contact */}
+           <div className="mt-auto">
+             {/* Mobile Profile Section */}
+             <div className="mb-6 pb-4 border-b border-gray-200">
+               {profileData ? (
+                 <div className="space-y-3">
+                   {/* Profile Info Card */}
+                   <div className="flex flex-col items-center p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-sm border border-gray-200">
+                     <div className="relative mb-3">
+                       <img
+                         src={profileData?.image_url || "/placeholder.jpg"}
+                         onError={(e) => {
+                           e.target.src = "/placeholder.jpg";
+                         }}
+                         alt={profileData?.name}
+                         className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md"
+                       />
+                       <div className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
+                     </div>
+                     <h3 className="font-bold text-lg text-gray-800 mb-1">
+                       {profileData?.name}
+                     </h3>
+                     <p className="text-sm text-gray-600">{profileData?.email}</p>
+                   </div>
+                   
+                   {/* Profile Link */}
+                   <Link
+                     to="/profile"
+                     onClick={() => setIsOpen(false)}
+                     className="flex items-center justify-center gap-2 w-full py-3.5 px-4 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm active:scale-[0.98]"
+                   >
+                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                     </svg>
+                     View Profile
+                   </Link>
+                   
+                   {/* Logout Button */}
+                   <button
+                     onClick={() => {
+                       handleLogout();
+                       setIsOpen(false);
+                     }}
+                     className="w-full flex items-center justify-center gap-2 py-3.5 px-4 text-white font-semibold rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] group"
+                   >
+                     <img
+                       src="/logout.svg"
+                       alt="logout"
+                       className="w-5 h-5 transition-all duration-300 ease-in group-hover:brightness-0 group-hover:invert"
+                     />
+                     <span>LOG OUT</span>
+                   </button>
+                 </div>
+               ) : (
+                 /* Mobile Auth Buttons */
+                 <div className="flex flex-col space-y-3">
+                   <Link 
+                     to="/#membershipplan"
+                     className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#000000] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300 inline-block text-center"
+                     onClick={() => setIsOpen(false)}
+                   >
+                     JOIN US
+                   </Link>
+                   <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-white border border-[#000000] rounded-full text-[#000000] hover:bg-gray-100 transition-all duration-300">
+                     <Link to="/login" onClick={() => setIsOpen(false)}>
+                       LOG IN
+                     </Link>
+                   </button>
+                 </div>
+               )}
+             </div>
 
             {/* Mobile Email */}
             <a

@@ -547,13 +547,19 @@ export default function Profile() {
                       <div className="card-right">
                         {profile?.image_url ? (
                           <img
-                            src={profile?.image_url}
+                            src={profile?.image_url || "/placeholder.jpg"}
+                            onError={(e) => {
+                              e.target.src = "/placeholder.jpg";
+                            }}
                             alt="card image"
                             className="profile-image "
                           />
                         ) : (
                           <img
-                            src={profile?.image_url}
+                            src={profile?.image_url || "/placeholder.jpg"}
+                            onError={(e) => {
+                              e.target.src = "/placeholder.jpg";
+                            }}
                             alt="placeholder"
                             className="profile-image "
                           />
@@ -627,7 +633,10 @@ export default function Profile() {
                   </p>
                   <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 overflow-hidden">
                     <img
-                      src={profile?.image_url}
+                      src={profile?.image_url || "/placeholder.jpg"}
+                      onError={(e) => {
+                        e.target.src = "/placeholder.jpg";
+                      }}
                       alt="Member"
                       className="w-full h-full object-cover"
                     />
