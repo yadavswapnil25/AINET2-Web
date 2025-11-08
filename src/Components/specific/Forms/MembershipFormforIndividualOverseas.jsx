@@ -570,7 +570,7 @@ export default function MembershipFormForIndividualOverseas() {
 
                         <div className="mt-4">
                             <label className="block text-base font-semibold mb-1">
-                                Address (Residential) : <span className="text-red-500">*</span>
+                                Address (Correspondence) : <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 name="address"
