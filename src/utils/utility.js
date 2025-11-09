@@ -1,34 +1,71 @@
-import { razorpayKey } from "./constant";
+import { baseUrl, razorpayKey } from "./constant";
 
-export const initiatePayment = async ({ amount, name, email, contact, currency }) => {
-    return new Promise(async (resolve, reject) => {
-        const loadScript = () =>
-            new Promise((resolve) => {
-                const script = document.createElement("script");
-                script.src = "https://checkout.razorpay.com/v1/checkout.js";
-                script.onload = () => resolve(true);
-                script.onerror = () => resolve(false);
-                document.body.appendChild(script);
-            });
+const loadRazorpayScript = () =>
+    new Promise((resolve) => {
+        if (document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]')) {
+            return resolve(true);
+        }
+        const script = document.createElement("script");
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.onload = () => resolve(true);
+        script.onerror = () => resolve(false);
+        document.body.appendChild(script);
+    });
 
-        const isLoaded = await loadScript();
-        if (!isLoaded) return reject("Razorpay SDK failed to load.");
+export const createRazorpayOrder = async ({
+    amount,
+    currency = "INR",
+    receipt,
+    notes = {},
+    customer = {},
+}) => {
+    const response = await fetch(`${baseUrl}client/payments/order`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            amount,
+            currency,
+            receipt,
+            notes,
+            customer,
+        }),
+    });
 
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data?.status) {
+        throw new Error(data?.message || "Failed to create Razorpay order.");
+    }
+
+    return data.data;
+};
+
+export const initiatePayment = async ({ order, customer = {}, notes = {} }) => {
+    const isLoaded = await loadRazorpayScript();
+    if (!isLoaded) {
+        throw new Error("Razorpay SDK failed to load.");
+    }
+
+    return new Promise((resolve, reject) => {
         const options = {
-            key: razorpayKey, // use live key in prod
-            amount: amount * 100, // Razorpay works in paise
-            currency: currency || "INR",
+            key: razorpayKey,
+            order_id: order.id,
+            amount: order.amount,
+            currency: order.currency,
             name: "AINET",
             description: "Membership Payment",
             handler: function (response) {
-                // ✅ Called only on payment success
-                resolve(response); // move ahead
+                resolve(response);
             },
             prefill: {
-                name,
-                email,
-                contact,
+                name: customer.name || "",
+                email: customer.email || "",
+                contact: customer.contact || "",
             },
+            notes,
             theme: {
                 color: "#3399cc",
             },
@@ -36,11 +73,69 @@ export const initiatePayment = async ({ amount, name, email, contact, currency }
 
         const paymentObject = new window.Razorpay(options);
 
-        // ❌ Called on user cancel, failure, or error
         paymentObject.on("payment.failed", function (response) {
-            reject(response.error.description || "Payment failed or was cancelled.");
+            reject(new Error(response?.error?.description || "Payment failed or was cancelled."));
         });
 
         paymentObject.open();
     });
+};
+
+export const processMembershipPayment = async ({
+    amount,
+    currency = "INR",
+    customer,
+    notes,
+}) => {
+    const orderData = await createRazorpayOrder({
+        amount,
+        currency,
+        customer,
+        notes,
+        receipt: `AINET-${Date.now()}`,
+    });
+
+    const paymentResponse = await initiatePayment({
+        order: orderData.order,
+        customer: orderData.customer || customer,
+        notes,
+    });
+
+    return {
+        order: orderData.order,
+        payment: paymentResponse,
+    };
+};
+
+export const confirmMembershipPayment = async ({
+    userId,
+    razorpayOrderId,
+    razorpayPaymentId,
+    razorpaySignature,
+}) => {
+    const response = await fetch(`${baseUrl}client/membership-signup/confirm`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            razorpay_order_id: razorpayOrderId,
+            razorpay_payment_id: razorpayPaymentId,
+            razorpay_signature: razorpaySignature,
+        }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data?.status) {
+        const message = data?.message || data?.error || "Failed to confirm payment.";
+        const extra = data?.errors;
+        const error = new Error(message);
+        error.extra = extra;
+        throw error;
+    }
+
+    return data.data;
 };

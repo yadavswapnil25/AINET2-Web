@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../../../Components/shared/Loader';
 import { baseUrl } from '../../../utils/constant';
-import { initiatePayment } from '../../../utils/utility';
+import { processMembershipPayment, confirmMembershipPayment } from '../../../utils/utility';
 import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 
@@ -15,6 +15,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
   const [isPaymentDone, setIsPaymentDone] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+  const [pendingMembership, setPendingMembership] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +43,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
     has_member_any: false,
     name_association: '',
     expectation: '',
-    has_newsletter: false,
+    has_newsletter: 'YES',
     title: '',
     address_institution: '',
     name_institution: '',
@@ -61,7 +62,6 @@ export default function MembershipFormforInstitutionalLongTerm() {
     emailperson: '',
     host_event: 'YES',
     expectations: '',
-    newsletter: 'YES',
   });
   const [states, setStates] = useState([]);
   const [districts, setDistricts] = useState([]);
@@ -155,6 +155,34 @@ export default function MembershipFormforInstitutionalLongTerm() {
     }
   };
 
+  const buildSignupPayload = () => {
+    const selectedState = states.find(state => state.geonameId === parseInt(formData.state));
+    const selectedDistrict = districts.find(district => district.geonameId === parseInt(formData.district));
+
+    const {
+      expectations,
+      has_newsletter,
+      contact_person_name,
+      ...rest
+    } = formData;
+
+    return {
+      ...rest,
+      first_name: formData.institution_name || "",
+      mobile: formData.contact_no || "",
+      address: formData.address || "",
+      state: selectedState?.name || "",
+      district: selectedDistrict?.name || "",
+      expectation: expectations || rest.expectation || "",
+      has_newsletter: has_newsletter === 'YES' || has_newsletter === true,
+      name_institution: formData.institution_name || "",
+      type_institution: formData.institution_type || "",
+      other_institution: formData.other_type || "",
+      contact_person: contact_person_name || rest.contact_person || "",
+      address_institution: formData.address || "",
+    };
+  };
+
   // Form validation
   const validateForm = () => {
     const requiredFields = [
@@ -203,7 +231,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
   const checkEmailExists = async () => {
     const email = formData.email;
 
-    if (!email) return; // skip if empty
+    if (!email) return false; // skip if empty
 
     try {
       const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
@@ -222,7 +250,6 @@ export default function MembershipFormforInstitutionalLongTerm() {
       } else {
         setIsEmailValid(true); // ✅ email valid
         return true;
-        // Optional success message
       } 
     } catch (error) {
       console.error("Error checking email:", error);
@@ -241,109 +268,138 @@ export default function MembershipFormforInstitutionalLongTerm() {
       return;
     }
 
-    // Show payment confirmation modal
-    setShowPaymentConfirmation(true);
-  };
+    if (pendingMembership && pendingMembership.email === formData.email && pendingMembership.payment_status === 'pending') {
+      setShowPaymentConfirmation(true);
+      return;
+    }
 
-  const handlePaymentProceed = async () => {
-    setShowPaymentConfirmation(false);
+    setIsSubmitting(true);
 
     try {
-      const paymentResponse = await initiatePayment({
-        amount: 2500,
-        name: formData.institution_name,
-        email: formData.email,
-        contact: formData.contact_no,
-        currency: "INR"
-      });
+      const payload = buildSignupPayload();
 
-      toast.success("✅ Payment Successful");
-      setLoading(true);
-      setIsSubmitting(true);
-
-      const selectedState = states.find(state => state.geonameId === parseInt(formData.state));
-      const selectedDistrict = districts.find(district => district.geonameId === parseInt(formData.district));
-
-      const submissionData = {
-        ...formData,
-        first_name: formData.institution_name || "",
-        email: formData.email,
-        mobile: formData.contact_no || "",
-        address: formData.address || "",
-        district: selectedDistrict?.name || "",
-        state: selectedState?.name || "",
-        expectation: formData.expectations || "",
-        has_newsletter: formData.newsletter === 'YES',
-        name_institution: formData.institution_name || "",
-        type_institution: formData.institution_type || "",
-        other_institution: formData.other_type || "",
-        contact_person: formData.contact_person_name || "",
-        address_institution: formData.address || "",
-      };
-
-      const res = await fetch(`${baseUrl}client/membership-signup`, {
+      const response = await fetch(`${baseUrl}client/membership-signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(submissionData),
+        body: JSON.stringify(payload),
       });
 
-      if (res.ok) {
-        const responseData = await res.json();
-        setIsPaymentDone(true);
-        setShowSuccessModal(true);
-        setFormData({
-          first_name: '',
+      const data = await response.json().catch(() => ({}));
 
-          mobile: '',
-          whatsapp_no: '',
-          email: '',
-          address: '',
-          state: '',
-          district: '',
-
-          password: '',
-          agree: false,
-          membership_type: "",
-          membership_plan: "",
-
-          password_confirmation: '',
-          has_member_any: false,
-          name_association: '',
-          expectation: '',
-          has_newsletter: false,
-          title: '',
-          address_institution: '',
-          name_institution: '',
-          type_institution: '',
-          other_institution: '',
-          contact_person: '',
-
-          institution_name: '',
-          institution_type: '',
-          other_type: '',
-          contact_no: '',
-          website: '',
-          contact_person_name: '',
-          mobileperson: '',
-          emailperson: '',
-          host_event: 'YES',
-          expectations: '',
-          newsletter: 'YES',
-        });
-      } else {
-        const errorData = await res.json();
-        toast.error(`${errorData.message || "Something went wrong. Please try again."}`);
+      if (!response.ok || !data?.status) {
+        toast.error(data?.message || "Failed to save membership details.");
+        return;
       }
 
+      const savedUser = data?.data?.user;
+      if (!savedUser?.id) {
+        toast.error("Signup response incomplete. Please try again.");
+        return;
+      }
+
+      setPendingMembership(savedUser);
+      toast.success("Membership details saved. Please proceed with the payment.");
+      setShowPaymentConfirmation(true);
     } catch (error) {
-      toast.error(`❌ Payment Failed: ${error}`);
+      toast.error(error?.message || "Failed to save membership details.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handlePaymentProceed = async () => {
+    setShowPaymentConfirmation(false);
+
+    if (!pendingMembership?.id) {
+      toast.error("Membership details missing. Please submit the form again.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const customerDetails = {
+        name: formData.institution_name || "",
+        email: formData.email,
+        contact: formData.contact_no,
+      };
+
+      const notes = {
+        membership_type: formData.membership_type,
+        membership_plan: formData.membership_plan,
+        email: formData.email,
+      };
+
+      const { order, payment } = await processMembershipPayment({
+        amount: 2500,
+        currency: "INR",
+        customer: customerDetails,
+        notes,
+      });
+
+      await confirmMembershipPayment({
+        userId: pendingMembership.id,
+        razorpayOrderId: payment.razorpay_order_id || order.id,
+        razorpayPaymentId: payment.razorpay_payment_id,
+        razorpaySignature: payment.razorpay_signature,
+      });
+
+      toast.success("✅ Payment Successful");
+
+      setIsPaymentDone(true);
+      setShowSuccessModal(true);
+      setPendingMembership(null);
+      setFormData({
+        first_name: '',
+
+        mobile: '',
+        whatsapp_no: '',
+        email: '',
+        address: '',
+        state: '',
+        district: '',
+
+        password: '',
+        agree: false,
+        membership_type: "Institutional",
+        membership_plan: "LongTerm",
+
+        password_confirmation: '',
+        has_member_any: false,
+        name_association: '',
+        expectation: '',
+        has_newsletter: 'YES',
+        title: '',
+        address_institution: '',
+        name_institution: '',
+        type_institution: '',
+        other_institution: '',
+        contact_person: '',
+
+        institution_name: '',
+        institution_type: '',
+        other_type: '',
+        contact_no: '',
+        website: '',
+        contact_person_name: '',
+        mobileperson: '',
+        emailperson: '',
+        host_event: 'YES',
+        expectations: '',
+      });
+    } catch (error) {
+      const refunded = error?.extra?.refunded;
+      if (refunded) {
+        toast.error(`${error.message || "Payment failed."} Amount has been refunded automatically.`);
+      } else {
+        toast.error(`❌ Payment Failed: ${error?.message || error}`);
+      }
       console.error("Payment or API Error:", error);
     } finally {
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 
