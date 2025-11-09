@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { baseUrl } from '../../../utils/constant';
-import { initiatePayment } from '../../../utils/utility';
+import { processMembershipPayment, confirmMembershipPayment } from '../../../utils/utility';
 import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 import Loader from '../../shared/Loader';
@@ -102,6 +102,7 @@ export default function FormIndLongterm() {
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+    const [pendingMembership, setPendingMembership] = useState(null);
 
 
 
@@ -430,41 +431,16 @@ export default function FormIndLongterm() {
             return;
         }
 
-        setFormData(prev => ({
-            ...prev,
-            name: formData.first_name
-        }));
+        if (pendingMembership && pendingMembership.email === formData.email && pendingMembership.payment_status === 'pending') {
+            setShowPaymentConfirmation(true);
+            return;
+        }
 
-
-
-        // Show payment confirmation modal instead of proceeding directly to payment
-        setShowPaymentConfirmation(true);
-    };
-
-    const handlePaymentProceed = async () => {
-        // Close the confirmation modal
-        setShowPaymentConfirmation(false);
-
+        setIsSubmitting(true);
+        setLoading(true);
 
         try {
-
-            const paymentResponse = await initiatePayment({
-                amount: 1200, // in INR
-                name: `${formData.first_name} ${formData.last_name}`,
-                email: formData.email,
-                contact: formData.mobile,
-                currency: "INR"
-            });
-
-
-
-            toast.success("✅ Payment Successful");
-
-
-            setLoading(true);
-            setIsSubmitting(true);
-
-            const res = await fetch(`${baseUrl}client/membership-signup`, {
+            const response = await fetch(`${baseUrl}client/membership-signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -473,52 +449,113 @@ export default function FormIndLongterm() {
                 body: JSON.stringify(formData),
             });
 
-            if (res.ok) {
-                const responseData = await res.json();
-                setIsPaymentDone(true);
-                setShowSuccessModal(true);
+            const data = await response.json().catch(() => ({}));
 
-                setFormData({
-                    name: "",
-                    first_name: "",
-                    last_name: "",
-                    gender: "",
-                    dob: "",
-                    mobile: "",
-                    whatsapp_no: "",
-                    email: "",
-                    address: "",
-                    state: "",
-                    district: "",
-                    teaching_exp: "",
-                    qualification: [],
-                    area_of_work: [],
-                    password: "",
-                    agree: false,
-                    membership_type: "",
-                    membership_plan: "",
-                    pin: "",
-                    password_confirmation: "",
-                    has_member_any: false,
-                    name_association: '',
-                    expectation: '',
-                    has_newsletter: false,
-                    title: '',
-                    address_institution: '',
-                    name_institution: '',
-                    type_institution: '',
-                    other_institution: '',
-                    contact_person: '',
-                });
-            } else {
-                const errorData = await res.json();
-                toast.error(`${errorData.message || "Something went wrong. Please try again."}`);
+            if (!response.ok || !data?.status) {
+                toast.error(data?.message || "Failed to save membership details.");
+                return;
             }
 
+            const savedUser = data?.data?.user;
+            if (!savedUser?.id) {
+                toast.error("Signup response incomplete. Please try again.");
+                return;
+            }
+
+            setPendingMembership(savedUser);
+            toast.success("Membership details saved. Please proceed with the payment.");
+            setShowPaymentConfirmation(true);
         } catch (error) {
-            // ❌ Razorpay payment failed or cancelled
-            // toast.dismiss(loadingToastId);
-            toast.error(`❌ Payment Failed: ${error}`);
+            toast.error(error?.message || "Failed to save membership details.");
+        } finally {
+            setIsSubmitting(false);
+            setLoading(false);
+        }
+    };
+
+    const handlePaymentProceed = async () => {
+        setShowPaymentConfirmation(false);
+
+        if (!pendingMembership?.id) {
+            toast.error("Membership details missing. Please submit the form again.");
+            return;
+        }
+
+        setIsSubmitting(true);
+        setLoading(true);
+
+        try {
+            const customerDetails = {
+                name: `${formData.first_name} ${formData.last_name}`.trim(),
+                email: formData.email,
+                contact: formData.mobile,
+            };
+
+            const notes = {
+                membership_type: formData.membership_type,
+                membership_plan: formData.membership_plan,
+                email: formData.email,
+            };
+
+            const { order, payment } = await processMembershipPayment({
+                amount: 1200,
+                currency: "INR",
+                customer: customerDetails,
+                notes,
+            });
+
+            await confirmMembershipPayment({
+                userId: pendingMembership.id,
+                razorpayOrderId: payment.razorpay_order_id || order.id,
+                razorpayPaymentId: payment.razorpay_payment_id,
+                razorpaySignature: payment.razorpay_signature,
+            });
+
+            toast.success("✅ Payment Successful");
+
+            setIsPaymentDone(true);
+            setShowSuccessModal(true);
+            setPendingMembership(null);
+
+            setFormData({
+                name: "",
+                first_name: "",
+                last_name: "",
+                gender: "",
+                dob: "",
+                mobile: "",
+                whatsapp_no: "",
+                email: "",
+                address: "",
+                state: "",
+                district: "",
+                teaching_exp: "",
+                qualification: [],
+                area_of_work: [],
+                password: "",
+                agree: false,
+                membership_type: "Individual",
+                membership_plan: "LongTerm",
+                pin: "",
+                password_confirmation: "",
+                has_member_any: false,
+                name_association: '',
+                expectation: '',
+                has_newsletter: false,
+                title: '',
+                address_institution: '',
+                name_institution: '',
+                type_institution: '',
+                other_institution: '',
+                contact_person: '',
+            });
+        } catch (error) {
+            const refunded = error?.extra?.refunded;
+            if (refunded) {
+                toast.error(`${error.message || "Payment failed."} Amount has been refunded automatically.`);
+            } else {
+                toast.error(`❌ Payment Failed: ${error?.message || error}`);
+            }
             console.error("Payment or API Error:", error);
         } finally {
             setIsSubmitting(false);
@@ -726,7 +763,7 @@ export default function FormIndLongterm() {
 
                         <div className="mt-4">
                             <label className="block text-base font-semibold mb-1">
-                                Address (Residential) : <span className="text-red-500">*</span>
+                                Address (Correspondence) : <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 name="address"

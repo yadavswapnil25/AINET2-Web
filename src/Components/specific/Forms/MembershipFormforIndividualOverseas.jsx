@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { baseUrl } from '../../../utils/constant';
-import { initiatePayment } from '../../../utils/utility';
+import { processMembershipPayment, confirmMembershipPayment } from '../../../utils/utility';
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
 import Loader from '../../../Components/shared/Loader';
@@ -99,6 +99,7 @@ export default function MembershipFormForIndividualOverseas() {
     const [isPaymentDone, setIsPaymentDone] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
+    const [pendingMembership, setPendingMembership] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const [passwordTouched, setPasswordTouched] = useState(false);
@@ -140,6 +141,10 @@ export default function MembershipFormForIndividualOverseas() {
         name_association: '',
         expectation: '',
         has_newsletter: false,
+        member_of_association: '',
+        association_name: '',
+        expectations: '',
+        receive_newsletter: '',
         title: '',
         address_institution: '',
         name_institution: '',
@@ -233,14 +238,14 @@ export default function MembershipFormForIndividualOverseas() {
     const checkEmailExists = async () => {
         const email = formData.email;
 
-        if (!email) return; // skip if empty
+        if (!email) return false; // skip if empty
 
         try {
             const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
 
             if (!res.ok) {
                 console.error("Failed to check email");
-                return;
+                return false;
             }
 
             const data = await res.json();
@@ -248,13 +253,37 @@ export default function MembershipFormForIndividualOverseas() {
             if (!data.status || data.status === false) {
                 setIsEmailValid(false); // ❌ email not valid
                 toast.warning("❌ Email already exists. Please use a different email.");
+                return false;
             } else {
                 setIsEmailValid(true); // ✅ email valid
-                // Optional success message
+                return true;
             }
         } catch (error) {
             console.error("Error checking email:", error);
+            return false;
         }
+    };
+
+    const buildSignupPayload = () => {
+        const {
+            member_of_association,
+            association_name,
+            expectations,
+            receive_newsletter,
+            ...rest
+        } = formData;
+
+        return {
+            ...rest,
+            has_member_any: member_of_association
+                ? member_of_association === 'YES'
+                : !!rest.has_member_any,
+            name_association: association_name || rest.name_association || "",
+            expectation: expectations || rest.expectation || "",
+            has_newsletter: receive_newsletter
+                ? receive_newsletter === 'YES'
+                : !!rest.has_newsletter,
+        };
     };
 
     const handleSubmit = async (e) => {
@@ -262,86 +291,136 @@ export default function MembershipFormForIndividualOverseas() {
 
         if (!validateForm()) return;
 
-       await checkEmailExists();
-       
+        const emailOk = await checkEmailExists();
+        if (!emailOk) {
+            return;
+        }
 
-        // Show payment confirmation modal
-        setShowPaymentConfirmation(true);
-    };
+        if (pendingMembership && pendingMembership.email === formData.email && pendingMembership.payment_status === 'pending') {
+            setShowPaymentConfirmation(true);
+            return;
+        }
 
-    const handlePaymentProceed = async () => {
-        setShowPaymentConfirmation(false);
+        setIsSubmitting(true);
+        setLoading(true);
 
         try {
-            const paymentResponse = await initiatePayment({
-                amount: 1725,
-                name: `${formData.first_name} ${formData.last_name}`,
-                email: formData.email,
-                contact: formData.mobile,
-                currency:  "INR"
-            });
+            const payload = buildSignupPayload();
 
-            toast.success("✅ Payment Successful");
-            setLoading(true);
-            setIsSubmitting(true);
-
-            // Prepare form data with proper mapping for individual overseas
-            const submissionData = {
-                ...formData,
-                // Map overseas specific fields properly
-                has_member_any: formData.member_of_association === 'YES',
-                name_association: formData.association_name || "",
-                expectation: formData.expectations || "",
-                has_newsletter: formData.receive_newsletter === 'YES',
-            };
-
-            const res = await fetch(`${baseUrl}client/membership-signup`, {
+            const response = await fetch(`${baseUrl}client/membership-signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
-                body: JSON.stringify(submissionData),
+                body: JSON.stringify(payload),
             });
 
-            if (res.ok) {
-                const responseData = await res.json();
-                setIsPaymentDone(true);
-                setShowSuccessModal(true);
-                setFormData({
-                    first_name: '',
-                    last_name: '',
-                    gender: '',
-                    dob: '',
-                    mobile: '',
-                    whatsapp_no: '',
-                    email: '',
-                    address: '',
-                    teaching_exp: '',
-                    area_of_work: [],
-                    password: '',
-                    agree: false,
-                    membership_type: "",
-                    membership_plan: "",
-                    password_confirmation: '',
-                    has_member_any: false,
-                    name_association: '',
-                    expectation: '',
-                    has_newsletter: false,
-                    title: '',
-                    address_institution: '',
-                    name_institution: '',
-                    type_institution: '',
-                    other_institution: '',
+            const data = await response.json().catch(() => ({}));
 
-                });
-            } else {
-                const errorData = await res.json();
-                toast.error(`${errorData.message || "Something went wrong. Please try again."}`);
+            if (!response.ok || !data?.status) {
+                toast.error(data?.message || "Failed to save membership details.");
+                return;
             }
 
+            const savedUser = data?.data?.user;
+            if (!savedUser?.id) {
+                toast.error("Signup response incomplete. Please try again.");
+                return;
+            }
+
+            setPendingMembership(savedUser);
+            toast.success("Membership details saved. Please proceed with the payment.");
+            setShowPaymentConfirmation(true);
         } catch (error) {
-            toast.error(`❌ Payment Failed: ${error}`);
+            toast.error(error?.message || "Failed to save membership details.");
+        } finally {
+            setIsSubmitting(false);
+            setLoading(false);
+        }
+    };
+
+    const handlePaymentProceed = async () => {
+        setShowPaymentConfirmation(false);
+
+        if (!pendingMembership?.id) {
+            toast.error("Membership details missing. Please submit the form again.");
+            return;
+        }
+
+        setIsSubmitting(true);
+        setLoading(true);
+
+        try {
+            const customerDetails = {
+                name: `${formData.first_name} ${formData.last_name}`.trim(),
+                email: formData.email,
+                contact: formData.mobile,
+            };
+
+            const notes = {
+                membership_type: formData.membership_type,
+                membership_plan: formData.membership_plan,
+                email: formData.email,
+            };
+
+            const { order, payment } = await processMembershipPayment({
+                amount: 1725,
+                currency: "INR",
+                customer: customerDetails,
+                notes,
+            });
+
+            await confirmMembershipPayment({
+                userId: pendingMembership.id,
+                razorpayOrderId: payment.razorpay_order_id || order.id,
+                razorpayPaymentId: payment.razorpay_payment_id,
+                razorpaySignature: payment.razorpay_signature,
+            });
+
+            toast.success("✅ Payment Successful");
+
+            setIsPaymentDone(true);
+            setShowSuccessModal(true);
+            setPendingMembership(null);
+
+            setFormData({
+                first_name: '',
+                last_name: '',
+                gender: '',
+                dob: '',
+                mobile: '',
+                whatsapp_no: '',
+                email: '',
+                address: '',
+                teaching_exp: '',
+                area_of_work: [],
+                password: '',
+                agree: false,
+                membership_type: "Individual",
+                membership_plan: "Overseas",
+                password_confirmation: '',
+                has_member_any: false,
+                name_association: '',
+                expectation: '',
+                has_newsletter: false,
+                title: '',
+                address_institution: '',
+                name_institution: '',
+                type_institution: '',
+                other_institution: '',
+                member_of_association: '',
+                association_name: '',
+                expectations: '',
+                receive_newsletter: '',
+            });
+        } catch (error) {
+            const refunded = error?.extra?.refunded;
+            if (refunded) {
+                toast.error(`${error.message || "Payment failed."} Amount has been refunded automatically.`);
+            } else {
+                toast.error(`❌ Payment Failed: ${error?.message || error}`);
+            }
             console.error("Payment or API Error:", error);
         } finally {
             setIsSubmitting(false);
@@ -570,7 +649,7 @@ export default function MembershipFormForIndividualOverseas() {
 
                         <div className="mt-4">
                             <label className="block text-base font-semibold mb-1">
-                                Address (Residential) : <span className="text-red-500">*</span>
+                                Address (Correspondence) : <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 name="address"
