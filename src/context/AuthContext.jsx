@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       setIsAuthenticating(true);
-      const res = await fetch(`${baseUrl}client/auth/profile`, {
+      const res = await fetch(`${baseUrl}/client/auth/profile`, {
         headers: {
           Authorization: `Bearer ${currentToken}`,
           Accept: "application/json",
@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch(`${baseUrl}client/auth/profile`, {
+      const res = await fetch(`${baseUrl}/client/auth/profile`, {
         headers: {
           Authorization: `Bearer ${currentToken}`,
           Accept: "application/json",

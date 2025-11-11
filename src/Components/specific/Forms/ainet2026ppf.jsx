@@ -267,7 +267,7 @@ export default function AINET2026PresentationProposalForm() {
 
     try {
       const res = await fetch(
-        `${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(
+        `${baseUrl}/client/eventValidationHandle?email=${encodeURIComponent(
           email
         )}`
       );
@@ -339,7 +339,7 @@ export default function AINET2026PresentationProposalForm() {
 
       console.log("Submitting API request with body:", apiBody);
 
-      const response = await fetch(`${baseUrl}client/ainet2025ppf`, {
+      const response = await fetch(`${baseUrl}/client/ainet2025ppf`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

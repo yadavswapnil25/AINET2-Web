@@ -64,7 +64,7 @@ export default function Profile() {
       const formDataForUpload = new FormData();
       formDataForUpload.append("image", selectedFile);
 
-      const res = await fetch(`${baseUrl}client/auth/${profile.id}/profile`, {
+      const res = await fetch(`${baseUrl}/client/auth/${profile.id}/profile`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -114,7 +114,7 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`${baseUrl}client/auth/profile`, {
+      const res = await fetch(`${baseUrl}/client/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -167,7 +167,7 @@ export default function Profile() {
         formDataForSubmit.append("image", selectedFile);
       }
 
-      const res = await fetch(`${baseUrl}client/auth/${profile.id}/profile`, {
+      const res = await fetch(`${baseUrl}/client/auth/${profile.id}/profile`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

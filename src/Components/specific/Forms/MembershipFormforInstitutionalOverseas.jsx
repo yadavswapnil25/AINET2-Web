@@ -144,7 +144,7 @@ export default function MembershipFormforInstitutionalOverseas() {
     if (!email) return false; // skip if empty
 
     try {
-      const res = await fetch(`${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`${baseUrl}/client/eventValidationHandle?email=${encodeURIComponent(email)}`);
 
       if (!res.ok) {
         console.error("Failed to check email");
@@ -189,7 +189,7 @@ export default function MembershipFormforInstitutionalOverseas() {
     try {
       const payload = buildSignupPayload();
 
-      const response = await fetch(`${baseUrl}client/membership-signup`, {
+      const response = await fetch(`${baseUrl}/client/membership-signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

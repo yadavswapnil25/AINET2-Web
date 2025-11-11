@@ -19,7 +19,7 @@ export const createRazorpayOrder = async ({
     notes = {},
     customer = {},
 }) => {
-    const response = await fetch(`${baseUrl}client/payments/order`, {
+    const response = await fetch(`${baseUrl}/client/payments/order`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -113,7 +113,7 @@ export const confirmMembershipPayment = async ({
     razorpayPaymentId,
     razorpaySignature,
 }) => {
-    const response = await fetch(`${baseUrl}client/membership-signup/confirm`, {
+    const response = await fetch(`${baseUrl}/client/membership-signup/confirm`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -73,7 +73,7 @@ export default function Login() {
 
 
     try {
-      const res = await fetch(`${baseUrl}client/auth/login`, {
+      const res = await fetch(`${baseUrl}/client/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
