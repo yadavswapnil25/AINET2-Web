@@ -30,36 +30,9 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
           </h1>
           
           <p className="text-lg text-gray-600 mb-6">
-            Thank you for submitting your presentation proposal form. Your submission has been received and is being reviewed.
+            Thank you for submitting your delegate registration form. Your submission has been received and is being reviewed.
           </p>
 
-          {/* Additional Information */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold text-blue-900 mb-3">
-              What happens next?
-            </h2>
-            <ul className="text-left text-blue-800 space-y-2">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-               {line1}
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                {line2}
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                {line3}
-              </li>
-              <li className="flex items-start">
-                {line4===""&&(
-                <span className="text-blue-600 mr-2">•</span>
-                )}
-                {line4}
-              </li>
-              
-            </ul>
-          </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -83,10 +56,10 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
             <p className="text-sm text-gray-500">
               If you have any questions, please contact us at{' '}
               <a
-                href="mailto:info@ainet.org"
+                href="mailto:theainet@gmail.com"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                info@ainet.org
+                theainet@gmail.com
               </a>
             </p>
           </div>

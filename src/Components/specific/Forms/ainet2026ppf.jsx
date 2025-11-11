@@ -843,8 +843,10 @@ export default function AINET2026PresentationProposalForm() {
                     "Empowering English Language Education in the Digital Era"
                   </p>
                   <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
-                    Supported by British Council & RELO, American Embassy
-                  </p>
+                  <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">
+                    Supported by British Council &amp; RELO, American Embassy
+                  </span>
+                </p>
 
                   {/* Registration Button */}
                   <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-gray-700 hover:text-white transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
@@ -991,8 +993,8 @@ export default function AINET2026PresentationProposalForm() {
                             name="main_country_code"
                             value={formData.main_country_code}
                             onChange={handleChange}
-                            placeholder="Select Country"
-                            className="w-full  "
+                            placeholder="Select Country Code"
+                            className="w-full"
                           />
                         </div>
                         <div className="col-span-1 sm:col-span-2">

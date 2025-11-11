@@ -1,12 +1,52 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { baseUrl } from "../../../utils/constant";
+import { baseUrl, razorpayKey } from "../../../utils/constant";
 import Loader from "../../../Components/shared/Loader";
 import { toast } from "react-toastify";
 import { FaArrowRight } from "react-icons/fa";
 import CountryCodeSelector from "../../shared/CountryCodeSelector";
-import FormSubmissionConfirmation from "../../../Pages/FormSubmissionConfirmation";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const loadRazorpayScript = () =>
+  new Promise((resolve) => {
+    if (document.getElementById('razorpay-sdk')) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'razorpay-sdk';
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+
+const initialDrfFormData = {
+  is_ainet_member: "",
+  membership_id: "",
+  delegate_type: "",
+  supporting_document: null,
+  title: "",
+  full_name: "",
+  gender: "",
+  age_group: "",
+  institution_address: "",
+  correspondence_address: "",
+  city: "",
+  pincode: "",
+  state: "",
+  country_code: "",
+  mobile_no: "",
+  email: "",
+  areas_of_interest: "",
+  area_of_work: [],
+  other_work_area: "",
+  teaching_experience: "",
+  is_presenting: "",
+  presentation_type: [],
+};
 
 export default function AINET2026DelegateRegistrationForm() {
   const location = useLocation();
@@ -18,39 +58,11 @@ export default function AINET2026DelegateRegistrationForm() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isWorkAreaDropdownOpen, setIsWorkAreaDropdownOpen] = useState(false);
+  const [isFetchingExisting, setIsFetchingExisting] = useState(false);
+  const [hasPrefilledFromExisting, setHasPrefilledFromExisting] = useState(false);
   const workAreaDropdownRef = useRef(null);
-  const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
 
-  const [formData, setFormData] = useState({
-    // Basic Information
-    is_ainet_member: "",
-    membership_id: "",
-    delegate_type: "",
-    supporting_document: null,
-    title: "",
-    full_name: "",
-    gender: "",
-    age_group: "",
-    institution_address: "",
-    correspondence_address: "",
-    city: "",
-    pincode: "",
-    state: "",
-    country_code: "",
-    mobile_no: "",
-    email: "",
-
-    // Professional Information
-    areas_of_interest: "",
-    area_of_work: [],
-    other_work_area: "",
-    teaching_experience: "",
-
-    // Conference Participation
-    is_presenting: "",
-    presentation_type: [],
-
-  });
+  const [formData, setFormData] = useState(() => ({ ...initialDrfFormData }));
 
   const workAreas = [
     'Not Applicable',
@@ -64,6 +76,13 @@ export default function AINET2026DelegateRegistrationForm() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "email") {
+      const trimmedValue = value.trim();
+      if (trimmedValue && trimmedValue !== formData.email) {
+        setHasPrefilledFromExisting(false);
+      }
+    }
 
     if (
       type === "checkbox" &&
@@ -120,128 +139,283 @@ export default function AINET2026DelegateRegistrationForm() {
     };
   }, []);
 
-  // Form validation
-  const validateForm = () => {
-    const requiredFields = [
-      "delegate_type",
-      "title",
-      "full_name",
-      "country_code",
-      "gender",
-      "age_group",
-      "institution_address",
-      "correspondence_address",
-      "city",
-      "pincode",
-      "state",
-      "mobile_no",
-      "email",
-    ];
+  const prefillFormWithRecord = (record) => {
+    if (!record) return;
 
-    for (let field of requiredFields) {
-      if (!formData[field] || formData[field].toString().trim() === "") {
-        toast.error(`Please fill in the ${field.replace("_", " ")} field.`);
-        return false;
-      }
+    const areaArray = Array.isArray(record.area_of_work)
+      ? record.area_of_work
+      : record.area_of_work
+      ? record.area_of_work.split(',')
+      : [];
+    const sanitizedAreas = areaArray
+      .map((item) => (typeof item === "string" ? item.trim() : ""))
+      .filter(Boolean);
+
+    let otherWorkArea = record.other_work_area || "";
+    const areaSet = new Set(sanitizedAreas);
+    if (otherWorkArea && !areaSet.has("Other")) {
+      areaSet.add("Other");
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email address.");
-      return false;
+    if (!sanitizedAreas.includes("Other") && (otherWorkArea || areaSet.has("Other"))) {
+      areaSet.add("Other");
     }
 
-    if (!isEmailValid) {
-      return false;
-    }
+    const presentationArray = Array.isArray(record.presentation_type)
+      ? record.presentation_type
+      : record.presentation_type
+      ? record.presentation_type.split(',')
+      : [];
 
-    return true;
+    const normalizedCountryCode = record.country_code !== undefined && record.country_code !== null
+      ? String(record.country_code).replace(/^\+/, "")
+      : "";
+
+    const updatedData = {
+      ...initialDrfFormData,
+      is_ainet_member: (() => {
+        const rawMember = typeof record.member === "string" ? record.member.trim().toLowerCase() : String(record.member ?? "").trim().toLowerCase();
+        if (["yes", "1", "true"].includes(rawMember)) {
+          return "Yes";
+        }
+        if (["no", "0", "false"].includes(rawMember)) {
+          return "No";
+        }
+        return formData.is_ainet_member || "";
+      })(),
+      delegate_type: record.delegate_type || "",
+      title: record.title || "",
+      full_name: record.full_name || "",
+      gender: record.gender || "",
+      age_group: record.age ? String(record.age) : "",
+      institution_address: record.institution_address || "",
+      correspondence_address: record.correspondence_address || "",
+      city: record.city || "",
+      pincode: record.pincode || "",
+      state: record.state || "",
+      country_code: normalizedCountryCode,
+      mobile_no: record.mobile_no || "",
+      email: record.email || formData.email,
+      areas_of_interest: record.areas_of_interest || "",
+      area_of_work: Array.from(areaSet),
+      other_work_area: otherWorkArea || "",
+      teaching_experience: record.teaching_experience || "",
+      is_presenting: record.is_presenting || "",
+      presentation_type: presentationArray.map((item) => item.trim()).filter(Boolean),
+    };
+
+    setFormData(updatedData);
+    setCurrentStep(1);
+    if (!hasPrefilledFromExisting) {
+      toast.info("Existing registration details have been populated.");
+      setHasPrefilledFromExisting(true);
+    }
   };
 
-  // const checkEmailExists = async () => {
-  //   const email = formData.email;
-  //   if (!email) return;
+  const handleEmailBlur = async () => {
+    const email = formData.email?.trim();
+    if (!email || !emailRegex.test(email)) {
+      return;
+    }
 
-  //   // try {
-  //   //   const res = await fetch(
-  //   //     `${baseUrl}client/eventValidationHandle?email=${encodeURIComponent(
-  //   //       email
-  //   //     )}`
-  //   //   );
+    try {
+      setIsFetchingExisting(true);
+      const response = await fetch(`${baseUrl}/client/ainet2020drf/check?email=${encodeURIComponent(email)}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+      const result = await response.json();
 
-  //   //   if (!res.ok) {
-  //   //     console.error("Failed to check email");
-  //   //     return false;
-  //   //   }
+      if (!response.ok || result?.status === false) {
+        return;
+      }
 
-  //   //   const data = await res.json();
-
-  //   //   if (!data.status || data.status === false) {
-  //   //     setIsEmailValid(false);
-  //   //     toast.warning("❌ Email already exists. Please use a different email.");
-  //   //     return false;
-  //   //   } else {
-  //   //     setIsEmailValid(true);
-  //   //     return true;
-  //   //   }
-  //   // } catch (error) {
-  //   //   console.error("Error checking email:", error);
-  //   //   return false;
-  //   // }
-  // };
-
+      if (result?.data?.exists && result.data.drf) {
+        prefillFormWithRecord(result.data.drf);
+      }
+    } catch (error) {
+      console.error("Failed to fetch existing DRF record:", error);
+    } finally {
+      setIsFetchingExisting(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault();
     }
+ 
+    if (!isFormValid()) return;
 
-    if (!validateForm()) return;
+    const payload = {
+      member: formData.is_ainet_member,
+      you_are_register_as: formData.delegate_type,
+      pre_title: formData.title,
+      name: formData.full_name,
+      gender: formData.gender,
+      age: Number(formData.age_group) || 0,
+      institution: formData.institution_address,
+      address: formData.correspondence_address,
+      city: formData.city,
+      pincode: formData.pincode,
+      state: formData.state,
+      country_code: formData.country_code ? `+${formData.country_code.replace(/^\+/, "")}` : "",
+      phone_no: formData.mobile_no.replace(/\s+/g, ""),
+      email: formData.email,
+      areas: formData.area_of_work,
+      other: formData.other_work_area,
+      experience: formData.teaching_experience,
+      conference: formData.is_presenting === "YES" ? "Yes" : "No",
+      types: formData.is_presenting === "YES" ? formData.presentation_type : [],
+    };
 
     try {
       setLoading(true);
       setIsSubmitting(true);
 
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      toast.success("✅ Delegate registration submitted successfully!");
-      navigate('/form-submission-confirmation');
-      
-      // Reset form
-      setFormData({
-        is_ainet_member: "",
-        membership_id: "",
-        delegate_type: "",
-        supporting_document: null,
-        title: "",
-        full_name: "",
-        gender: "",
-        age_group: "",
-        institution_address: "",
-        correspondence_address: "",
-        city: "",
-        pincode: "",
-        state: "",
-        country_code: "",
-        mobile_no: "",
-        email: "",
-        areas_of_interest: "",
-        area_of_work: [],
-        other_work_area: "",
-        teaching_experience: "",
-        is_presenting: "",
-        presentation_type: [],
+      const response = await fetch(`${baseUrl}/client/ainet2020drf`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      setSelectedFile(null);
 
-    } catch (error) {
-      toast.error(`❌ Registration Failed: ${error}`);
-      console.error("Submission Error:", error);
-    } finally {
-      setIsSubmitting(false);
-      setLoading(false);
+      let result = null;
+      try {
+        result = await response.json();
+      } catch (parseError) {
+        result = null;
+      }
+ 
+      if (!response.ok || (result && result.status === false)) {
+        const errorMessage =
+          result?.errors && typeof result.errors === "object"
+            ? Object.values(result.errors)[0]?.[0] || result.message
+            : result?.message;
+        throw new Error(errorMessage || "Failed to submit registration.");
+      }
+ 
+      const drfId = result?.data?.id;
+
+      if (!drfId) {
+        throw new Error("Missing registration reference.");
+      }
+
+      await startDrfPaymentFlow(drfId);
+ 
+       toast.success("✅ Delegate registration and payment completed successfully!");
+       setFormData({ ...initialDrfFormData });
+       setSelectedFile(null);
+       setCurrentStep(1);
+       setHasPrefilledFromExisting(false);
+       navigate("/form-submission-confirmation");
+     } catch (error) {
+       console.error("Submission Error:", error);
+       toast.error(`❌ ${error?.message || 'Registration or payment failed. Please try again.'}`);
+     } finally {
+       setIsSubmitting(false);
+       setLoading(false);
+     }
+   };
+
+  const startDrfPaymentFlow = async (drfId) => {
+    const orderResponse = await fetch(`${baseUrl}/client/ainet2020drf/payment/order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ drf_id: drfId }),
+    });
+
+    const orderResult = await orderResponse.json();
+
+    if (!orderResponse.ok || orderResult?.status === false) {
+      const message = orderResult?.message || "Unable to initiate payment.";
+      throw new Error(message);
     }
+
+    const orderData = orderResult?.data?.order;
+    const orderAmount = orderResult?.data?.amount;
+    const orderCurrency = orderResult?.data?.currency || (orderData?.currency ?? "INR");
+    const orderId = orderData?.id;
+    const key = orderResult?.data?.key || razorpayKey;
+
+    if (!orderId || !orderAmount) {
+      throw new Error("Invalid payment order details.");
+    }
+
+    const sdkLoaded = await loadRazorpayScript();
+    if (!sdkLoaded) {
+      throw new Error("Unable to load Razorpay SDK. Please check your connection.");
+    }
+
+    const contactNumber = formData.mobile_no ? `${formData.country_code ? `+${formData.country_code}` : ""}${formData.mobile_no}` : undefined;
+
+    await new Promise((resolve, reject) => {
+      const options = {
+        key,
+        amount: orderAmount,
+        currency: orderCurrency,
+        name: "AINET",
+        description: "AINET 2026 Delegate Registration",
+        order_id: orderId,
+        prefill: {
+          name: formData.full_name || "",
+          email: formData.email || "",
+          contact: contactNumber || "",
+        },
+        notes: {
+          drf_id: String(drfId),
+          delegate_type: formData.delegate_type || "",
+        },
+        theme: { color: "#0f172a" },
+        handler: async (response) => {
+          try {
+            const confirmResponse = await fetch(`${baseUrl}/client/ainet2020drf/payment/confirm`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({
+                drf_id: drfId,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const confirmResult = await confirmResponse.json();
+
+            if (!confirmResponse.ok || confirmResult?.status === false) {
+              reject(new Error(confirmResult?.message || "Payment confirmation failed."));
+              return;
+            }
+
+            resolve(true);
+          } catch (confirmationError) {
+            reject(confirmationError);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            reject(new Error("Payment popup closed before completion."));
+          },
+        },
+      };
+
+      const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.on("payment.failed", (response) => {
+        reject(new Error(response?.error?.description || "Payment failed."));
+      });
+
+      razorpayInstance.open();
+    });
   };
 
 
@@ -303,6 +477,10 @@ export default function AINET2026DelegateRegistrationForm() {
       return false;
     }
 
+    if (!formData.teaching_experience || formData.teaching_experience.toString().trim() === "") {
+      return false;
+    }
+
     if (!formData.is_presenting) {
       return false;
     }
@@ -325,6 +503,17 @@ export default function AINET2026DelegateRegistrationForm() {
     // Validate membership ID if member is selected
     if (formData.is_ainet_member === "Yes" && !formData.membership_id.trim()) {
       toast.error("Please enter your AINET membership ID.");
+      return false;
+    }
+
+    if (!formData.email || formData.email.toString().trim() === "") {
+      toast.error("Please enter your email address.");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address.");
       return false;
     }
 
@@ -367,7 +556,6 @@ export default function AINET2026DelegateRegistrationForm() {
       "state",
       "country_code",
       "mobile_no",
-      "email",
     ];
     for (let field of requiredFields) {
       if (!formData[field] || formData[field].toString().trim() === "") {
@@ -376,23 +564,10 @@ export default function AINET2026DelegateRegistrationForm() {
       }
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email address.");
-      return false;
-    }
-
     // Validate mobile number format
     const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(formData.mobile_no.replace(/\D/g, ""))) {
       toast.error("Please enter a valid 10-digit mobile number.");
-      return false;
-    }
-
-    // Check email validation status
-    if (!isEmailValid) {
-      toast.error("Please use a different email address.");
       return false;
     }
     
@@ -413,6 +588,11 @@ export default function AINET2026DelegateRegistrationForm() {
       return false;
     }
     
+    if (!formData.teaching_experience || formData.teaching_experience.toString().trim() === "") {
+      toast.error("Please select your teaching experience.");
+      return false;
+    }
+
     return true;
   };
 
@@ -514,7 +694,9 @@ export default function AINET2026DelegateRegistrationForm() {
                   "Empowering English Language Education in the Digital Era"
                 </p>
                 <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
-                  Supported by British Council & RELO, American Embassy
+                  <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">
+                    Supported by British Council &amp; RELO, American Embassy
+                  </span>
                 </p>
 
                 {/* Registration Button */}
@@ -566,6 +748,21 @@ export default function AINET2026DelegateRegistrationForm() {
                     <h2 className="text-white text-lg font-semibold">
                       AINET Membership Information
                     </h2>
+                  </div>
+
+                  <div>
+                    <label className="block text-base font-semibold mb-1 text-gray-700">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      onBlur={handleEmailBlur}
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Enter your email"
+                      className="w-full p-3 border border-gray-300 rounded text-sm"
+                    />
                   </div>
 
                   <div className="space-y-3">
@@ -852,7 +1049,8 @@ export default function AINET2026DelegateRegistrationForm() {
                           name="country_code"
                           value={formData.country_code}
                           onChange={handleChange}
-                          placeholder="+91"
+                          placeholder="Select Country Code"
+                          preferredDirection="up"
                           className="w-full"
                         />
                       </div>
@@ -870,21 +1068,6 @@ export default function AINET2026DelegateRegistrationForm() {
                           className="w-full p-3 border border-gray-300 rounded text-sm"
                         />
                       </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Email: <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        // onBlur={checkEmailExists}
-                        onChange={handleChange}
-                        placeholder="Enter Your Email"
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
-                      />
                     </div>
                   </div>
                 </div>
@@ -979,22 +1162,22 @@ export default function AINET2026DelegateRegistrationForm() {
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Teaching Experience (Years):
+                        Teaching Experience (Years): <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="teaching_experience"
                         value={formData.teaching_experience}
                         onChange={handleChange}
+                        required
                         className="w-full p-3 border border-gray-300 rounded text-sm"
                       >
                         <option value="">Select Experience</option>
-                        <option value="Not Applicable">Not Applicable</option>
-                        <option value="0-5">0-5</option>
-                        <option value="6-10">6-10</option>
-                        <option value="11-15">11-15</option>
-                        <option value="16-20">16-20</option>
-                        <option value="21-25">21-25</option>
-                        <option value="Over 25">Over 25</option>
+                        <option value="Less than 2 years">Less than 2 years</option>
+                        <option value="2-5 years">2-5 years</option>
+                        <option value="5-10 years">5-10 years</option>
+                        <option value="10-15 years">10-15 years</option>
+                        <option value="15-20 years">15-20 years</option>
+                        <option value="Over 20 years">Over 20 years</option>
                       </select>
                     </div>
                   </div>
@@ -1047,7 +1230,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           If yes, what are you presenting?
                         </label>
                         <div className="grid grid-cols-2 gap-3">
-                          {["Paper", "Poster"].map((type) => (
+                          {["Paper", "Poster", "Virtual Presentation", "Workshop"].map((type) => (
                             <label
                               key={type}
                               className="flex items-center  cursor-pointer hover:bg-gray-50"
@@ -1080,23 +1263,23 @@ export default function AINET2026DelegateRegistrationForm() {
                       <div className="grid grid-cols-2 gap-4 mb-8">
                         <div>
                           <h5 className="font-semibold mb-3 text-blue-800 text-sm">
-                            Up to 31 December 2021
+                            Up to 25 December 2025
                           </h5>
                           <div className="space-y-2 text-sm">
-                            <p>• India & SAARC countries: INR 1,500</p>
-                            <p>• Other countries (USD 25)</p>
-                            <p>• Students & trainee teachers (INR 500)</p>
+                            <p>• Teachers and PG students: INR 1200</p>
+                            <p>• Other Including teachers: INR 2500</p>
+                            <p>• All Overseas participants: INR 5000</p>
                           </div>
                         </div>
                         <div>
                           <h5 className="font-semibold mb-3 text-blue-800 text-sm">
                             {" "}
-                            From 1 Jan 2022
+                            After 25 December 2025
                           </h5>
                           <div className="space-y-2 text-sm">
-                            <p>• India & SAARC countries: INR 2,000</p>
-                            <p>• Other countries (USD 50)</p>
-                            <p>• Students & trainee teachers (INR 1000)</p>
+                            <p>• Teachers and PG students: INR 2000</p>
+                            <p>• Other Including teachers: INR 3500</p>
+                            <p>• All Overseas participants: INR 5000</p>
                           </div>
                         </div>
                       </div>
@@ -1148,14 +1331,7 @@ export default function AINET2026DelegateRegistrationForm() {
         </div>
       </div>
       
-      {formSubmissionConfirmation && (
-        <FormSubmissionConfirmation
-          line1="You will be added to the delegates database."
-          line2="You will receive conference details and joining instructions nearer the time."
-          line3="Keep checking your email for further updates and instructions."
-          // line4="Thank you for registering for the conference"
-        />
-      )}
+      {/* Removed formSubmissionConfirmation and related ref */}
     </>
   );
 }

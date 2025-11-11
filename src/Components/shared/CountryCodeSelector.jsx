@@ -6,7 +6,9 @@ const CountryCodeSelector = ({
   name, 
   placeholder = "Select Country", 
   className = "",
-  required = false 
+  required = false,
+  dropdownHeight = 320,
+  preferredDirection = 'auto'
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,6 +16,9 @@ const CountryCodeSelector = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
+  const initialDirection = preferredDirection === 'up' ? 'up' : 'down';
+  const [dropDirection, setDropDirection] = useState(initialDirection);
 
   // Fetch countries data from free API
   useEffect(() => {
@@ -44,8 +49,20 @@ const CountryCodeSelector = ({
             };
           })
           .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-        
-        setCountries(transformedCountries);
+
+        const indiaEntry = transformedCountries.find(country => country.dialCode === '91');
+        let orderedCountries = transformedCountries;
+
+        if (indiaEntry) {
+          orderedCountries = [indiaEntry, ...transformedCountries.filter(country => country.dialCode !== '91')];
+        } else {
+          orderedCountries = [
+            { name: 'India', code: '+91', flag: '🇮🇳', dialCode: '91' },
+            ...transformedCountries
+          ];
+        }
+
+        setCountries(orderedCountries);
       } catch (err) {
         console.error('Error fetching countries:', err);
         setError(err.message);
@@ -72,15 +89,24 @@ const CountryCodeSelector = ({
     fetchCountries();
   }, []);
 
+  const topCountryDialCode = '91';
+  const topCountry = countries.find(country => country.dialCode === topCountryDialCode);
+
   // Filter countries based on search term
-  const filteredCountries = countries.filter(country => {
+  const filteredCountries = (() => {
     const searchLower = searchTerm.toLowerCase();
-    return (
+
+    if (searchLower.length === 0) {
+      const remaining = countries.filter(country => country.dialCode !== topCountryDialCode);
+      return topCountry ? [topCountry, ...remaining] : countries;
+    }
+
+    return countries.filter(country =>
       country.name.toLowerCase().includes(searchLower) ||
       country.code.toLowerCase().includes(searchLower) ||
       country.dialCode.includes(searchTerm)
     );
-  });
+  })();
 
   // Get selected country - handle cases where multiple countries share the same dial code
   const selectedCountry = countries.find(country => country.dialCode === value);
@@ -109,11 +135,58 @@ const CountryCodeSelector = ({
     });
     setIsOpen(false);
     setSearchTerm('');
+    setDropDirection('down');
   };
 
   const handleToggle = () => {
+    if (loading) return;
+
+    if (!isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const estimatedHeight = dropdownHeight;
+
+      if (preferredDirection === 'up') {
+        setDropDirection('up');
+        const offsetTop = rect.top - estimatedHeight - 20;
+        if (offsetTop < window.scrollY) {
+          window.scrollTo({ top: Math.max(offsetTop, 0), behavior: 'smooth' });
+        }
+      } else if (preferredDirection === 'down') {
+        setDropDirection('down');
+        const offsetBottom = rect.bottom + estimatedHeight;
+        if (offsetBottom > window.scrollY + window.innerHeight) {
+          const newTop = offsetBottom - window.innerHeight + 20;
+          window.scrollTo({ top: newTop, behavior: 'smooth' });
+        }
+      } else {
+        const availableBelow = window.innerHeight - rect.bottom;
+        const availableAbove = rect.top;
+
+        if (availableBelow < estimatedHeight && availableAbove > availableBelow) {
+          setDropDirection('up');
+          const offsetTop = rect.top - estimatedHeight - 20;
+          if (offsetTop < window.scrollY) {
+            window.scrollTo({ top: Math.max(offsetTop, 0), behavior: 'smooth' });
+          }
+        } else {
+          setDropDirection('down');
+          const offsetBottom = rect.bottom + estimatedHeight;
+          if (offsetBottom > window.scrollY + window.innerHeight) {
+            const newTop = offsetBottom - window.innerHeight + 20;
+            window.scrollTo({ top: newTop, behavior: 'smooth' });
+          }
+        }
+      }
+
+      setSearchTerm('');
+    }
+
+    if (isOpen) {
+      setDropDirection(preferredDirection === 'up' ? 'up' : (preferredDirection === 'down' ? 'down' : initialDirection));
+    }
+
     setIsOpen(!isOpen);
-    if (!isOpen) {
+    if (isOpen) {
       setSearchTerm('');
     }
   };
@@ -131,6 +204,7 @@ const CountryCodeSelector = ({
         type="button"
         onClick={handleToggle}
         disabled={loading}
+        ref={buttonRef}
         className={`w-full p-3 border border-gray-300 rounded text-sm bg-white text-left flex items-center justify-between hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
           !selectedCountry ? 'text-gray-500' : 'text-gray-900'
         } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -169,7 +243,11 @@ const CountryCodeSelector = ({
       </button>
 
       {isOpen && !loading && !error && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden">
+        <div
+          className={`absolute z-50 w-full ${
+            dropDirection === 'up' ? 'bottom-full mb-1' : 'mt-1'
+          } bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden`}
+        >
           {/* Search Input */}
           <div className="p-2 border-b border-gray-200">
             <div className="relative">
