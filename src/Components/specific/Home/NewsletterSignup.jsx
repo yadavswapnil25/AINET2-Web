@@ -32,7 +32,7 @@ export default function NewsletterSignup() {
 
     try {
       setLoading(true);
-      const res = await fetch(`${baseUrl}client/newsletter/subscribe`, {
+      const res = await fetch(`${baseUrl}/client/newsletter/subscribe`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
