@@ -74,6 +74,45 @@ export default function AINET2026DelegateRegistrationForm() {
     'Other'
   ];
 
+  const indianStates = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
+  ];
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -265,6 +304,7 @@ export default function AINET2026DelegateRegistrationForm() {
       phone_no: formData.mobile_no.replace(/\s+/g, ""),
       email: formData.email,
       areas: formData.area_of_work,
+      areas_of_interest: formData.areas_of_interest,
       other: formData.other_work_area,
       experience: formData.teaching_experience,
       conference: formData.is_presenting === "YES" ? "Yes" : "No",
@@ -1022,14 +1062,19 @@ export default function AINET2026DelegateRegistrationForm() {
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
                         State: <span className="text-red-500">*</span>
                       </label>
-                      <input
-                        type="text"
+                      <select
                         name="state"
                         value={formData.state}
                         onChange={handleChange}
-                        placeholder="Enter Your State"
                         className="w-full p-3 border border-gray-300 rounded text-sm"
-                      />
+                      >
+                        <option value="">Select State / Union Territory</option>
+                        {indianStates.map((stateName) => (
+                          <option key={stateName} value={stateName}>
+                            {stateName}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
