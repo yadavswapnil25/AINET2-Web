@@ -13,7 +13,10 @@ const CountryCodeSelector = ({
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openUpward, setOpenUpward] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
   const dropdownRef = useRef(null);
+  const dropdownMenuRef = useRef(null);
 
   // Fetch countries data from free API
   useEffect(() => {
@@ -72,8 +75,15 @@ const CountryCodeSelector = ({
     fetchCountries();
   }, []);
 
+  // Recent country code (India +91)
+  const recentCountry = { name: 'India', code: '+91', flag: '🇮🇳', dialCode: '91' };
+
   // Filter countries based on search term
   const filteredCountries = countries.filter(country => {
+    // Exclude India from main list if it's in the recent section
+    if (country.dialCode === '91' && country.name === 'India') {
+      return false;
+    }
     const searchLower = searchTerm.toLowerCase();
     return (
       country.name.toLowerCase().includes(searchLower) ||
@@ -82,23 +92,68 @@ const CountryCodeSelector = ({
     );
   });
 
+  // Check if recent country matches search
+  const showRecentCountry = !searchTerm || 
+    recentCountry.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    recentCountry.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    recentCountry.dialCode.includes(searchTerm);
+
   // Get selected country - handle cases where multiple countries share the same dial code
-  const selectedCountry = countries.find(country => country.dialCode === value);
+  // Check recent country first, then main list
+  const selectedCountry = value === '91' ? recentCountry : countries.find(country => country.dialCode === value);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      const isClickInsideButton = dropdownRef.current?.contains(event.target);
+      const isClickInsideMenu = dropdownMenuRef.current?.contains(event.target);
+      
+      if (!isClickInsideButton && !isClickInsideMenu) {
         setIsOpen(false);
         setSearchTerm('');
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [isOpen]);
+
+  // Update dropdown position on scroll/resize when open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const updatePosition = () => {
+      if (dropdownRef.current) {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const spaceBelow = viewportHeight - rect.bottom;
+        const dropdownHeight = 240;
+        
+        const shouldOpenUpward = spaceBelow < dropdownHeight + 20;
+        setOpenUpward(shouldOpenUpward);
+        
+        setDropdownPosition({
+          top: shouldOpenUpward 
+            ? rect.top - dropdownHeight - 4 
+            : rect.bottom + 4,
+          left: rect.left,
+          width: rect.width
+        });
+      }
     };
-  }, []);
+
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [isOpen]);
 
   const handleSelect = (country) => {
     onChange({
@@ -112,9 +167,35 @@ const CountryCodeSelector = ({
   };
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    if (newIsOpen) {
       setSearchTerm('');
+      // Calculate position when opening
+      setTimeout(() => {
+        if (dropdownRef.current) {
+          const rect = dropdownRef.current.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          const spaceBelow = viewportHeight - rect.bottom;
+          const dropdownHeight = 240; // max-h-60 = 240px approximately
+          
+          // If there's not enough space below (less than dropdown height + some margin), open upward
+          const shouldOpenUpward = spaceBelow < dropdownHeight + 20;
+          setOpenUpward(shouldOpenUpward);
+          
+          // Set dropdown position for fixed positioning
+          setDropdownPosition({
+            top: shouldOpenUpward 
+              ? rect.top - dropdownHeight - 4 
+              : rect.bottom + 4,
+            left: rect.left,
+            width: rect.width
+          });
+          
+          // Scroll the dropdown into view when it opens
+          dropdownRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 100);
     }
   };
 
@@ -126,7 +207,7 @@ const CountryCodeSelector = ({
   }, [isOpen]);
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative z-30 ${className}`} ref={dropdownRef}>
       <button
         type="button"
         onClick={handleToggle}
@@ -169,7 +250,15 @@ const CountryCodeSelector = ({
       </button>
 
       {isOpen && !loading && !error && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden">
+        <div 
+          ref={dropdownMenuRef}
+          className="fixed z-[9999] bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-hidden"
+          style={{
+            top: `${dropdownPosition.top}px`,
+            left: `${dropdownPosition.left}px`,
+            width: `${dropdownPosition.width}px`
+          }}
+        >
           {/* Search Input */}
           <div className="p-2 border-b border-gray-200">
             <div className="relative">
@@ -189,6 +278,38 @@ const CountryCodeSelector = ({
 
           {/* Country List */}
           <div className="max-h-48 overflow-y-auto">
+            {/* Recent Section */}
+            {showRecentCountry && (
+              <>
+                <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase bg-gray-50 border-b border-gray-200">
+                  Recent
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleSelect(recentCountry)}
+                  className={`w-full p-3 text-left hover:bg-gray-50 flex items-center ${
+                    selectedCountry?.dialCode === recentCountry.dialCode ? 'bg-blue-50 text-blue-600' : 'text-gray-900'
+                  }`}
+                >
+                  <span className="text-lg mr-3">{recentCountry.flag}</span>
+                  <div className="flex-1">
+                    <div className="text-sm text-gray-500">{recentCountry.code}</div>
+                  </div>
+                  {selectedCountry?.dialCode === recentCountry.dialCode && (
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </button>
+                {filteredCountries.length > 0 && (
+                  <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase bg-gray-50 border-t border-b border-gray-200 mt-1">
+                    All Countries
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* All Countries List */}
             {filteredCountries.length > 0 ? (
               filteredCountries.map((country, index) => (
                 <button
@@ -211,11 +332,11 @@ const CountryCodeSelector = ({
                   )}
                 </button>
               ))
-            ) : (
+            ) : !showRecentCountry ? (
               <div className="p-3 text-center text-gray-500 text-sm">
                 {searchTerm ? `No countries found for "${searchTerm}"` : 'No countries available'}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       )}

@@ -591,7 +591,7 @@ export default function MembershipFormForIndividualOverseas() {
                                     yearDropdownItemNumber={100}
                                     scrollableYearDropdown
                                     dropdownMode="select"
-                                    placeholderText="Select your date of birth"
+                                    placeholderText="Select Your Date of Birth"
                                     dateFormat="yyyy-MM-dd"
                                     className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
@@ -653,7 +653,7 @@ export default function MembershipFormForIndividualOverseas() {
                             </label>
                             <textarea
                                 name="address"
-                                placeholder="Enter Your Address"
+                                placeholder="Enter Your Correspondence Address"
                                 value={formData.address}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-white rounded border border-gray-300"
@@ -734,7 +734,7 @@ export default function MembershipFormForIndividualOverseas() {
                                 options={areaOfWorkOptions}
                                 selected={formData.area_of_work}
                                 onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
-                                placeholder="Select areas of work"
+                                placeholder="Select Areas of Your Work"
                                 name="area_of_work"
                             />
                         </div>
@@ -754,13 +754,14 @@ export default function MembershipFormForIndividualOverseas() {
                         </div>
 
                         <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">Like to receive newsletter ?</label>
+                            <label className="block text-base font-semibold mb-1">Like to receive our newsletter ?</label>
                             <select
                                 name="receive_newsletter"
                                 value={formData.receive_newsletter}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                             >
+                                <option value="">Select Option</option>
                                 <option value="YES">YES</option>
                                 <option value="NO">NO</option>
                             </select>

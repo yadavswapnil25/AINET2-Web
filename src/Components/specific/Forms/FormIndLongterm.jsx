@@ -111,9 +111,11 @@ export default function FormIndLongterm() {
         mobile: '',
         whatsapp_no: '',
         area_of_work: [],
+        area_of_work_other: '',
         qualification: [],
         email: '',
         address: '',
+        address_institution: '',
         state: '',
         district: '',
         password: '',
@@ -121,10 +123,10 @@ export default function FormIndLongterm() {
         membership_type: "Individual",
         membership_plan: "LongTerm",
         password_confirmation: '',
-        has_member_any: false,
+        has_member_any: '',
         name_association: '',
         expectation: '',
-        has_newsletter: false,
+        has_newsletter: '',
 
 
 
@@ -245,25 +247,26 @@ export default function FormIndLongterm() {
                 }
             }));
         } else {
-            // Convert string values to boolean for specific fields
-            let finalValue = value;
-            if (name === 'has_member_any' || name === 'has_newsletter') {
-                finalValue = value === 'true';
-            }
-
             setFormData(prev => ({
                 ...prev,
-                [name]: finalValue
+                [name]: value
             }));
         }
     };
 
     // Handle multi-select changes
     const handleMultiSelectChange = (name, selectedValues) => {
-        setFormData(prev => ({
-            ...prev,
-            [name]: selectedValues
-        }));
+        setFormData(prev => {
+            const updated = {
+                ...prev,
+                [name]: selectedValues
+            };
+            // Clear area_of_work_other if "Other" is deselected
+            if (name === 'area_of_work' && !selectedValues.includes('Other')) {
+                updated.area_of_work_other = '';
+            }
+            return updated;
+        });
     };
 
     // Handle state change to update districts
@@ -320,6 +323,7 @@ export default function FormIndLongterm() {
 
         if (formData.qualification.length === 0) return false;
         if (formData.area_of_work.length === 0) return false;
+        if (formData.area_of_work.includes('Other') && !formData.area_of_work_other?.trim()) return false;
         if (!formData.agree) return false;
 
         if (!isEmailValid) return false;
@@ -349,6 +353,11 @@ export default function FormIndLongterm() {
 
         if (formData.area_of_work.length === 0) {
             toast.error("Please select at least one area of work.");
+            return false;
+        }
+
+        if (formData.area_of_work.includes('Other') && !formData.area_of_work_other?.trim()) {
+            toast.error("Please specify your area of work when 'Other' is selected.");
             return false;
         }
 
@@ -440,13 +449,20 @@ export default function FormIndLongterm() {
         setLoading(true);
 
         try {
+            // Convert string values to booleans for API
+            const payload = {
+                ...formData,
+                has_member_any: formData.has_member_any === 'true' || formData.has_member_any === true ? true : false,
+                has_newsletter: formData.has_newsletter === 'true' || formData.has_newsletter === true ? true : false,
+            };
+
             const response = await fetch(`${baseUrl}client/membership-signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Accept: "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json().catch(() => ({}));
@@ -532,16 +548,17 @@ export default function FormIndLongterm() {
                 teaching_exp: "",
                 qualification: [],
                 area_of_work: [],
+                area_of_work_other: "",
                 password: "",
                 agree: false,
                 membership_type: "Individual",
                 membership_plan: "LongTerm",
                 pin: "",
                 password_confirmation: "",
-                has_member_any: false,
+                has_member_any: '',
                 name_association: '',
                 expectation: '',
-                has_newsletter: false,
+                has_newsletter: '',
                 title: '',
                 address_institution: '',
                 name_institution: '',
@@ -643,7 +660,7 @@ export default function FormIndLongterm() {
                                 <input
                                     type="text"
                                     name="first_name"
-                                    placeholder="Enter Your Name"
+                                    placeholder="Enter Your First Name"
                                     value={formData.first_name}
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -657,7 +674,7 @@ export default function FormIndLongterm() {
                                 <input
                                     type="text"
                                     name="last_name"
-                                    placeholder="Enter Your Name"
+                                    placeholder="Enter Your Last Name"
                                     value={formData.last_name}
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -676,7 +693,7 @@ export default function FormIndLongterm() {
                                     className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                                     required
                                 >
-                                    <option value="">Select Your Gender</option> 
+                                    <option value="" disabled>Select Your Gender</option> 
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                     <option value="other">Other</option>
@@ -702,7 +719,7 @@ export default function FormIndLongterm() {
                                         yearDropdownItemNumber={100}
                                         scrollableYearDropdown
                                         dropdownMode="select"
-                                        placeholderText="Select your date of birth"
+                                        placeholderText="Select Your Date of Birth"
                                         dateFormat="yyyy-MM-dd"
                                         className="w-full p-2 bg-white rounded border border-gray-300"
                                         required
@@ -751,7 +768,7 @@ export default function FormIndLongterm() {
                                 <input
                                     type="text"
                                     name="pin"
-                                    placeholder="Enter Your PIN"
+                                    placeholder="Enter Your PIN Code"
                                     value={formData.pin}
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -767,12 +784,26 @@ export default function FormIndLongterm() {
                             </label>
                             <textarea
                                 name="address"
-                                placeholder="Enter Your Address"
+                                placeholder="Enter Your Correspondence Address"
                                 value={formData.address}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-white rounded border border-gray-300"
                                 rows="3"
                                 required
+                            ></textarea>
+                        </div>
+
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Address (Institutional) :
+                            </label>
+                            <textarea
+                                name="address_institution"
+                                placeholder="Enter Your Institutional Address"
+                                value={formData.address_institution}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                rows="3"
                             ></textarea>
                         </div>
 
@@ -852,15 +883,31 @@ export default function FormIndLongterm() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
-                                    Area's of your work : <span className="text-red-500">*</span>
+                                    Area(s) of your work : <span className="text-red-500">*</span>
                                 </label>
                                 <MultiSelectDropdown
                                     options={areaOfWorkOptions}
                                     selected={formData.area_of_work}
                                     onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
-                                    placeholder="Select areas of work"
+                                    placeholder="Select Areas of Your Work"
                                     name="area_of_work"
                                 />
+                                {formData.area_of_work.includes('Other') && (
+                                    <div className="mt-2">
+                                        <label className="block text-sm font-semibold mb-1">
+                                            Please specify : <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="area_of_work_other"
+                                            placeholder="Enter your area of work"
+                                            value={formData.area_of_work_other}
+                                            onChange={handleChange}
+                                            className="w-full p-2 bg-white rounded border border-gray-300"
+                                            required
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             <div>
@@ -871,7 +918,7 @@ export default function FormIndLongterm() {
                                     options={qualificationOptions}
                                     selected={formData.qualification}
                                     onChange={(selected) => handleMultiSelectChange('qualification', selected)}
-                                    placeholder="Select qualifications"
+                                    placeholder="Select Added Qualification"
                                     name="qualification"
                                 />
                             </div>
@@ -890,13 +937,13 @@ export default function FormIndLongterm() {
                                 required
                             >
                                 <option value="">Select Option</option>
-                                <option value={true}>YES</option>
-                                <option value={false}>NO</option>
+                                <option value="true">YES</option>
+                                <option value="false">NO</option>
                             </select>
                         </div>
 
 
-                        {formData.has_member_any === true && (
+                        {(formData.has_member_any === true || formData.has_member_any === 'true') && (
                             <div className="mt-4">
                                 <label className="block text-base font-semibold mb-1">
                                     Name of the Association(s) : <span className="text-red-500">*</span>
@@ -908,7 +955,7 @@ export default function FormIndLongterm() {
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
                                     rows="2"
-                                    required={formData.has_member_any === true}
+                                    required={formData.has_member_any === true || formData.has_member_any === 'true'}
                                 />
                             </div>
                         )}
@@ -930,15 +977,16 @@ export default function FormIndLongterm() {
                         </div>
 
                         <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">Like to receive newsletter ?</label>
+                            <label className="block text-base font-semibold mb-1">Like to receive our newsletter ?</label>
                             <select
                                 name="has_newsletter"
                                 value={formData.has_newsletter}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                             >
-                                <option value={true}>YES</option>
-                                <option value={false}>NO</option>
+                                <option value="">Select Option</option>
+                                <option value="true">YES</option>
+                                <option value="false">NO</option>
                             </select>
                         </div>
 

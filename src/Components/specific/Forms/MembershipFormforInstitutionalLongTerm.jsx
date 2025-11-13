@@ -478,7 +478,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
             <div className="space-y-2 px-1">
               <div>
-                <label className="block text-base mb-2 mt-1">Name of the Institution : <span className="text-red-500">*</span></label>
+                <label className="block text-base font-semibold mb-2 mt-1">Name of the Institution : <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   name="institution_name"
@@ -492,7 +492,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Type of institution : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Type of institution : <span className="text-red-500">*</span></label>
                   <select
                     name="institution_type"
                     value={formData.institution_type}
@@ -508,7 +508,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                   </select>
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Other :</label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Other :</label>
                   <input
                     type="text"
                     name="other_type"
@@ -522,7 +522,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
                   <input
                     type="tel"
                     maxLength={10}
@@ -536,7 +536,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">WhatsApp No. :</label>
+                  <label className="block text-base font-semibold mb-2 mt-1">WhatsApp No. :</label>
                   <input
                     type="tel"
                     maxLength={10}
@@ -552,7 +552,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Email : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Email : <span className="text-red-500">*</span></label>
                   <input
                     type="email"
                     name="email"
@@ -565,7 +565,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Website :</label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Website :</label>
                   <input
                     type="text"
                     name="website"
@@ -578,7 +578,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Address (Institutional) : <span className="text-red-500">*</span></label>
+                <label className="block text-base font-semibold mb-2 mt-1">Address (Institutional) : <span className="text-red-500">*</span></label>
                 <textarea
                   name="address"
                   value={formData.address}
@@ -592,7 +592,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">State : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">State : <span className="text-red-500">*</span></label>
                   <select
                     name="state"
                     value={formData.state}
@@ -617,7 +617,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                   {error.states && <p className="text-red-500 text-xs mt-1">{error.states}</p>}
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">District : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">District : <span className="text-red-500">*</span></label>
                   <select
                     name="district"
                     value={formData.district}
@@ -655,7 +655,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
             <div className="space-y-2 px-1">
               <div>
-                <label className="block text-base mb-2 mt-1">Name of the contact person : <span className="text-red-500">*</span></label>
+                <label className="block text-base font-semibold mb-2 mt-1">Name of the contact person : <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   name="contact_person_name"
@@ -669,7 +669,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
                   <input
                     type="text"
                     name="mobileperson"
@@ -681,7 +681,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Email : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Email : <span className="text-red-500">*</span></label>
                   <input
                     type="email"
                     name="emailperson"
@@ -695,7 +695,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Would you like to host an event/collaborate with AINET?</label>
+                <label className="block text-base font-semibold mb-2 mt-1">Would you like to host an event/collaborate with AINET?</label>
                 <select
                   name="host_event"
                   value={formData.host_event}
@@ -708,7 +708,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Your expectations from AINET :</label>
+                <label className="block text-base font-semibold mb-2 mt-1">Your expectations from AINET :</label>
                 <textarea
                   name="expectations"
                   value={formData.expectations}
@@ -720,7 +720,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Like to receive newsletter ?</label>
+                <label className="block text-base font-semibold mb-2 mt-1">Like to receive newsletter ?</label>
                 <select
                   name="newsletter"
                   value={formData.newsletter}
@@ -735,7 +735,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
               {/* Enhanced Password Fields */}
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Password : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Password : <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -792,7 +792,7 @@ export default function MembershipFormforInstitutionalLongTerm() {
                   </div>
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Re-Enter Password : <span className="text-red-500">*</span></label>
+                  <label className="block text-base font-semibold mb-2 mt-1">Re-Enter Password : <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <input
                       type={showPasswordConfirm ? "text" : "password"}

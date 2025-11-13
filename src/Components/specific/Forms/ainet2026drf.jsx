@@ -16,41 +16,64 @@ export default function AINET2026DelegateRegistrationForm() {
   const [loading, setLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(() => {
+    const savedStep = localStorage.getItem("ainet2026drf_currentStep");
+    return savedStep ? parseInt(savedStep, 10) : 1;
+  });
   const [isWorkAreaDropdownOpen, setIsWorkAreaDropdownOpen] = useState(false);
   const workAreaDropdownRef = useRef(null);
   const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
 
-  const [formData, setFormData] = useState({
-    // Basic Information
-    is_ainet_member: "",
-    membership_id: "",
-    delegate_type: "",
-    supporting_document: null,
-    title: "",
-    full_name: "",
-    gender: "",
-    age_group: "",
-    institution_address: "",
-    correspondence_address: "",
-    city: "",
-    pincode: "",
-    state: "",
-    country_code: "",
-    mobile_no: "",
-    email: "",
+  // Initialize formData with saved data from localStorage if available
+  const [formData, setFormData] = useState(() => {
+    const savedData = localStorage.getItem("ainet2026drf_formData");
+    if (savedData) {
+      try {
+        return JSON.parse(savedData);
+      } catch (error) {
+        console.error("Error parsing saved form data:", error);
+      }
+    }
+    // Default empty form data
+    return {
+      // Basic Information
+      is_ainet_member: "",
+      membership_id: "",
+      delegate_type: "",
+      supporting_document: null,
+      title: "",
+      full_name: "",
+      gender: "",
+      age_group: "",
+      institution_address: "",
+      correspondence_address: "",
+      city: "",
+      pincode: "",
+      state: "",
+      country_code: "",
+      mobile_no: "",
+      email: "",
 
-    // Professional Information
-    areas_of_interest: "",
-    area_of_work: [],
-    other_work_area: "",
-    teaching_experience: "",
+      // Professional Information
+      areas_of_interest: "",
+      area_of_work: [],
+      other_work_area: "",
+      teaching_experience: "",
 
-    // Conference Participation
-    is_presenting: "",
-    presentation_type: [],
-
+      // Conference Participation
+      is_presenting: "",
+      presentation_type: [],
+    };
   });
+
+  // Auto-save functionality: Save form data and current step to localStorage
+  useEffect(() => {
+    localStorage.setItem("ainet2026drf_formData", JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem("ainet2026drf_currentStep", currentStep.toString());
+  }, [currentStep]);
 
   const workAreas = [
     'Not Applicable',
@@ -205,7 +228,12 @@ export default function AINET2026DelegateRegistrationForm() {
       // Simulate processing time
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      toast.success("✅ Delegate registration submitted successfully!");
+      toast.success("Delegate registration submitted successfully!");
+      
+      // Clear auto-saved data from localStorage after successful submission
+      localStorage.removeItem("ainet2026drf_formData");
+      localStorage.removeItem("ainet2026drf_currentStep");
+      
       navigate('/form-submission-confirmation');
       
       // Reset form
@@ -234,6 +262,7 @@ export default function AINET2026DelegateRegistrationForm() {
         presentation_type: [],
       });
       setSelectedFile(null);
+      setCurrentStep(1);
 
     } catch (error) {
       toast.error(`❌ Registration Failed: ${error}`);
@@ -300,6 +329,11 @@ export default function AINET2026DelegateRegistrationForm() {
     }
 
     if (formData.area_of_work.includes("Other") && !formData.other_work_area.trim()) {
+      return false;
+    }
+
+    // Validate Teaching Experience is required
+    if (!formData.teaching_experience || formData.teaching_experience.trim() === "") {
       return false;
     }
 
@@ -413,6 +447,12 @@ export default function AINET2026DelegateRegistrationForm() {
       return false;
     }
     
+    // Validate Teaching Experience is required
+    if (!formData.teaching_experience || formData.teaching_experience.trim() === "") {
+      toast.error("Please select your teaching experience.");
+      return false;
+    }
+    
     return true;
   };
 
@@ -513,7 +553,7 @@ export default function AINET2026DelegateRegistrationForm() {
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
                   "Empowering English Language Education in the Digital Era"
                 </p>
-                <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
+                <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-800 font-semibold mb-4 md:mb-5 lg:mb-6" style={{ textShadow: '0 1px 2px rgba(255, 255, 255, 0.8)' }}>
                   Supported by British Council & RELO, American Embassy
                 </p>
 
@@ -756,7 +796,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
               {/* Step 3: Address & Contact Information */}
               {currentStep === 3 && (
-                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
+                <div className="flex-1 flex flex-col space-y-4 overflow-y-auto relative z-20">
                   <div className="bg-gray-400 py-1 px-2 rounded">
                     <h2 className="text-white text-lg font-semibold">
                       Address Information
@@ -852,7 +892,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           name="country_code"
                           value={formData.country_code}
                           onChange={handleChange}
-                          placeholder="+91"
+                          placeholder="Select Country Code"
                           className="w-full"
                         />
                       </div>
@@ -979,7 +1019,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
                     <div>
                       <label className="block text-sm font-semibold mb-2 text-gray-700">
-                        Teaching Experience (Years):
+                        Teaching Experience (Years): <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="teaching_experience"
@@ -1047,7 +1087,7 @@ export default function AINET2026DelegateRegistrationForm() {
                           If yes, what are you presenting?
                         </label>
                         <div className="grid grid-cols-2 gap-3">
-                          {["Paper", "Poster"].map((type) => (
+                          {["Paper", "Poster", "Virtual Presentation", "Workshop"].map((type) => (
                             <label
                               key={type}
                               className="flex items-center  cursor-pointer hover:bg-gray-50"
@@ -1077,33 +1117,56 @@ export default function AINET2026DelegateRegistrationForm() {
                         Delegate Fee:
                       </h4>
 
-                      <div className="grid grid-cols-2 gap-4 mb-8">
-                        <div>
-                          <h5 className="font-semibold mb-3 text-blue-800 text-sm">
-                            Up to 31 December 2021
-                          </h5>
-                          <div className="space-y-2 text-sm">
-                            <p>• India & SAARC countries: INR 1,500</p>
-                            <p>• Other countries (USD 25)</p>
-                            <p>• Students & trainee teachers (INR 500)</p>
+                      {/* Indian Participants Section */}
+                      <div className="mb-6">
+                        <h5 className="font-semibold mb-3 text-blue-800 text-base">
+                          Indian Participants
+                        </h5>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <h6 className="font-semibold mb-2 text-blue-800 text-sm">
+                              Up to 25 December 2025
+                            </h6>
+                            <div className="space-y-2 text-sm">
+                              <p className="text-blue-600">
+                                • Research and PG students: <span className="font-semibold">INR 1,200</span>
+                              </p>
+                              <p className="text-blue-600">
+                                • Others including teachers: <span className="font-semibold">INR 2,500</span>
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          <h5 className="font-semibold mb-3 text-blue-800 text-sm">
-                            {" "}
-                            From 1 Jan 2022
-                          </h5>
-                          <div className="space-y-2 text-sm">
-                            <p>• India & SAARC countries: INR 2,000</p>
-                            <p>• Other countries (USD 50)</p>
-                            <p>• Students & trainee teachers (INR 1000)</p>
+                          <div>
+                            <h6 className="font-semibold mb-2 text-blue-800 text-sm">
+                              After 25 December 2025
+                            </h6>
+                            <div className="space-y-2 text-sm">
+                              <p className="text-blue-600">
+                                • Research and PG students: <span className="font-semibold">INR 2,000</span>
+                              </p>
+                              <p className="text-blue-600">
+                                • Others including teachers: <span className="font-semibold">INR 3,500</span>
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
 
+                      {/* Overseas Participants Section */}
+                      <div className="mb-6">
+                        <h5 className="font-semibold mb-3 text-blue-800 text-base">
+                          Overseas Participants
+                        </h5>
+                        <div>
+                          <p className="text-sm text-blue-600">
+                            • All Overseas participants: <span className="font-semibold">INR 5,000</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Discount Information */}
                       <p className="text-sm text-red-500 mt-3 font-semibold">
-                        *AINET members are entitled to 20% discount in the
-                        delegate fee applicable at the time of payment
+                        *AINETians get 10% DISCOUNT in the delegate fee applicable at the time of payment
                       </p>
                     </div>
                   )}
@@ -1111,7 +1174,7 @@ export default function AINET2026DelegateRegistrationForm() {
               )}
 
               {/* Navigation Buttons - Inside Form */}
-              <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-gray-200">
+              <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-gray-200 z-10">
                 {/* Back Button */}
                 {currentStep > 1 && (
                   <button

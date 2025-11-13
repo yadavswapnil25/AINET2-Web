@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
+const FormSubmissionConfirmation = ({ 
+  line1 = "You will be added to the delegates database.",
+  line2 = "You will receive conference details and joining instructions nearer the time.",
+  line3 = "Keep checking your email for further updates and instructions.",
+  line4 = ""
+}) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
@@ -30,7 +35,7 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
           </h1>
           
           <p className="text-lg text-gray-600 mb-6">
-            Thank you for submitting your presentation proposal form. Your submission has been received and is being reviewed.
+            Thank you for submitting your delegate registration form. Your submission has been received and is being reviewed.
           </p>
 
           {/* Additional Information */}
@@ -39,25 +44,30 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
               What happens next?
             </h2>
             <ul className="text-left text-blue-800 space-y-2">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-               {line1}
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                {line2}
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">•</span>
-                {line3}
-              </li>
-              <li className="flex items-start">
-                {line4===""&&(
-                <span className="text-blue-600 mr-2">•</span>
-                )}
-                {line4}
-              </li>
-              
+              {line1 && (
+                <li className="flex items-start">
+                  <span className="text-blue-600 mr-2">•</span>
+                  <span>{line1}</span>
+                </li>
+              )}
+              {line2 && (
+                <li className="flex items-start">
+                  <span className="text-blue-600 mr-2">•</span>
+                  <span>{line2}</span>
+                </li>
+              )}
+              {line3 && (
+                <li className="flex items-start">
+                  <span className="text-blue-600 mr-2">•</span>
+                  <span>{line3}</span>
+                </li>
+              )}
+              {line4 && (
+                <li className="flex items-start">
+                  <span className="text-blue-600 mr-2">•</span>
+                  <span>{line4}</span>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -83,10 +93,10 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
             <p className="text-sm text-gray-500">
               If you have any questions, please contact us at{' '}
               <a
-                href="mailto:info@ainet.org"
+                href="mailto:theainet@gmail.com"
                 className="text-blue-600 hover:text-blue-800 font-medium"
               >
-                info@ainet.org
+                theainet@gmail.com
               </a>
             </p>
           </div>
