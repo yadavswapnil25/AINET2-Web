@@ -60,6 +60,9 @@ export default function AINET2026DelegateRegistrationForm() {
   const [isWorkAreaDropdownOpen, setIsWorkAreaDropdownOpen] = useState(false);
   const [isFetchingExisting, setIsFetchingExisting] = useState(false);
   const [hasPrefilledFromExisting, setHasPrefilledFromExisting] = useState(false);
+  const [isValidatingMembership, setIsValidatingMembership] = useState(false);
+  const [membershipDiscount, setMembershipDiscount] = useState(null);
+  const [showDiscountPopup, setShowDiscountPopup] = useState(false);
   const workAreaDropdownRef = useRef(null);
 
   const [formData, setFormData] = useState(() => ({ ...initialDrfFormData }));
@@ -121,6 +124,18 @@ export default function AINET2026DelegateRegistrationForm() {
       if (trimmedValue && trimmedValue !== formData.email) {
         setHasPrefilledFromExisting(false);
       }
+    }
+
+    // Reset membership discount if user changes AINET member selection
+    if (name === "is_ainet_member" && value === "No") {
+      setMembershipDiscount(null);
+      setShowDiscountPopup(false);
+    }
+
+    // Reset discount if membership ID is cleared
+    if (name === "membership_id" && !value.trim()) {
+      setMembershipDiscount(null);
+      setShowDiscountPopup(false);
     }
 
     if (
@@ -281,6 +296,63 @@ export default function AINET2026DelegateRegistrationForm() {
     }
   };
 
+  const handleMembershipIdBlur = async () => {
+    const membershipId = formData.membership_id?.trim();
+    
+    // Reset discount state if membership ID is cleared
+    if (!membershipId) {
+      setMembershipDiscount(null);
+      setShowDiscountPopup(false);
+      return;
+    }
+
+    // Only validate if user selected "Yes" for AINET member
+    if (formData.is_ainet_member !== "Yes") {
+      return;
+    }
+
+    try {
+      setIsValidatingMembership(true);
+      const response = await fetch(`${baseUrl}/client/validate-membership-discount`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          membership_id: membershipId,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result?.status === true && result?.data) {
+        const discountData = result.data;
+        setMembershipDiscount(discountData);
+
+        // Show popup if discount is applicable
+        if (discountData.discount_applicable && discountData.valid) {
+          setShowDiscountPopup(true);
+        }
+      } else {
+        setMembershipDiscount({
+          valid: false,
+          discount_applicable: false,
+          message: result?.message || "Invalid membership ID",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to validate membership:", error);
+      setMembershipDiscount({
+        valid: false,
+        discount_applicable: false,
+        message: "Failed to validate membership. Please try again.",
+      });
+    } finally {
+      setIsValidatingMembership(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault();
@@ -290,6 +362,7 @@ export default function AINET2026DelegateRegistrationForm() {
 
     const payload = {
       member: formData.is_ainet_member,
+      membership_id: formData.is_ainet_member === "Yes" ? formData.membership_id : null,
       you_are_register_as: formData.delegate_type,
       pre_title: formData.title,
       name: formData.full_name,
@@ -363,13 +436,26 @@ export default function AINET2026DelegateRegistrationForm() {
    };
 
   const startDrfPaymentFlow = async (drfId) => {
+    // Include membership_id if available and valid
+    const orderPayload = { drf_id: drfId };
+    if (formData.is_ainet_member === "Yes" && formData.membership_id && membershipDiscount?.valid) {
+      orderPayload.membership_id = formData.membership_id.trim();
+      console.log("✅ Sending membership_id for discount:", orderPayload.membership_id);
+    } else {
+      console.log("❌ Membership discount not applied:", {
+        is_ainet_member: formData.is_ainet_member,
+        membership_id: formData.membership_id,
+        membershipDiscount_valid: membershipDiscount?.valid
+      });
+    }
+
     const orderResponse = await fetch(`${baseUrl}/client/ainet2020drf/payment/order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ drf_id: drfId }),
+      body: JSON.stringify(orderPayload),
     });
 
     const orderResult = await orderResponse.json();
@@ -380,10 +466,32 @@ export default function AINET2026DelegateRegistrationForm() {
     }
 
     const orderData = orderResult?.data?.order;
-    const orderAmount = orderResult?.data?.amount;
+    const orderAmount = orderResult?.data?.amount; // This is already in paise and includes discount
     const orderCurrency = orderResult?.data?.currency || (orderData?.currency ?? "INR");
     const orderId = orderData?.id;
     const key = orderResult?.data?.key || razorpayKey;
+    const discountApplied = orderResult?.data?.discount_applied || false;
+    const originalAmount = orderResult?.data?.original_amount;
+    const discountedAmount = orderResult?.data?.discounted_amount;
+
+    // Debug logging
+    console.log("💰 Payment Order Details:", {
+      orderAmount_paise: orderAmount,
+      orderAmount_rupees: orderAmount / 100,
+      discountApplied,
+      originalAmount,
+      discountedAmount,
+      orderId
+    });
+
+    // Show discount info if applicable
+    if (discountApplied && originalAmount && discountedAmount) {
+      const discountAmount = originalAmount - discountedAmount;
+      const finalAmount = discountedAmount;
+      toast.success(`🎉 AINET Member Discount Applied! Original: ₹${originalAmount.toFixed(2)}, Discount: ₹${discountAmount.toFixed(2)}, Pay: ₹${finalAmount.toFixed(2)}`, {
+        duration: 6000,
+      });
+    }
 
     if (!orderId || !orderAmount) {
       throw new Error("Invalid payment order details.");
@@ -396,13 +504,30 @@ export default function AINET2026DelegateRegistrationForm() {
 
     const contactNumber = formData.mobile_no ? `${formData.country_code ? `+${formData.country_code}` : ""}${formData.mobile_no}` : undefined;
 
+    // Build description with discount info
+    let description = "AINET 2026 Delegate Registration";
+    if (discountApplied && originalAmount && discountedAmount) {
+      description = `AINET 2026 Delegate Registration (Member Discount: ₹${(originalAmount - discountedAmount).toFixed(2)} off)`;
+    }
+
+    // Ensure we use the amount from Razorpay order (which should be discounted)
+    // When using order_id, Razorpay uses the order amount, but we still need to pass matching amount
+    const finalAmount = orderData?.amount || orderAmount; // Use order amount from Razorpay response
+    
+    console.log("🔍 Razorpay Checkout Amount:", {
+      orderData_amount: orderData?.amount,
+      orderAmount_from_response: orderAmount,
+      finalAmount_to_use: finalAmount,
+      finalAmount_rupees: finalAmount / 100
+    });
+
     await new Promise((resolve, reject) => {
       const options = {
         key,
-        amount: orderAmount,
+        amount: finalAmount, // Use the amount from Razorpay order (discounted)
         currency: orderCurrency,
         name: "AINET",
-        description: "AINET 2026 Delegate Registration",
+        description: description,
         order_id: orderId,
         prefill: {
           name: formData.full_name || "",
@@ -654,6 +779,21 @@ export default function AINET2026DelegateRegistrationForm() {
   };
 
   const handleNext = async () => {
+    // Prevent proceeding if membership validation is in progress
+    if (isValidatingMembership) {
+      toast.info("Please wait for membership validation to complete.");
+      return;
+    }
+
+    // If on step 1 and user entered membership ID, ensure validation has completed
+    if (currentStep === 1 && 
+        formData.is_ainet_member === "Yes" && 
+        formData.membership_id?.trim() && 
+        membershipDiscount === null) {
+      toast.warning("Please enter your membership ID and wait for validation to complete.");
+      return;
+    }
+
     let canProceed = false;
 
     switch (currentStep) {
@@ -847,9 +987,24 @@ export default function AINET2026DelegateRegistrationForm() {
                           name="membership_id"
                           value={formData.membership_id}
                           onChange={handleChange}
+                          onBlur={handleMembershipIdBlur}
                           placeholder="Enter Your Membership Number"
                           className="w-full p-3 border border-gray-300 rounded text-sm"
+                          disabled={isValidatingMembership}
                         />
+                        {isValidatingMembership && (
+                          <p className="text-xs text-blue-600 mt-1">Validating membership...</p>
+                        )}
+                        {membershipDiscount && membershipDiscount.valid && (
+                          <p className="text-xs text-green-600 mt-1 font-semibold">
+                            ✓ Valid membership - 10% discount will be applied
+                          </p>
+                        )}
+                        {membershipDiscount && !membershipDiscount.valid && (
+                          <p className="text-xs text-red-600 mt-1">
+                            {membershipDiscount.message}
+                          </p>
+                        )}
                         <p className="text-xs text-gray-500 mt-1">
                           Not sure of your ID?{" "}
                           <Link to="/login" className="text-blue-600">
@@ -1330,7 +1485,7 @@ export default function AINET2026DelegateRegistrationForm() {
                       </div>
 
                       <p className="text-sm text-red-500 mt-3 font-semibold">
-                        *AINET members are entitled to 20% discount in the
+                        *AINET members are entitled to 10% discount in the
                         delegate fee applicable at the time of payment
                       </p>
                     </div>
@@ -1361,13 +1516,28 @@ export default function AINET2026DelegateRegistrationForm() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className= {`px-15 py-4 bg-yellow-200 hover:bg-yellow-300 text-black font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 ${currentStep === 1 ? "absolute left-1/2 -translate-x-1/2" : "relative"}`}
+                  disabled={isValidatingMembership}
+                  className={`px-15 py-4 font-bold rounded-full transition-all duration-300 flex items-center shadow-lg ${
+                    isValidatingMembership
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-yellow-200 hover:bg-yellow-300 text-black hover:shadow-xl transform hover:scale-105"
+                  } ${currentStep === 1 ? "absolute left-1/2 -translate-x-1/2" : "relative"}`}
                 >
                   <span className="text-lg">
-                    {currentStep === 5 ? "Submit" : "Continue"}
+                    {isValidatingMembership 
+                      ? "Validating..." 
+                      : currentStep === 5 
+                        ? "Submit" 
+                        : "Continue"}
                   </span>
-                  {currentStep < 5 && (
+                  {currentStep < 5 && !isValidatingMembership && (
                     <FaArrowRight className="ml-2" />
+                  )}
+                  {isValidatingMembership && (
+                    <svg className="animate-spin ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
                   )}
                 </button>
               </div>
@@ -1376,6 +1546,55 @@ export default function AINET2026DelegateRegistrationForm() {
         </div>
       </div>
       
+      {/* Discount Popup Modal */}
+      {showDiscountPopup && membershipDiscount && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
+                  <svg
+                    className="h-8 w-8 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                🎉 AINET Member Discount!
+              </h3>
+              <p className="text-gray-700 mb-4">
+                Your membership is valid and active. A <strong className="text-green-600">10% discount</strong> will be applied to your delegate registration fee.
+              </p>
+              {membershipDiscount.member_name && (
+                <p className="text-sm text-gray-600 mb-4">
+                  Member: <strong>{membershipDiscount.member_name}</strong>
+                </p>
+              )}
+              {membershipDiscount.expiry_date && (
+                <p className="text-xs text-gray-500 mb-4">
+                  Membership valid until: {new Date(membershipDiscount.expiry_date).toLocaleDateString()}
+                </p>
+              )}
+              <button
+                onClick={() => setShowDiscountPopup(false)}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+              >
+                Great! Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Removed formSubmissionConfirmation and related ref */}
     </>
   );
