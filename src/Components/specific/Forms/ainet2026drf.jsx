@@ -367,7 +367,7 @@ export default function AINET2026DelegateRegistrationForm() {
       pre_title: formData.title,
       name: formData.full_name,
       gender: formData.gender,
-      age: Number(formData.age_group) || 0,
+      age: formData.age_group || "",
       institution: formData.institution_address,
       address: formData.correspondence_address,
       city: formData.city,
@@ -613,9 +613,9 @@ export default function AINET2026DelegateRegistrationForm() {
       return false;
     }
 
-    // Validate age is a valid number
-    const age = parseInt(formData.age_group);
-    if (isNaN(age) || age < 1 || age > 120) {
+    // Validate age group is selected
+    const validAgeGroups = ["up to 25", "26-30", "31-35", "36-40", "41-45", "46-50", "over 50"];
+    if (!formData.age_group || !validAgeGroups.includes(formData.age_group)) {
       return false;
     }
 
@@ -701,10 +701,10 @@ export default function AINET2026DelegateRegistrationForm() {
       }
     }
 
-    // Validate age is a valid number
-    const age = parseInt(formData.age_group);
-    if (isNaN(age) || age < 1 || age > 120) {
-      toast.error("Please enter a valid age between 1 and 120.");
+    // Validate age group is selected
+    const validAgeGroups = ["up to 25", "26-30", "31-35", "36-40", "41-45", "46-50", "over 50"];
+    if (!formData.age_group || !validAgeGroups.includes(formData.age_group)) {
+      toast.error("Please select an age group.");
       return false;
     }
 
@@ -1125,21 +1125,90 @@ export default function AINET2026DelegateRegistrationForm() {
                         </select>
                       </div>
 
-                      {/* Age */}
+                      {/* Age Group */}
                       <div className="col-span-2 sm:col-span-1">
                         <label className="block text-sm font-semibold mb-2 text-gray-700">
-                          Age (Years): <span className="text-red-500">*</span>
+                          Age Group (years): <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type="number"
-                          name="age_group"
-                          value={formData.age_group}
-                          onChange={handleChange}
-                          placeholder="Enter your age"
-                          min="1"
-                          max="120"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
-                        />
+                        <div className="grid grid-cols-3 gap-2">
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="up to 25"
+                              checked={formData.age_group === "up to 25"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">up to 25</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="26-30"
+                              checked={formData.age_group === "26-30"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">26-30</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="31-35"
+                              checked={formData.age_group === "31-35"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">31-35</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="36-40"
+                              checked={formData.age_group === "36-40"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">36-40</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="41-45"
+                              checked={formData.age_group === "41-45"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">41-45</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="46-50"
+                              checked={formData.age_group === "46-50"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">46-50</span>
+                          </label>
+                          <label className="flex items-center cursor-pointer">
+                            <input
+                              type="radio"
+                              name="age_group"
+                              value="over 50"
+                              checked={formData.age_group === "over 50"}
+                              onChange={handleChange}
+                              className="mr-1"
+                            />
+                            <span className="text-sm">over 50</span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
