@@ -23,7 +23,7 @@ export default function AINET2026PresentationProposalForm() {
 
   // Helper function to format field names for error messages
   const formatFieldName = (fieldName) => {
-    return fieldName
+    const formattedName = fieldName
       .replace(/^main_/i, "") // Remove "main_" prefix (case insensitive)
       .replace(/^co1_/i, "") // Remove "co1_" prefix (case insensitive)
       .replace(/^co2_/i, "") // Remove "co2_" prefix (case insensitive)
@@ -31,6 +31,10 @@ export default function AINET2026PresentationProposalForm() {
       .split(" ") // Split into words
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
       .join(" "); // Join back with spaces
+    if (fieldName === "main_presenter_bio") {
+      return "Presenter's Bio";
+    }
+    return formattedName;
   };
 
   // Initialize formData with saved data from localStorage if available
@@ -573,6 +577,11 @@ export default function AINET2026PresentationProposalForm() {
         toast.error("Please fill in email for co-presenter 1.");
         return false;
       }
+
+      if (!formData.co1_presenter_bio || !formData.co1_presenter_bio.trim()) {
+        toast.error("Please fill in the Co-presenter Bio field.");
+        return false;
+      }
     }
 
     // Validate email format if provided
@@ -839,7 +848,7 @@ export default function AINET2026PresentationProposalForm() {
                   <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
                     Gateway Education, Sonipat, Delhi NCR
                   </p>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-900 mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
                     "Empowering English Language Education in the Digital Era"
                   </p>
                   <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
@@ -1156,7 +1165,7 @@ export default function AINET2026PresentationProposalForm() {
                       {formData.co1_full_name && (
                         <div>
                           <label className="block text-sm font-semibold mb-2 text-gray-700">
-                            Co-Presenter 1 Bio (Max. 30 words):
+                            Co-Presenter 1 Bio (Max. 30 words):<span className="text-red-500">*</span>
                             <span className="text-sm text-gray-500 ml-2">
                               ({getWordCount(formData.co1_presenter_bio)}/30
                               words)
@@ -1497,31 +1506,6 @@ export default function AINET2026PresentationProposalForm() {
                         )}
                       </div>
 
-                      <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
-                          Main Presenter Bio (Max. 30 words):{" "}
-                          <span className="text-red-500">*</span>
-                          <span className="text-sm text-gray-500 ml-2">
-                            ({getWordCount(formData.main_presenter_bio)}/30 words)
-                          </span>
-                        </label>
-                        <textarea
-                          name="main_presenter_bio"
-                          value={formData.main_presenter_bio}
-                          onChange={handleChange}
-                          placeholder="Enter main presenter bio (max 30 words)"
-                          className={`w-full p-3 border-2 rounded text-sm ${getWordCount(formData.main_presenter_bio) > 30
-                              ? "border-red-500 bg-red-50"
-                              : "border-gray-300"
-                            }`}
-                          rows="3"
-                        ></textarea>
-                        {getWordCount(formData.main_presenter_bio) > 30 && (
-                          <p className="text-red-600 text-sm font-semibold mt-1 bg-red-50 p-2 rounded">
-                            Bio exceeds 30 words limit
-                          </p>
-                        )}
-                      </div>
                     </div>
                   </div>
                 )}

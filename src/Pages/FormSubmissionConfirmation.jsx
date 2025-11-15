@@ -30,7 +30,7 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
           </h1>
           
           <p className="text-lg text-gray-600 mb-6">
-            Thank you for submitting your delegate registration form. Your submission has been received and is being reviewed.
+            Thank you for submitting your presentation proposal form. Your submission has been received and is being reviewed.
           </p>
 
 
