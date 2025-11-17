@@ -314,6 +314,7 @@ export default function ConferencePage() {
                             )}
                         </div>
                     </div>
+                    </div>
                 )}
             </div>
 
