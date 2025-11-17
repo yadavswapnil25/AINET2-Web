@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Highlight from "../Components/shared/Highlight";
 import bg1 from "/bg1.png";
 import bg2 from "/bg2.png";
@@ -15,9 +15,14 @@ import MembersArea from "../Components/specific/Home/MembersArea";
 import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
 import Partners from "../Components/specific/Home/Partners";
 import upcoming from "/upcoming.png";
+import { baseUrl } from "../utils/constant";
 
 const Home = () => {
   const location = useLocation();
+  const [banners, setBanners] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [eventsLoading, setEventsLoading] = useState(true);
 
   useEffect(() => {
     if (location.hash === "#membershipplan") {
@@ -28,7 +33,60 @@ const Home = () => {
     }
   }, [location]);
 
-  const eventsData = [
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/client/banners?limit=3`);
+        const data = await response.json();
+        
+        if (data.status && data.data && data.data.banners) {
+          // Filter banners with sort_order 0, 1, and 2, then sort them
+          const filteredBanners = data.data.banners
+            .filter(banner => banner.sort_order === 0 || banner.sort_order === 1 || banner.sort_order === 2)
+            .sort((a, b) => a.sort_order - b.sort_order);
+          
+          setBanners(filteredBanners);
+        }
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/client/events?limit=3&exclude_conference=true`);
+        const data = await response.json();
+        
+        if (data.status && data.data && data.data.events) {
+          // Map API events to match the component structure
+          const mappedEvents = data.data.events.map(event => ({
+            id: event.id,
+            title: event.title,
+            location: event.location || "Online",
+            date: event.date_display || "TBA",
+            link: event.link_url || "/conference"
+          }));
+          
+          setEvents(mappedEvents);
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      } finally {
+        setEventsLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // Fallback events if API fails or returns no events
+  const eventsData = events.length > 0 ? events : [
     {
       title: "AINET Foundation Week Programmes.",
       location: "Online",
@@ -69,11 +127,31 @@ const Home = () => {
               </h3>
             </div>
             <div className="w-full md:w-[75%] flex justify-end pt-4">
-              <img
-                src={newh1}
-                alt="HomeImage"
-                className="w-full   h-auto md:h-[350px] rounded-2xl"
-              />
+              {loading ? (
+                <div className="w-full h-auto md:h-[350px] rounded-2xl bg-gray-200 animate-pulse"></div>
+              ) : banners[0]?.image_url ? (
+                banners[0].link_url ? (
+                  <a href={banners[0].link_url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={banners[0].image_url}
+                      alt={banners[0].title || "HomeImage"}
+                      className="w-full h-auto md:h-[350px] rounded-2xl object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={banners[0].image_url}
+                    alt={banners[0].title || "HomeImage"}
+                    className="w-full h-auto md:h-[350px] rounded-2xl object-cover"
+                  />
+                )
+              ) : (
+                <img
+                  src={newh1}
+                  alt="HomeImage"
+                  className="w-full h-auto md:h-[350px] rounded-2xl"
+                />
+              )}
             </div>
           </div>
 
@@ -114,11 +192,31 @@ const Home = () => {
             </div>
 
             <div className="w-full md:w-[55%] flex flex-col  px-4 gap-4">
-              <img
-                src={newh2}
-                alt="homepagebanner2"
-                className="w-full  md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl"
-              />
+              {loading ? (
+                <div className="w-full md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl bg-gray-200 animate-pulse"></div>
+              ) : banners[1]?.image_url ? (
+                banners[1].link_url ? (
+                  <a href={banners[1].link_url} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={banners[1].image_url}
+                      alt={banners[1].title || "homepagebanner2"}
+                      className="w-full md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={banners[1].image_url}
+                    alt={banners[1].title || "homepagebanner2"}
+                    className="w-full md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl object-cover"
+                  />
+                )
+              ) : (
+                <img
+                  src={newh2}
+                  alt="homepagebanner2"
+                  className="w-full md:w-[75%] h-auto my-2 md:h-[350px] rounded-2xl"
+                />
+              )}
             </div>
           </div>
         </div>
@@ -132,7 +230,27 @@ const Home = () => {
           <h2 className="text-3xl w-full font-medium">UPCOMING CONFERENCE</h2>
           <div className="w-full h-1/2 flex flex-col md:flex-row p-0 md:p-6 gap-8">
             <div className="w-full md:w-1/2 h-full flex justify-center items-center">
-              <img src={upcoming} alt="upcoming conference" />
+              {loading ? (
+                <div className="w-full h-auto max-w-md rounded-2xl bg-gray-200 animate-pulse aspect-video"></div>
+              ) : banners[2]?.image_url ? (
+                banners[2].link_url ? (
+                  <a href={banners[2].link_url} target="_blank" rel="noopener noreferrer">
+                    <img 
+                      src={banners[2].image_url} 
+                      alt={banners[2].title || "upcoming conference"} 
+                      className="w-full h-auto max-w-md rounded-2xl object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    />
+                  </a>
+                ) : (
+                  <img 
+                    src={banners[2].image_url} 
+                    alt={banners[2].title || "upcoming conference"} 
+                    className="w-full h-auto max-w-md rounded-2xl object-cover"
+                  />
+                )
+              ) : (
+                <img src={upcoming} alt="upcoming conference" />
+              )}
             </div>
 
             <div className=" w-full md:w-1/2 h-full flex items-center  md:items-start justify-center flex-col gap-8">
@@ -154,28 +272,49 @@ const Home = () => {
           <h2 className="text-3xl w-full font-medium mt-10 font-sans">UPCOMING EVENTS</h2>
 
           <div className="w-full h-1/2  flex flex-col md:flex-row sm:flex-row mt-6 gap-8">
-            {eventsData?.map((event, index) => (
-              <div
-                key={index}
-                className={`relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
-              >
-                <h2 className="text-2xl font-semibold mb-6">{event.title}</h2>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6">
-                  <p className="flex items-center text-black text-xl font-medium">
-                    <MdLocationOn className="mr-2 text-xl" />
-                    {event.location}
-                  </p>
-                  <p className="flex items-center text-black text-xl font-medium">
-                    <FaCalendar className="mr-2 text-xl" />
-                    {event.date}
-                  </p>
+            {eventsLoading ? (
+              // Loading skeleton for events
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 animate-pulse"
+                >
+                  <div className="h-6 bg-gray-300 rounded mb-6"></div>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6">
+                    <div className="h-5 bg-gray-300 rounded w-24"></div>
+                    <div className="h-5 bg-gray-300 rounded w-32"></div>
+                  </div>
+                  <div className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-gray-300 rounded-full"></div>
                 </div>
+              ))
+            ) : eventsData.length > 0 ? (
+              eventsData.map((event, index) => (
+                <div
+                  key={event.id || index}
+                  className={`relative min-h-[232px] flex-1 bg-[#FFF8DE] rounded-2xl shadow-md p-6 hover:shadow-xl transition-shadow`}
+                >
+                  <h2 className="text-2xl font-semibold mb-6">{event.title}</h2>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-6">
+                    <p className="flex items-center text-black text-xl font-medium">
+                      <MdLocationOn className="mr-2 text-xl" />
+                      {event.location}
+                    </p>
+                    <p className="flex items-center text-black text-xl font-medium">
+                      <FaCalendar className="mr-2 text-xl" />
+                      {event.date}
+                    </p>
+                  </div>
 
-                <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer" onClick={()=>window.location.href=event.link}>
-                  <img src="./arrowright.svg" alt="arrowright" />
-                </button>
+                  <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer hover:bg-gray-800 transition-colors" onClick={()=>window.location.href=event.link}>
+                    <img src="./arrowright.svg" alt="arrowright" />
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="w-full text-center py-8 text-gray-500">
+                No upcoming events at the moment.
               </div>
-            ))}
+            )}
           </div>
         </div>
 

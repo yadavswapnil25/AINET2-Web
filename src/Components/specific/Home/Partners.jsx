@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { baseUrl } from "../../../utils/constant";
 
-const images = [
+// Fallback images if API fails
+const fallbackImages = [
   { src: "./logos/ActiveTeachers.png", title: "Active Teachers Maharashtra" },
   { src: "./logos/BhandaraEnglish.png", title: "Bhandara English Teachers Club" },
   { src: "./logos/BritishCouncil.png", title: "British Council, India" },
@@ -39,6 +41,38 @@ const wrapTitle = (title, maxLineLength = 20) => {
 };
 
 const Partners = () => {
+  const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/client/partners`);
+        const data = await response.json();
+        
+        if (data.status && data.data && data.data.partners) {
+          // Map API partners to match component structure
+          const mappedPartners = data.data.partners.map(partner => ({
+            id: partner.id,
+            src: partner.logo_url || "",
+            title: partner.name || "",
+            link_url: partner.link_url || null,
+          }));
+          
+          setPartners(mappedPartners);
+        }
+      } catch (error) {
+        console.error("Error fetching partners:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPartners();
+  }, []);
+
+  // Use API partners if available, otherwise fallback to hardcoded images
+  const images = partners.length > 0 ? partners : fallbackImages;
   const allImages = [...images, ...images]; // duplicate for seamless loop
 
   return (
@@ -48,20 +82,46 @@ const Partners = () => {
       </h3>
 
       <div className="partner-slider mt-4">
-        <div className="slider-track flex">
-          {allImages.map((image, index) => (
-            <div key={index} className="flex flex-col items-center mx-4">
-              <img
-                src={image.src}
-                alt={`partner-${index}`}
-                className="h-[125px] w-auto object-contain"
-              />
-              <span className="text-lg font-semibold text-center text-[#A6AEBF] ">
-                {wrapTitle(image.title)}
-              </span>
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <div className="slider-track flex">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div key={index} className="flex flex-col items-center mx-4">
+                <div className="h-[125px] w-[150px] bg-gray-200 animate-pulse rounded"></div>
+                <div className="h-4 w-24 bg-gray-200 animate-pulse rounded mt-2"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="slider-track flex">
+            {allImages.map((image, index) => (
+              <div key={image.id || index} className="flex flex-col items-center mx-4">
+                {image.link_url ? (
+                  <a 
+                    href={image.link_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:opacity-80 transition-opacity"
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.title || `partner-${index}`}
+                      className="h-[125px] w-auto object-contain"
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={image.src}
+                    alt={image.title || `partner-${index}`}
+                    className="h-[125px] w-auto object-contain"
+                  />
+                )}
+                <span className="text-lg font-semibold text-center text-[#A6AEBF] ">
+                  {wrapTitle(image.title)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
