@@ -20,7 +20,7 @@ const About = () => {
 
 
       {/* Section 3 */}
-      <AinetNews />
+      {/* <AinetNews /> */}
     </>
 
   )
