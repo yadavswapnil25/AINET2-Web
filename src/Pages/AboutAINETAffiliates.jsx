@@ -41,10 +41,7 @@ const AboutAINETAffiliates = ({ data }) => {
     return (
 
         <>
-            <Highlight
-                heading={"HIGHLIGHTS"}
-                subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
-            />
+            <Highlight />
             <div className="px-4 py-10 md:px-8 lg:px-16 max-w-screen-xl mx-auto text-gray-700">
                 <div className='pb-10 flex items-center justify-between'>
                     <Breadcrumbs

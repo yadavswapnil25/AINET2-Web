@@ -8,7 +8,7 @@ import AinetTeam from '../Components/specific/About/AinetTeam'
 const About = () => {
   return (
     <>
-      <Highlight heading={"HIGHLIGHTS"} subheading={"9th AINET International Conference 2026 - To Be Announced SOON"} />
+      <Highlight />
 
       <div className='w-full h-auto p-4 md:p-[34px] pt-0 md:pt-[46px]' id="about">
         {/* Section 1 */}

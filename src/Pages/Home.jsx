@@ -108,10 +108,7 @@ const Home = () => {
   ];
   return (
     <>
-      <Highlight
-        heading={"HIGHLIGHTS"}
-        subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
-      />
+      <Highlight />
       <div className="w-full h-auto p-4 md:p-[34px] pt-[46px]">
         {/* Section 1 */}
         <div

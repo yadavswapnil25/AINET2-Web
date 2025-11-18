@@ -94,10 +94,7 @@ export default function Archives() {
 
   return (
     <>
-      <Highlight
-        heading={"HIGHLIGHTS"}
-        subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
-      />
+      <Highlight />
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Breadcrumb navigation */}
         <Breadcrumbs

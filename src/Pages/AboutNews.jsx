@@ -48,10 +48,7 @@ export default function AboutNews() {
   return (
 
     <>
-      <Highlight
-        heading={"HIGHLIGHTS"}
-        subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
-      />
+      <Highlight />
 
 
       <div className="min-h-screen">

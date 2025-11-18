@@ -35,7 +35,7 @@ export default function ContactUs() {
 
     return (
         <>
-            <Highlight heading={"HIGHLIGHTS"} subheading={"9th AINET International Conference 2026 - To Be Announced SOON"} />
+            <Highlight />
             <div className="max-w-5xl mx-auto p-4 bg-white">
                 {/* Header */}
                 <div className="mb-6 text-center">

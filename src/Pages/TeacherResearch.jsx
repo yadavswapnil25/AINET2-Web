@@ -79,10 +79,7 @@ const TeacherResearch = () => {
   ];
   return (
     <>
-      <Highlight
-        heading={"HIGHLIGHTS"}
-        subheading={"9th AINET International Conference 2026 - To Be Announced SOON"}
-      />
+      <Highlight />
       <div className="max-w-full lg:max-w-[80%] mx-auto p-8 md:p-14 pt-[25px] h-auto relative">
         <div className='pb-6 flex items-center justify-between'>
           <Breadcrumbs
