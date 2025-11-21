@@ -4,6 +4,33 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 import { AuthContext, AuthProvider } from "./context/AuthContext.jsx";
+import { initGA } from "./utils/analytics.js";
+
+// Initialize Google Analytics
+const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
+  // Initialize dataLayer and gtag function
+  window.dataLayer = window.dataLayer || [];
+  function gtag(...args) {
+    window.dataLayer.push(args);
+  }
+  window.gtag = gtag;
+  gtag('js', new Date());
+
+  // Load Google Analytics script
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+
+  // Initialize GA after script loads
+  script.onload = () => {
+    gtag('config', GA_MEASUREMENT_ID, {
+      page_path: window.location.pathname + window.location.search,
+    });
+    initGA();
+  };
+}
 
 // Register service worker for PWA functionality
 if ('serviceWorker' in navigator) {

@@ -9,6 +9,7 @@ import ForgotPassword from "./Components/shared/ForgotPassword";
 import Navbar from "./Components/shared/Navbar";
 import PrivateRoute from "./Components/shared/PrivateRoute";
 import AboutNews from "./Pages/AboutNews";
+import GoogleAnalytics from "./Components/GoogleAnalytics";
 
 // Layouts
 
@@ -60,6 +61,7 @@ import FormSubmissionConfirmation from "./Pages/FormSubmissionConfirmation";
 const App = () => {
   return (
     <>
+      <GoogleAnalytics />
       <ToastContainer />
       <Navbar />
       <ScrollToTop />
