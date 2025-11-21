@@ -21,16 +21,23 @@ if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   // Load Google Analytics script
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=G-0D9M13RY6R`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
   document.head.appendChild(script);
 
   // Initialize GA after script loads
   script.onload = () => {
-    gtag('config', GA_MEASUREMENT_ID, {
-      page_path: window.location.pathname + window.location.search,
-    });
-    initGA();
-    console.log('✅ Google Analytics initialized:', GA_MEASUREMENT_ID);
+    // Wait a bit to ensure gtag is fully available
+    setTimeout(() => {
+      if (typeof window.gtag === 'function') {
+        gtag('config', GA_MEASUREMENT_ID, {
+          page_path: window.location.pathname + window.location.search,
+        });
+        initGA();
+        console.log('✅ Google Analytics initialized with ID:', GA_MEASUREMENT_ID);
+      } else {
+        console.error('❌ gtag function not available after script load');
+      }
+    }, 100);
   };
 
   script.onerror = () => {
