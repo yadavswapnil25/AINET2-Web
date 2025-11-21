@@ -8,6 +8,7 @@ import { initGA } from "./utils/analytics.js";
 
 // Initialize Google Analytics
 const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+
 if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   // Initialize dataLayer and gtag function
   window.dataLayer = window.dataLayer || [];
@@ -20,7 +21,7 @@ if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   // Load Google Analytics script
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=G-0D9M13RY6R`;
   document.head.appendChild(script);
 
   // Initialize GA after script loads
@@ -29,7 +30,17 @@ if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
       page_path: window.location.pathname + window.location.search,
     });
     initGA();
+    console.log('✅ Google Analytics initialized:', GA_MEASUREMENT_ID);
   };
+
+  script.onerror = () => {
+    console.error('❌ Failed to load Google Analytics script');
+  };
+} else {
+  if (typeof window !== 'undefined') {
+    console.warn('⚠️ Google Analytics not initialized. VITE_GA_MEASUREMENT_ID is missing or invalid.');
+    console.log('Current env value:', import.meta.env.VITE_GA_MEASUREMENT_ID);
+  }
 }
 
 // Register service worker for PWA functionality
