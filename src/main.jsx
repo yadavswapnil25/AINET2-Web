@@ -7,7 +7,7 @@ import { AuthContext, AuthProvider } from "./context/AuthContext.jsx";
 import { initGA } from "./utils/analytics.js";
 
 // Initialize Google Analytics
-const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+const GA_MEASUREMENT_ID = "G-0D9M13RY6R";
 
 if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   // Initialize dataLayer and gtag function
@@ -36,12 +36,7 @@ if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   script.onerror = () => {
     console.error('❌ Failed to load Google Analytics script');
   };
-} else {
-  if (typeof window !== 'undefined') {
-    console.warn('⚠️ Google Analytics not initialized. VITE_GA_MEASUREMENT_ID is missing or invalid.');
-    console.log('Current env value:', import.meta.env.VITE_GA_MEASUREMENT_ID);
-  }
-}
+} 
 
 // Register service worker for PWA functionality
 if ('serviceWorker' in navigator) {

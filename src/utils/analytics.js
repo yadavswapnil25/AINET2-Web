@@ -4,7 +4,7 @@
  */
 
 // Get the Google Analytics Measurement ID from environment variables
-const GA_MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID;
+const GA_MEASUREMENT_ID = "G-0D9M13RY6R";
 
 /**
  * Check if Google Analytics is enabled and configured
