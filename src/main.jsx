@@ -7,7 +7,7 @@ import { AuthContext, AuthProvider } from "./context/AuthContext.jsx";
 import { initGA } from "./utils/analytics.js";
 
 // Initialize Google Analytics
-const GA_MEASUREMENT_ID = "G-0D9M13RY6R";
+const GA_MEASUREMENT_ID = "G-EQ9DCHRG5V";
 
 if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   // Initialize dataLayer and gtag function

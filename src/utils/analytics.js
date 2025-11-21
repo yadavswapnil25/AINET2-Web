@@ -4,7 +4,7 @@
  */
 
 // Get the Google Analytics Measurement ID from environment variables
-const GA_MEASUREMENT_ID = "G-0D9M13RY6R";
+const GA_MEASUREMENT_ID = "G-EQ9DCHRG5V";
 
 /**
  * Check if Google Analytics is enabled and configured
