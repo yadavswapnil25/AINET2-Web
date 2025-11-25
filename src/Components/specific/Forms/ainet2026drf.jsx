@@ -376,9 +376,9 @@ export default function AINET2026DelegateRegistrationForm() {
       country_code: formData.country_code ? `+${formData.country_code.replace(/^\+/, "")}` : "",
       phone_no: formData.mobile_no.replace(/\s+/g, ""),
       email: formData.email,
-      areas: formData.area_of_work,
-      areas_of_interest: formData.areas_of_interest,
-      other: formData.other_work_area,
+      areas: Array.isArray(formData.area_of_work) ? formData.area_of_work : [],
+      areas_of_interest: formData.areas_of_interest || "",
+      other: formData.other_work_area || "",
       experience: formData.teaching_experience,
       conference: formData.is_presenting === "YES" ? "Yes" : "No",
       types: formData.is_presenting === "YES" ? formData.presentation_type : [],
@@ -1535,7 +1535,7 @@ export default function AINET2026DelegateRegistrationForm() {
                             Up to 25 December 2025
                           </h5>
                           <div className="space-y-2 text-sm">
-                            <p>• Teachers and PG students: INR 1200</p>
+                            <p>• Research and PG students: INR 1200</p>
                             <p>• Other Including teachers: INR 2500</p>
                             <p>• All Overseas participants: INR 5000</p>
                           </div>
@@ -1546,7 +1546,7 @@ export default function AINET2026DelegateRegistrationForm() {
                             After 25 December 2025
                           </h5>
                           <div className="space-y-2 text-sm">
-                            <p>• Teachers and PG students: INR 2000</p>
+                            <p>• Research and PG students: INR 2000</p>
                             <p>• Other Including teachers: INR 3500</p>
                             <p>• All Overseas participants: INR 5000</p>
                           </div>

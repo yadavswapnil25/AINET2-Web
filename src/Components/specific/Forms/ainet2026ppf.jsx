@@ -190,12 +190,19 @@ export default function AINET2026PresentationProposalForm() {
       return false;
     }
 
+    // Validate co-presenter 2 bio if co-presenter 2 information is provided
     if (
-      formData.co2_full_name &&
-      getWordCount(formData.co2_presenter_bio) > 30
+      formData.co2_full_name ||
+      formData.co2_place_of_work
     ) {
-      toast.error("Co-presenter 2 bio must be maximum 30 words.");
-      return false;
+      if (!formData.co2_presenter_bio || !formData.co2_presenter_bio.trim()) {
+        toast.error("Please fill in the Co-presenter 2 Bio field.");
+        return false;
+      }
+      if (getWordCount(formData.co2_presenter_bio) > 30) {
+        toast.error("Co-presenter 2 bio must be maximum 30 words.");
+        return false;
+      }
     }
 
     // Email validation
@@ -668,6 +675,11 @@ export default function AINET2026PresentationProposalForm() {
         toast.error("Please fill in email for co-presenter 2.");
         return false;
       }
+
+      if (!formData.co2_presenter_bio || !formData.co2_presenter_bio.trim()) {
+        toast.error("Please fill in the Co-presenter 2 Bio field.");
+        return false;
+      }
     }
 
     // Validate email format if provided
@@ -845,7 +857,7 @@ export default function AINET2026PresentationProposalForm() {
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
                     January 2026
                   </p>
-                  <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
                     Gateway Education, Sonipat, Delhi NCR
                   </p>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
@@ -1315,10 +1327,11 @@ export default function AINET2026PresentationProposalForm() {
                         />
                       </div>
 
-                      {formData.co2_full_name && (
+                      {(formData.co2_full_name || formData.co2_place_of_work) && (
                         <div>
                           <label className="block text-sm font-semibold mb-2 text-gray-700">
                             Co-Presenter 2 Bio (Max. 30 words):
+                            <span className="text-red-500">*</span>
                             <span className="text-sm text-gray-500 ml-2">
                               ({getWordCount(formData.co2_presenter_bio)}/30
                               words)
