@@ -402,7 +402,7 @@ export default function Profile() {
             {/* History Card */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                History
+              Membership History
               </h3>
 
               <div className="mb-6">
@@ -424,19 +424,19 @@ export default function Profile() {
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">
-                      AINET member on :
+                      Registered on :
                     </span>
                     <span className="text-gray-900">{created}</span>
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">
-                      Renewed membership on :
+                      Membership Renewed :
                     </span>
                     <span className="text-gray-900">{renewed}</span>
                   </div>
                   <div className="flex">
                     <span className="text-gray-600 w-40">
-                      Expire membership on :
+                      Membership Expiring on :
                     </span>
                     <span className="text-gray-900">{expired}</span>
                   </div>

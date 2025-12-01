@@ -14,7 +14,6 @@ export default function AINET2026PresentationProposalForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isEmailValid, setIsEmailValid] = useState(true);
   const [currentStep, setCurrentStep] = useState(() => {
     const savedStep = localStorage.getItem("ainet2026ppf_currentStep");
     return savedStep ? parseInt(savedStep, 10) : 1;
@@ -263,47 +262,7 @@ export default function AINET2026PresentationProposalForm() {
       return false;
     }
 
-    // Check email validation status
-    if (!isEmailValid) {
-      toast.error("Please use a different email address.");
-      return false;
-    }
-
     return true;
-  };
-
-  const checkEmailExists = async () => {
-    const email = formData.main_email;
-    if (!email) return false;
-
-    try {
-      const res = await fetch(
-        `${baseUrl}/client/eventValidationHandle?email=${encodeURIComponent(
-          email
-        )}`
-      );
-
-      if (!res.ok) {
-        console.error("Failed to check email");
-        setIsEmailValid(true); // Allow submission if validation service is down
-        return true;
-      }
-
-      const data = await res.json();
-
-      if (!data.status || data.status === false) {
-        setIsEmailValid(false);
-        toast.warning("❌ Email already exists. Please use a different email.");
-        return false;
-      } else {
-        setIsEmailValid(true);
-        return true;
-      }
-    } catch (error) {
-      console.error("Error checking email:", error);
-      setIsEmailValid(true); // Allow submission if validation fails
-      return true;
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -465,7 +424,6 @@ export default function AINET2026PresentationProposalForm() {
     if (!formData.conference_sub_theme || formData.conference_sub_theme.trim() === "") return false;
 
     if (!formData.agree) return false;
-    if (!isEmailValid) return false;
     if (
       formData.conference_sub_theme === "Any Other (Specify)" &&
       !formData.other_sub_theme.trim()
@@ -521,12 +479,6 @@ export default function AINET2026PresentationProposalForm() {
     const mobileRegex = /^[0-9]{10}$/;
     if (!mobileRegex.test(formData.main_mobile.replace(/\D/g, ""))) {
       toast.error("Please enter a valid 10-digit mobile number.");
-      return false;
-    }
-
-    // Check email validation status
-    if (!isEmailValid) {
-      toast.error("Please use a different email address.");
       return false;
     }
 
@@ -1042,7 +994,6 @@ export default function AINET2026PresentationProposalForm() {
                           type="email"
                           name="main_email"
                           value={formData.main_email}
-                          onBlur={checkEmailExists}
                           onChange={handleChange}
                           placeholder="Enter Your Email"
                           className="w-full p-3 border border-gray-300 rounded text-sm"
