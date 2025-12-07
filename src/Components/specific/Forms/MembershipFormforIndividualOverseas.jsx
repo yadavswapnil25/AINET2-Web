@@ -6,8 +6,6 @@ import { processMembershipPayment, confirmMembershipPayment } from '../../../uti
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
 import Loader from '../../../Components/shared/Loader';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
 import { IoIosArrowDown } from "react-icons/io";
 
@@ -122,7 +120,7 @@ export default function MembershipFormForIndividualOverseas() {
         first_name: '',
         last_name: '',
         gender: '',
-        dob: '',
+        age_group: '',
         mobile: '',
         whatsapp_no: '',
         email: '',
@@ -183,7 +181,7 @@ export default function MembershipFormForIndividualOverseas() {
     // Form validation function
     const validateForm = () => {
         const requiredFields = [
-            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'first_name', 'last_name', 'gender', 'age_group', 'mobile',
             'whatsapp_no', 'email', 'address', 'teaching_exp', 'password'
         ];
 
@@ -388,7 +386,7 @@ export default function MembershipFormForIndividualOverseas() {
                 first_name: '',
                 last_name: '',
                 gender: '',
-                dob: '',
+                age_group: '',
                 mobile: '',
                 whatsapp_no: '',
                 email: '',
@@ -445,7 +443,7 @@ export default function MembershipFormForIndividualOverseas() {
     // Check if form is valid for submit button
     const isFormValid = () => {
         const requiredFields = [
-            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'first_name', 'last_name', 'gender', 'age_group', 'mobile',
             'whatsapp_no', 'email', 'address', 'teaching_exp', 'password', 'password_confirmation'
         ];
 
@@ -575,27 +573,24 @@ export default function MembershipFormForIndividualOverseas() {
 
                             <div>
                                 <label className="block text-base font-semibold mb-1">
-                                    Date of Birth : <span className="text-red-500">*</span>
+                                    Age Group : <span className="text-red-500">*</span>
                                 </label>
-                                <DatePicker
-                                    selected={formData.dob ? new Date(formData.dob) : null}
-                                    onChange={(date) => {
-                                        setFormData(prev => ({
-                                            ...prev,
-                                            dob: date ? date.toISOString().split('T')[0] : ""
-                                        }));
-                                    }}
-                                    maxDate={new Date(Date.now() - 24 * 60 * 60 * 1000)}
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    yearDropdownItemNumber={100}
-                                    scrollableYearDropdown
-                                    dropdownMode="select"
-                                    placeholderText="Select your date of birth"
-                                    dateFormat="yyyy-MM-dd"
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                <select
+                                    name="age_group"
+                                    value={formData.age_group}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
                                     required
-                                />
+                                >
+                                    <option value="" disabled>Select Your Age Group</option>
+                                    <option value="Under 18">Under 18</option>
+                                    <option value="18-25">18-25</option>
+                                    <option value="26-35">26-35</option>
+                                    <option value="36-45">36-45</option>
+                                    <option value="46-55">46-55</option>
+                                    <option value="56-65">56-65</option>
+                                    <option value="Over 65">Over 65</option>
+                                </select>
                             </div>
 
                             <div>

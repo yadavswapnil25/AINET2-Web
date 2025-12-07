@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from '../../../Components/shared/Loader';
@@ -110,7 +108,7 @@ export default function MembershipFormforIndividualAnnual() {
         first_name: "",
         last_name: "",
         gender: "",
-        dob: "",
+        age_group: "",
         mobile: "",
         whatsapp_no: "",
         email: "",
@@ -307,7 +305,7 @@ export default function MembershipFormforIndividualAnnual() {
     // Check if form is valid for submit button
     const isFormValid = () => {
         const requiredFields = [
-            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'first_name', 'last_name', 'gender', 'age_group', 'mobile',
             'whatsapp_no', 'email', 'address', 'state', 'district',
             'teaching_exp', 'password', 'password_confirmation', 'pin'
         ];
@@ -330,7 +328,7 @@ export default function MembershipFormforIndividualAnnual() {
     // Form validation function
     const validateForm = () => {
         const requiredFields = [
-            'first_name', 'last_name', 'gender', 'dob', 'mobile',
+            'first_name', 'last_name', 'gender', 'age_group', 'mobile',
             'whatsapp_no', 'email', 'address', 'state', 'district',
             'teaching_exp', 'password', 'pin'
         ];
@@ -520,7 +518,7 @@ export default function MembershipFormforIndividualAnnual() {
                 first_name: "",
                 last_name: "",
                 gender: "",
-                dob: "",
+                age_group: "",
                 mobile: "",
                 whatsapp_no: "",
                 email: "",
@@ -683,31 +681,24 @@ export default function MembershipFormforIndividualAnnual() {
 
                             <div>
                                 <label className="block text-base font-semibold mb-1">
-                                    Date of Birth : <span className="text-red-500">*</span>
+                                    Age Group : <span className="text-red-500">*</span>
                                 </label>
-                                <div className="flex gap-2 w-full">
-                                    <DatePicker
-                                        selected={formData.dob ? new Date(formData.dob) : null}
-                                        onChange={(date) => {
-                                            setFormData(prev => ({
-                                                ...prev,
-                                                dob: date ? date.toISOString().split('T')[0] : ""
-                                            }));
-                                        }}
-                                        maxDate={new Date(Date.now() - 24 * 60 * 60 * 1000)} // Disables today and future dates
-                                        showMonthDropdown
-                                        showYearDropdown
-                                        yearDropdownItemNumber={100}
-                                        scrollableYearDropdown
-                                        dropdownMode="select"
-                                        placeholderText="Select your date of birth"
-                                        dateFormat="yyyy-MM-dd"
-                                        className="w-full p-2 bg-white rounded border border-gray-300"
-                                        required
-                                        popperClassName="date-picker-popper"
-
-                                    />
-                                </div>
+                                <select
+                                    name="age_group"
+                                    value={formData.age_group}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    required
+                                >
+                                    <option value="" disabled>Select Your Age Group</option>
+                                    <option value="Under 18">Under 18</option>
+                                    <option value="18-25">18-25</option>
+                                    <option value="26-35">26-35</option>
+                                    <option value="36-45">36-45</option>
+                                    <option value="46-55">46-55</option>
+                                    <option value="56-65">56-65</option>
+                                    <option value="Over 65">Over 65</option>
+                                </select>
                             </div>
 
                             <div>
