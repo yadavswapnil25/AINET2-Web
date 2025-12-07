@@ -510,14 +510,14 @@ export default function Profile() {
           {/* Right Column */}
           <div className="space-y-6 col-span-2">
             {/* Membership Kit */}
-            <div className="bg-white rounded-2xl border-2 border-blue-200 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+            <div >
+              {/* <h3 className="text-xl font-semibold text-gray-900 mb-6">
                 Membership Kit
-              </h3>
+              </h3> */}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {/* Membership ID Card */}
-                <div className="  col-span-2">
+                {/* <div className="  col-span-2">
                   <h4 className="font-semibold text-gray-900 mb-4">
                     Membership ID Card
                   </h4>
@@ -586,10 +586,10 @@ export default function Profile() {
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
-                </div>
+                </div> */}
 
                 {/* Membership Certificate */}
-                <div>
+                {/* <div>
                   <h4 className="font-semibold text-gray-900 mb-4">
                     Membership Certificate
                   </h4>
@@ -621,11 +621,11 @@ export default function Profile() {
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
-                </div>
+                </div> */}
               </div>
 
               {/* Member DP */}
-              <div className="mt-6">
+              {/* <div className="mt-6">
                 <h4 className="font-semibold text-gray-900 mb-4">Member DP</h4>
                 <div className="bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg p-6 text-white text-center">
                   <p className="text-sm mb-2">
@@ -648,11 +648,11 @@ export default function Profile() {
                   <Download className="w-4 h-4" />
                   <span className="text-sm">Download</span>
                 </button>
-              </div>
+              </div> */}
             </div>
 
             {/* Badge Section */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            {/* <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <h4 className="font-semibold text-gray-900 mb-4">badge 1</h4>
@@ -683,7 +683,7 @@ export default function Profile() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* AINET Scholarships */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
