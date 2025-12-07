@@ -691,13 +691,13 @@ export default function MembershipFormforIndividualAnnual() {
                                     required
                                 >
                                     <option value="" disabled>Select Your Age Group</option>
-                                    <option value="Under 18">Under 18</option>
-                                    <option value="18-25">18-25</option>
-                                    <option value="26-35">26-35</option>
-                                    <option value="36-45">36-45</option>
-                                    <option value="46-55">46-55</option>
-                                    <option value="56-65">56-65</option>
-                                    <option value="Over 65">Over 65</option>
+                                    <option value="up to 25">up to 25</option>
+                                    <option value="26-30">26-30</option>
+                                    <option value="31-35">31-35</option>
+                                    <option value="36-40">36-40</option>
+                                    <option value="41-45">41-45</option>
+                                    <option value="46-50">46-50</option>
+                                    <option value="Over 50">Over 50</option>
                                 </select>
                             </div>
 
