@@ -55,7 +55,7 @@ import RefundPolicy from "./Pages/RefundPolicy";
 import ShippingPolicy from "./Pages/ShippingPolicy";
 import FormIndLongterm from "./Components/specific/Forms/FormIndLongterm";
 import AINET2026DelegateRegistrationForm from "./Components/specific/Forms/ainet2026drf";
-import AINET2026PresentationProposalForm from "./Components/specific/Forms/ainet2026ppf";
+// import AINET2026PresentationProposalForm from "./Components/specific/Forms/ainet2026ppf"; // Hidden - deadline passed
 import FormSubmissionConfirmation from "./Pages/FormSubmissionConfirmation";
 
 const App = () => {
@@ -110,7 +110,7 @@ const App = () => {
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/FormIndLongterm" element={<FormIndLongterm />} />
           <Route path="/ainet2026drf" element={<AINET2026DelegateRegistrationForm />} />
-          <Route path="/ainet2026ppf" element={<AINET2026PresentationProposalForm />} />
+          {/* <Route path="/ainet2026ppf" element={<AINET2026PresentationProposalForm />} /> */} {/* Hidden - deadline passed */}
           <Route path="/form-submission-confirmation" element={<FormSubmissionConfirmation />} />
         </Routes>
       </Suspense>
