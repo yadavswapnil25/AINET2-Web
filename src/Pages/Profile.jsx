@@ -252,7 +252,11 @@ export default function Profile() {
     daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
   }
 
-  const expired = expiryDate ? expiryDate.toLocaleDateString() : 'N/A';
+  const expired = expiryDate ? expiryDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }) : 'N/A';
 
   const getStatusMessage = () => {
     if (isBlocked) {
@@ -475,12 +479,12 @@ export default function Profile() {
                     </span>
                     <span className="text-gray-900">{renewed}</span>
                   </div>
-                  <div className="flex">
+                  {/* <div className="flex">
                     <span className="text-gray-600 w-40">
                       Membership Expiring on :
                     </span>
                     <span className="text-gray-900">{expired}</span>
-                  </div>
+                  </div> */}
                   <div className="flex">
                     <span className="text-gray-600 w-40">
                       Membership Status :
@@ -497,7 +501,7 @@ export default function Profile() {
                         {finalStatus}
                       </span>
                       {expiryDate && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 font-semibold">
                           Expires: {expiryDate.toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',
