@@ -213,31 +213,72 @@ export default function Profile() {
   let renewed = new Date(profile?.updated_at);
   renewed = renewed.toLocaleDateString();
 
-  // Calculate expiry date (1 year from renewed date)
-  const renewedDate = new Date(profile?.updated_at);
-  const expiryDate = new Date(renewedDate);
-  expiryDate.setFullYear(renewedDate.getFullYear() + 1);
+  // Calculate membership status using the same logic as Portal
+  // Check if member is blocked (status = 0)
+  const isBlocked = profile?.status === 0 || profile?.status === '0' || profile?.status === false;
+  
+  // Check if member has membership ID
+  const hasMembershipId = !!profile?.m_id;
+  
+  // Use member_date if available, otherwise fallback to created_at
+  const memberDate = profile?.member_date ? new Date(profile.member_date) : (profile?.created_at ? new Date(profile.created_at) : null);
+  
+  // Get addMonths (could be addMonths, add_months, membership_validity_months, or validity_months)
+  const addMonths = profile?.addMonths ?? profile?.add_months ?? profile?.membership_validity_months ?? profile?.validity_months ?? 12;
+  
+  // Calculate expiry date: member_date + addMonths (set to last day of expiry month)
+  let expiryDate = null;
+  let isActive = false;
+  let daysDiff = 0;
+  
+  if (!isBlocked && hasMembershipId && memberDate && !isNaN(memberDate.getTime())) {
+    // Create expiry date by adding months
+    expiryDate = new Date(memberDate);
+    expiryDate.setMonth(expiryDate.getMonth() + addMonths);
+    
+    // Get the last day of the expiry month
+    const lastDayOfMonth = new Date(expiryDate.getFullYear(), expiryDate.getMonth() + 1, 0).getDate();
+    
+    // Set to last day of month but keep original time
+    expiryDate.setDate(lastDayOfMonth);
+    expiryDate.setHours(memberDate.getHours(), memberDate.getMinutes(), memberDate.getSeconds());
+    
+    // Check if membership is still valid
+    const currentDate = new Date();
+    isActive = currentDate <= expiryDate;
+    
+    // Calculate days difference
+    const timeDiff = expiryDate.getTime() - currentDate.getTime();
+    daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  }
 
-  const currentDate = new Date();
-
-  // Determine membership status based on expiry date
-  const isActive = currentDate <= expiryDate;
-  const expired = expiryDate.toLocaleDateString();
-
-  // Calculate days difference
-  const timeDiff = expiryDate.getTime() - currentDate.getTime();
-  const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  const expired = expiryDate ? expiryDate.toLocaleDateString() : 'N/A';
 
   const getStatusMessage = () => {
+    if (isBlocked) {
+      return 'Membership is blocked';
+    }
+    if (!hasMembershipId) {
+      return 'No membership ID';
+    }
+    if (!memberDate) {
+      return 'Invalid membership date';
+    }
     if (isActive) {
       if (daysDiff <= 30) {
         return `Expires in ${daysDiff} days`;
       }
       return `Valid for ${daysDiff} days`;
     } else {
-      return `Expired ${Math.abs(daysDiff)} days ago`;
+      if (expiryDate) {
+        return `Expired ${Math.abs(daysDiff)} days ago`;
+      }
+      return 'Expired';
     }
   };
+  
+  // Determine final status for display
+  const finalStatus = isBlocked ? 'BLOCKED' : (!hasMembershipId || !memberDate || !isActive) ? 'INACTIVE' : 'ACTIVE';
 
   const cardRef = useRef();
 
@@ -446,15 +487,26 @@ export default function Profile() {
                     </span>
                     <div className="flex flex-col">
                       <span
-                        className={`${isActive
+                        className={`${finalStatus === 'ACTIVE'
                           ? "text-green-500"
+                          : finalStatus === 'BLOCKED'
+                          ? "text-red-600"
                           : "text-red-600"
                           }  font-medium `}
                       >
-                        {isActive ? "ACTIVE" : "INACTIVE"}
+                        {finalStatus}
                       </span>
+                      {expiryDate && (
+                        <span className="text-xs text-gray-500">
+                          Expires: {expiryDate.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      )}
                       <span
-                        className={`text-xs ${isActive
+                        className={`text-xs ${finalStatus === 'ACTIVE'
                           ? daysDiff <= 30
                             ? "text-orange-500"
                             : "text-gray-500"
