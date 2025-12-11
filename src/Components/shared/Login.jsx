@@ -19,9 +19,40 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const autoLoginToken = urlParams.get('token');
+    const autoLogin = urlParams.get('autoLogin') === 'true';
+
+    // Handle auto-login from admin portal
+    if (autoLoginToken && autoLogin) {
+      setLoading(true);
+      try {
+        // Store the token
+        localStorage.setItem("ainetToken", autoLoginToken);
+        
+        // Trigger a custom event to notify AuthContext about the token change
+        window.dispatchEvent(new CustomEvent("authTokenChanged", { detail: { token: autoLoginToken } }));
+        
+        toast.success("Login successful!");
+        
+        // Remove token from URL for security
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Navigate to profile
+        navigate("/profile");
+        return;
+      } catch (error) {
+        console.error("Auto-login error:", error);
+        toast.error("Auto-login failed. Please try logging in manually.");
+        setLoading(false);
+        // Remove token from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
     const token = localStorage.getItem("ainetToken");
     // Check if we're not already on the login page due to a redirect
-    const isRedirected = new URLSearchParams(window.location.search).get('from') === 'profile';
+    const isRedirected = urlParams.get('from') === 'profile';
 
     if (token && !isRedirected) {
       // Set loading state to true to show loading indicator
@@ -31,7 +62,7 @@ export default function Login() {
     }
     
     // Check if user was redirected due to token expiration
-    const expired = new URLSearchParams(window.location.search).get('expired');
+    const expired = urlParams.get('expired');
     if (expired === 'true') {
       toast.error("Your session has expired. Please log in again.");
     }
