@@ -813,7 +813,7 @@ export default function AINET2026PresentationProposalForm() {
                     Gateway Education, Sonipat, Delhi NCR
                   </p>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
-                    "Empowering English Language Education in the Digital Era"
+                    "English Language Education Today: Educate, Empower, Employ, Innovate"
                   </p>
                   <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
                   <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">
