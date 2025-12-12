@@ -210,8 +210,14 @@ export default function Profile() {
   let created = new Date(profile?.created_at);
   created = created.toLocaleDateString();
 
-  let renewed = new Date(profile?.updated_at);
-  renewed = renewed.toLocaleDateString();
+  // Use member_date for Membership Renewed date (same format as portal)
+  let renewed = profile?.member_date 
+    ? new Date(profile.member_date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    : '-';
 
   // Calculate membership status using the same logic as Portal
   // Check if member is blocked (status = 0)
