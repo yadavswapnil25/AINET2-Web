@@ -321,7 +321,7 @@ export default function FormIndLongterm() {
                 return false;
             }
         }
-
+        if (formData.qualification.length === 0) return false;
         if (formData.qualification.length === 0) return false;
         if (formData.area_of_work.length === 0) return false;
         if (!formData.agree) return false;
@@ -862,7 +862,7 @@ export default function FormIndLongterm() {
 
                             <div>
                                 <label className="block text-base font-semibold mb-1">
-                                    Added Qualification : <span className="text-red-500">*</span>
+                                    Added Qualification : 
                                 </label>
                                 <MultiSelectDropdown
                                     options={qualificationOptions}
