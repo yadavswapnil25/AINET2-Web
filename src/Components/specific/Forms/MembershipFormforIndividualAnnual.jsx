@@ -118,13 +118,14 @@ export default function MembershipFormforIndividualAnnual() {
         teaching_exp: "",
         qualification: [],
         area_of_work: [],
+        other_area_of_work: '',
         password: "",
         agree: false,
         membership_type: "Individual",
         membership_plan: "Annual",
         pin: "",
         password_confirmation: "",
-        has_member_any: false,
+        has_member_any: '',
         name_association: '',
         expectation: '',
         has_newsletter: false,
@@ -249,9 +250,14 @@ export default function MembershipFormforIndividualAnnual() {
                 }
             }));
         } else {
+            // Normalize boolean-like selects but keep empty as-is for default option
+            let finalValue = value;
+            if (name === 'has_member_any' || name === 'has_newsletter') {
+                finalValue = value === '' ? '' : value === 'true';
+            }
             setFormData(prev => ({
                 ...prev,
-                [name]: value
+                [name]: finalValue
             }));
         }
     };
@@ -305,9 +311,9 @@ export default function MembershipFormforIndividualAnnual() {
     // Check if form is valid for submit button
     const isFormValid = () => {
         const requiredFields = [
-            'first_name', 'last_name', 'gender', 'age_group', 'mobile',
+            'title', 'first_name', 'last_name', 'gender', 'age_group', 'mobile',
             'whatsapp_no', 'email', 'address', 'state', 'district',
-            'teaching_exp', 'password', 'password_confirmation', 'pin'
+            'teaching_exp', 'expectation', 'password', 'password_confirmation', 'pin'
         ];
 
         for (let field of requiredFields) {
@@ -317,6 +323,8 @@ export default function MembershipFormforIndividualAnnual() {
         }
 
         if (formData.area_of_work.length === 0) return false;
+        // If 'Other' is selected, ensure user has entered a value
+        if (formData.area_of_work.includes('Other') && !formData.other_area_of_work.trim()) return false;
         if (!formData.agree) return false;
 
         if (!isEmailValid) return false;
@@ -327,9 +335,9 @@ export default function MembershipFormforIndividualAnnual() {
     // Form validation function
     const validateForm = () => {
         const requiredFields = [
-            'first_name', 'last_name', 'gender', 'age_group', 'mobile',
+            'title', 'first_name', 'last_name', 'gender', 'age_group', 'mobile',
             'whatsapp_no', 'email', 'address', 'state', 'district',
-            'teaching_exp', 'password', 'pin'
+            'teaching_exp', 'expectation', 'password', 'pin'
         ];
 
         for (let field of requiredFields) {
@@ -341,6 +349,10 @@ export default function MembershipFormforIndividualAnnual() {
 
         if (formData.area_of_work.length === 0) {
             toast.error("Please select at least one area of work.");
+            return false;
+        }
+        if (formData.area_of_work.includes('Other') && !formData.other_area_of_work.trim()) {
+            toast.error("Please specify the 'Other' area of work.");
             return false;
         }
 
@@ -610,7 +622,27 @@ export default function MembershipFormforIndividualAnnual() {
                             <h2 className="text-white text-xl">Personal Information</h2>
                         </div>
 
+                        {/* Row 1: Title | Email */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Title : <span className="text-red-500">*</span>
+                                </label>
+                                <select
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    required
+                                >
+                                    <option value="" disabled>Select Title</option>
+                                    <option value="Mr.">Mr.</option>
+                                    <option value="Ms.">Ms.</option>
+                                    <option value="Mrs.">Mrs.</option>
+                                    <option value="Dr.">Dr.</option>
+                                    <option value="Prof.">Prof.</option>
+                                </select>
+                            </div>
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     Email : <span className="text-red-500">*</span>
@@ -626,6 +658,10 @@ export default function MembershipFormforIndividualAnnual() {
                                     required
                                 />
                             </div>
+                        </div>
+
+                        {/* Row 2: First Name | Last Name */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     First Name : <span className="text-red-500">*</span>
@@ -633,7 +669,7 @@ export default function MembershipFormforIndividualAnnual() {
                                 <input
                                     type="text"
                                     name="first_name"
-                                    placeholder="Enter Your Name"
+                                    placeholder="Enter Your First Name"
                                     value={formData.first_name}
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
@@ -647,14 +683,17 @@ export default function MembershipFormforIndividualAnnual() {
                                 <input
                                     type="text"
                                     name="last_name"
-                                    placeholder="Enter Your Name"
+                                    placeholder="Enter Your Last Name"
                                     value={formData.last_name}
                                     onChange={handleChange}
                                     className="w-full p-2 bg-white rounded border border-gray-300"
                                     required
                                 />
                             </div>
+                        </div>
 
+                        {/* Row 3: Gender | Age Group */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     Gender : <span className="text-red-500">*</span>
@@ -694,7 +733,10 @@ export default function MembershipFormforIndividualAnnual() {
                                     <option value="Over 50">Over 50</option>
                                 </select>
                             </div>
+                        </div>
 
+                        {/* Row 4: Contact No. | WhatsApp No. */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
                                     Contact No. : <span className="text-red-500">*</span>
@@ -726,39 +768,9 @@ export default function MembershipFormforIndividualAnnual() {
                                     required
                                 />
                             </div>
-
-                            <div>
-                                <label className="block text-base font-semibold mb-1">
-                                    PIN Code : <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    name="pin"
-                                    placeholder="Enter Your PIN"
-                                    value={formData.pin}
-                                    onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
-                                    maxLength={6}
-                                    required
-                                />
-                            </div>
                         </div>
 
-                        <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">
-                                Address (Correspondence) : <span className="text-red-500">*</span>
-                            </label>
-                            <textarea
-                                name="address"
-                                placeholder="Enter Your Address"
-                                value={formData.address}
-                                onChange={handleChange}
-                                className="w-full p-2 bg-white rounded border border-gray-300"
-                                rows="3"
-                                required
-                            ></textarea>
-                        </div>
-
+                        {/* Row 5: State | District */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
@@ -796,7 +808,7 @@ export default function MembershipFormforIndividualAnnual() {
                                     disabled={!formData.state || loadingDistricts}
                                 >
                                     <option value="">
-                                        {!formData.state ? "Select state first" :
+                                        {!formData.state ? "Select State First" :
                                             loadingDistricts ? "Loading districts..." : "Select Your District"}
                                     </option>
                                     {districts.map(district => (
@@ -805,6 +817,55 @@ export default function MembershipFormforIndividualAnnual() {
                                         </option>
                                     ))}
                                 </select>
+                            </div>
+                        </div>
+
+                        {/* Row 6: Address (Correspondence) */}
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Address (Correspondence) : <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                name="address"
+                                placeholder="Enter Your Correspondence Address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                rows="3"
+                                required
+                            ></textarea>
+                        </div>
+
+                        {/* Row 7: Address (Institutional) | Pincode */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Address (Institutional) :
+                                </label>
+                                <textarea
+                                    name="address_institution"
+                                    placeholder="Enter Institutional Address"
+                                    value={formData.address_institution}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    rows="3"
+                                ></textarea>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label className="block text-base font-semibold mb-1">
+                                    Pincode : <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="pin"
+                                    placeholder="Enter Your PIN Code"
+                                    value={formData.pin}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    maxLength={6}
+                                    required
+                                />
                             </div>
                         </div>
                     </div>
@@ -835,15 +896,31 @@ export default function MembershipFormforIndividualAnnual() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
                                 <label className="block text-base font-semibold mb-1">
-                                    Area's of your work : <span className="text-red-500">*</span>
+                                    Area(s) of your work : <span className="text-red-500">*</span>
                                 </label>
                                 <MultiSelectDropdown
                                     options={areaOfWorkOptions}
                                     selected={formData.area_of_work}
                                     onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
-                                    placeholder="Select areas of work"
+                                    placeholder="Select Areas of Your Work"
                                     name="area_of_work"
                                 />
+                                {formData.area_of_work.includes('Other') && (
+                                    <div className="mt-2">
+                                        <label className="block text-sm font-semibold mb-1">
+                                            Please specify other area of work <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="other_area_of_work"
+                                            placeholder="Enter other area of work"
+                                            value={formData.other_area_of_work}
+                                            onChange={handleChange}
+                                            className="w-full p-2 bg-white rounded border border-gray-300"
+                                            required
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             <div>
@@ -854,10 +931,78 @@ export default function MembershipFormforIndividualAnnual() {
                                     options={qualificationOptions}
                                     selected={formData.qualification}
                                     onChange={(selected) => handleMultiSelectChange('qualification', selected)}
-                                    placeholder="Select qualifications"
+                                    placeholder="Select Added Qualification"
                                     name="qualification"
                                 />
                             </div>
+                        </div>
+
+                        {/* Association membership */}
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Are you member of any other English Teacher Association(s) : <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="has_member_any"
+                                value={formData.has_member_any === '' ? '' : formData.has_member_any === true ? 'true' : 'false'}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                required
+                            >
+                                <option value="">Select Option</option>
+                                <option value="true">YES</option>
+                                <option value="false">NO</option>
+                            </select>
+                        </div>
+
+                        {formData.has_member_any === true && (
+                            <div className="mt-4">
+                                <label className="block text-base font-semibold mb-1">
+                                    Name of the Association(s) : <span className="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    name="name_association"
+                                    placeholder="Enter Association Name(s)"
+                                    value={formData.name_association}
+                                    onChange={handleChange}
+                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    rows="2"
+                                    required={formData.has_member_any === true}
+                                />
+                            </div>
+                        )}
+
+                        {/* Expectations from AINET */}
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Your expectations from AINET : <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                name="expectation"
+                                placeholder="Enter your expectations"
+                                value={formData.expectation}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                rows="3"
+                                required
+                            />
+                        </div>
+
+                        {/* Newsletter preference */}
+                        <div className="mt-4">
+                            <label className="block text-base font-semibold mb-1">
+                                Like to receive our newsletter ? <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                                name="has_newsletter"
+                                value={formData.has_newsletter}
+                                onChange={handleChange}
+                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                required
+                            >
+                                <option value="true">YES</option>
+                                <option value="false">NO</option>
+                            </select>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">

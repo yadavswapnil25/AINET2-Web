@@ -105,7 +105,7 @@ export default function MembershipFormForIndividualOverseas() {
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     const [isEmailValid, setIsEmailValid] = useState(true);
 
-    // Options for multi-select dropdown
+    // Options for multi-select dropdowns
     const areaOfWorkOptions = [
         "Primary School",
         "Secondary School",
@@ -113,6 +113,15 @@ export default function MembershipFormForIndividualOverseas() {
         "Senior College/University",
         "Teacher Education",
         "Other"
+    ];
+
+    const qualificationOptions = [
+        "B.Ed",
+        "D.Ed",
+        "M.Ed",
+        "CELTA/DELTA/TTS",
+        "PGCTE",
+        "PGDTE"
     ];
 
     const [formData, setFormData] = useState({
@@ -125,10 +134,11 @@ export default function MembershipFormForIndividualOverseas() {
         whatsapp_no: '',
         email: '',
         address: '',
-       
+
         teaching_exp: '',
 
         area_of_work: [],
+        qualification: [],
         password: '',
         agree: false,
         membership_type: "Individual",
@@ -648,7 +658,7 @@ export default function MembershipFormForIndividualOverseas() {
                             </label>
                             <textarea
                                 name="address"
-                                placeholder="Enter Your Address"
+                                placeholder="Enter Your Correspondence Address"
                                 value={formData.address}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-white rounded border border-gray-300"
@@ -721,17 +731,32 @@ export default function MembershipFormForIndividualOverseas() {
                             </div>
                         )}
 
-                        <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">
-                                Area's of your work : <span className="text-red-500">*</span>
-                            </label>
-                            <MultiSelectDropdown
-                                options={areaOfWorkOptions}
-                                selected={formData.area_of_work}
-                                onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
-                                placeholder="Select areas of work"
-                                name="area_of_work"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Area(s) of your work : <span className="text-red-500">*</span>
+                                </label>
+                                <MultiSelectDropdown
+                                    options={areaOfWorkOptions}
+                                    selected={formData.area_of_work}
+                                    onChange={(selected) => handleMultiSelectChange('area_of_work', selected)}
+                                    placeholder="Select Areas of Your Work"
+                                    name="area_of_work"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-base font-semibold mb-1">
+                                    Added Qualification :
+                                </label>
+                                <MultiSelectDropdown
+                                    options={qualificationOptions}
+                                    selected={formData.qualification}
+                                    onChange={(selected) => handleMultiSelectChange('qualification', selected)}
+                                    placeholder="Select Added Qualification"
+                                    name="qualification"
+                                />
+                            </div>
                         </div>
 
                         <div className="mt-4">
@@ -740,25 +765,12 @@ export default function MembershipFormForIndividualOverseas() {
                             </label>
                             <textarea
                                 name="expectations"
-                                placeholder="Enter your expectations"
+                                placeholder="Enter Your Expectations"
                                 value={formData.expectations}
                                 onChange={handleChange}
                                 className="w-full p-2 bg-white rounded border border-gray-300"
                                 rows="3"
                             />
-                        </div>
-
-                        <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">Like to receive newsletter ?</label>
-                            <select
-                                name="receive_newsletter"
-                                value={formData.receive_newsletter}
-                                onChange={handleChange}
-                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
-                            >
-                                <option value="YES">YES</option>
-                                <option value="NO">NO</option>
-                            </select>
                         </div>
 
                         {/* Enhanced Password Fields */}
