@@ -6,6 +6,7 @@ import Loader from "../../../Components/shared/Loader";
 import { toast } from "react-toastify";
 import { FaArrowRight } from "react-icons/fa";
 import CountryCodeSelector from "../../shared/CountryCodeSelector";
+import FeedbackPopup from "../../shared/FeedbackPopup";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -63,6 +64,8 @@ export default function AINET2026DelegateRegistrationForm() {
   const [isValidatingMembership, setIsValidatingMembership] = useState(false);
   const [membershipDiscount, setMembershipDiscount] = useState(null);
   const [showDiscountPopup, setShowDiscountPopup] = useState(false);
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
+  const [completedDrfId, setCompletedDrfId] = useState(null);
   const workAreaDropdownRef = useRef(null);
 
   const [formData, setFormData] = useState(() => ({ ...initialDrfFormData }));
@@ -421,11 +424,13 @@ export default function AINET2026DelegateRegistrationForm() {
       await startDrfPaymentFlow(drfId);
  
        toast.success("✅ Delegate registration and payment completed successfully!");
-       setFormData({ ...initialDrfFormData });
-       setSelectedFile(null);
-       setCurrentStep(1);
-       setHasPrefilledFromExisting(false);
-       navigate("/form-submission-confirmation");
+       
+       // Show feedback popup after successful registration
+       setCompletedDrfId(drfId);
+       setShowFeedbackPopup(true);
+       
+       // Note: Don't navigate immediately - let user submit feedback first
+       // Navigation will happen after feedback popup is closed
      } catch (error) {
        console.error("Submission Error:", error);
        toast.error(`❌ ${error?.message || 'Registration or payment failed. Please try again.'}`);
@@ -463,6 +468,17 @@ export default function AINET2026DelegateRegistrationForm() {
     if (!orderResponse.ok || orderResult?.status === false) {
       const message = orderResult?.message || "Unable to initiate payment.";
       throw new Error(message);
+    }
+
+    // Check if user is sponsored (payment not required)
+    if (orderResult?.data?.sponsored === true || orderResult?.data?.payment_required === false) {
+      toast.success("✅ Registration confirmed! Payment not required for sponsored participants.", {
+        duration: 5000,
+      });
+      // Show feedback popup for sponsored users too
+      setCompletedDrfId(drfId);
+      setShowFeedbackPopup(true);
+      return; // Skip payment flow
     }
 
     const orderData = orderResult?.data?.order;
@@ -562,6 +578,10 @@ export default function AINET2026DelegateRegistrationForm() {
               return;
             }
 
+            // After successful payment confirmation, show feedback popup
+            setCompletedDrfId(drfId);
+            setShowFeedbackPopup(true);
+            
             resolve(true);
           } catch (confirmationError) {
             reject(confirmationError);
@@ -1664,7 +1684,22 @@ export default function AINET2026DelegateRegistrationForm() {
         </div>
       )}
 
-      {/* Removed formSubmissionConfirmation and related ref */}
+      {/* Feedback Popup */}
+      <FeedbackPopup
+        isOpen={showFeedbackPopup}
+        onClose={() => {
+          setShowFeedbackPopup(false);
+          // Navigate after feedback is submitted or skipped
+          setFormData({ ...initialDrfFormData });
+          setSelectedFile(null);
+          setCurrentStep(1);
+          setHasPrefilledFromExisting(false);
+          navigate("/form-submission-confirmation?type=drf");
+        }}
+        drfId={completedDrfId}
+        userEmail={formData.email}
+        userName={formData.full_name}
+      />
     </>
   );
 }

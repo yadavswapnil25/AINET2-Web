@@ -1,7 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
+  const [searchParams] = useSearchParams();
+  const formType = searchParams.get('type') || 'ppf'; // Default to 'ppf' for backward compatibility
+
+  // Determine the message based on form type
+  const getMessage = () => {
+    if (formType === 'drf') {
+      return 'Thank you for submitting your delegate registration form. Your submission has been received and is being reviewed.';
+    }
+    return 'Thank you for submitting your presentation proposal form. Your submission has been received and is being reviewed.';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
@@ -30,7 +41,7 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
           </h1>
           
           <p className="text-lg text-gray-600 mb-6">
-            Thank you for submitting your presentation proposal form. Your submission has been received and is being reviewed.
+            {getMessage()}
           </p>
 
 
