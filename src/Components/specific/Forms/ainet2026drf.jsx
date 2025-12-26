@@ -1563,7 +1563,7 @@ export default function AINET2026DelegateRegistrationForm() {
                         <div>
                           <h5 className="font-semibold mb-3 text-blue-800 text-sm">
                             {" "}
-                            After 25 December 2025
+                            After 29 December 2025
                           </h5>
                           <div className="space-y-2 text-sm">
                             <p>• Research and PG students: INR 2000</p>
