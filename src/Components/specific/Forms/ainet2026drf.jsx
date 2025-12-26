@@ -1552,7 +1552,7 @@ export default function AINET2026DelegateRegistrationForm() {
                       <div className="grid grid-cols-2 gap-4 mb-8">
                         <div>
                           <h5 className="font-semibold mb-3 text-blue-800 text-sm">
-                            Up to 25 December 2025
+                            Up to 29 December 2025
                           </h5>
                           <div className="space-y-2 text-sm">
                             <p>• Research and PG students: INR 1200</p>
