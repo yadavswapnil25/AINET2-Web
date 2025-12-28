@@ -257,7 +257,7 @@ const Home = () => {
               </h3>
               <p className="text-xl text-center md:text-left">
                 
-              16-17 JANUARY 2026 SONIPAT (Delhi-NCR), India
+              15-17 JANUARY 2026 SONIPAT (Delhi-NCR), India
               </p>
               <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
                Coming soon

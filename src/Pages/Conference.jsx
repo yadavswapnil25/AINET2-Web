@@ -115,7 +115,7 @@ export default function ConferencePage() {
             location: "SONIPAT (Delhi-NCR)",
             registrationLink: "https://conf.theainet.net/",
             theme: "English Language Education Today: Educate, Empower, Employ, Innovate",
-            fullTitle: "9th AINET INTERNATIONAL CONFERENCE , 16-17 JANUARY 2026"
+            fullTitle: "9th AINET INTERNATIONAL CONFERENCE , 15-17 JANUARY 2026"
         },
         subThemes: [
             "ELE for an Inclusive World",
