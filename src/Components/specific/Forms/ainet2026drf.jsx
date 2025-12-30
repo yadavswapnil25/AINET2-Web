@@ -116,7 +116,8 @@ export default function AINET2026DelegateRegistrationForm() {
     "Jammu and Kashmir",
     "Ladakh",
     "Lakshadweep",
-    "Puducherry"
+    "Puducherry",
+    "Not Applicable",
   ];
 
   const handleChange = (e) => {
