@@ -51,8 +51,13 @@ const Webinar = () => {
         const response = await fetch(`${baseUrl}/client/webinar`);
         const data = await response.json();
         
+        console.log('Webinar API Response:', data); // Debug log
+        
         if (data.status && data.data && data.data.webinar) {
           setWebinar(data.data.webinar);
+          console.log('Webinar data set:', data.data.webinar); // Debug log
+        } else {
+          console.log('No webinar found in response:', data); // Debug log
         }
       } catch (error) {
         console.error("Error fetching webinar:", error);

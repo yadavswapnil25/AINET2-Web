@@ -41,43 +41,61 @@ const LiveStream = ({
   const renderStream = () => {
     switch (streamType) {
       case 'youtube':
-        if (streamId) {
-          // Extract video ID from URL if full URL is provided
+        if (streamUrl || streamId) {
+          // Extract video ID from URL or use provided streamId
           let videoId = streamId;
           if (streamUrl) {
-            const match = streamUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-            if (match) videoId = match[1];
+            // Try to extract video ID from various YouTube URL formats
+            const patterns = [
+              /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/,
+              /youtube\.com\/live\/([^"&?\/\s]+)/,
+              /youtube\.com\/watch\?v=([^"&?\/\s]+)/
+            ];
+            
+            for (const pattern of patterns) {
+              const match = streamUrl.match(pattern);
+              if (match) {
+                videoId = match[1];
+                break;
+              }
+            }
           }
           
-          return (
-            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-lg"
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`}
-                title="YouTube Live Stream"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          );
-        }
-        break;
-
-      case 'facebook':
-        if (streamUrl || streamId) {
-          // Facebook Live embed
-          const videoId = streamId || extractFacebookVideoId(streamUrl);
           if (videoId) {
             return (
               <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                 <iframe
                   className="absolute top-0 left-0 w-full h-full rounded-lg"
-                  src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(streamUrl || `https://www.facebook.com/watch/?v=${videoId}`)}&show_text=false&width=734`}
+                  src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0`}
+                  title="YouTube Live Stream"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            );
+          }
+        }
+        break;
+
+      case 'facebook':
+        if (streamUrl || streamId) {
+          // Facebook Live embed - use the stream URL directly
+          const embedUrl = streamUrl 
+            ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(streamUrl)}&show_text=false&width=734&height=413`
+            : (streamId ? `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(`https://www.facebook.com/watch/?v=${streamId}`)}&show_text=false&width=734&height=413` : null);
+          
+          if (embedUrl) {
+            return (
+              <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full rounded-lg"
+                  src={embedUrl}
                   title="Facebook Live Stream"
                   frameBorder="0"
                   allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"
                   allowFullScreen
+                  scrolling="no"
                 />
               </div>
             );
