@@ -38,11 +38,13 @@ const Highlight = () => {
     return null; // Or return a loading placeholder
   }
 
-  const handleClick = () => {
+  const handleClick = (e) => {
     if (highlightData.link_url) {
+      e.preventDefault();
+      e.stopPropagation();
       // Check if it's an absolute URL or relative path
       if (highlightData.link_url.startsWith('http://') || highlightData.link_url.startsWith('https://')) {
-        window.open(highlightData.link_url, '_blank');
+        window.open(highlightData.link_url, '_blank', 'noopener,noreferrer');
       } else {
         // Relative path - use React Router or window.location
         window.location.href = highlightData.link_url;
@@ -65,18 +67,32 @@ const Highlight = () => {
 
   return (
     <>
-      <div className={`w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative ${highlightData.link_url ? 'cursor-pointer hover:bg-[#C0D8B5] transition-colors' : ''}`}>
-        <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl">
-          {highlightData.heading}
-        </span>
-        {highlightData.link_url ? (
-          <div onClick={handleClick} className="flex-1">
-            {highlightContent}
-          </div>
-        ) : (
-          highlightContent
-        )}
-      </div>
+      {highlightData.link_url ? (
+        <div 
+          onClick={handleClick}
+          className="w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative cursor-pointer hover:bg-[#C0D8B5] transition-colors active:bg-[#B0C8A5]"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              handleClick(e);
+            }
+          }}
+          aria-label={`Click to visit: ${highlightData.subheading}`}
+        >
+          <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl pointer-events-none">
+            {highlightData.heading}
+          </span>
+          {highlightContent}
+        </div>
+      ) : (
+        <div className="w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative">
+          <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl">
+            {highlightData.heading}
+          </span>
+          {highlightContent}
+        </div>
+      )}
     </>
   );
 };
