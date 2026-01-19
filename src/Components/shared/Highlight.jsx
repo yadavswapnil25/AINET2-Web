@@ -4,7 +4,7 @@ import { baseUrl } from "../../utils/constant";
 const Highlight = () => {
   const [highlightData, setHighlightData] = useState({
     heading: "HIGHLIGHTS",
-    subheading: "9th AINET International Conference 2026 - To Be Announced SOON",
+    subheading: "",
     link_url: null
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +22,7 @@ const Highlight = () => {
       if (data.status && data.data?.highlight) {
         setHighlightData({
           heading: data.data.highlight.heading || "HIGHLIGHTS",
-          subheading: data.data.highlight.subheading || "9th AINET International Conference 2026 - To Be Announced SOON",
+          subheading: data.data.highlight.subheading || "",
           link_url: data.data.highlight.link_url || null
         });
       }
