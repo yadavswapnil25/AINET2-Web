@@ -224,7 +224,7 @@ const Home = () => {
           style={{ backgroundImage: `url(${bg2})` }}
         >
           {/* top */}
-          <h2 className="text-3xl w-full font-medium">UPCOMING CONFERENCE</h2>
+          {/* <h2 className="text-3xl w-full font-medium">UPCOMING CONFERENCE</h2>
           <div className="w-full h-1/2 flex flex-col md:flex-row p-0 md:p-6 gap-8">
             <div className="w-full md:w-1/2 h-full flex justify-center items-center">
               {loading ? (
@@ -263,7 +263,7 @@ const Home = () => {
                Coming soon
               </button>
             </div>
-          </div>
+          </div> */}
 
           {/* bottom */}
           <h2 className="text-3xl w-full font-medium mt-10 font-sans">UPCOMING EVENTS</h2>
