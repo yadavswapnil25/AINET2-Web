@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Loader from "../Components/shared/Loader";
 import { useAuth } from "../context/AuthContext";
 import html2canvas from "html2canvas";
+import RenewMembershipModal from "../Components/specific/RenewMembershipModal";
 
 export default function Profile() {
   const [profile, setProfile] = useState(null);
@@ -25,6 +26,7 @@ export default function Profile() {
   const token = localStorage.getItem("ainetToken");
   const { setProfileData, handleTokenExpiration } = useAuth();
   const [showInboxModal, setShowInboxModal] = useState(false);
+  const [showRenewModal, setShowRenewModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: profile?.name,
@@ -530,8 +532,20 @@ export default function Profile() {
                 </div>
 
                 {!isActive && (
-                  <button className="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 font-semibold">
+                  <button
+                    onClick={() => setShowRenewModal(true)}
+                    className="mt-4 px-4 py-2 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 font-semibold"
+                  >
                     Renew Now - Membership Expired
+                  </button>
+                )}
+
+                {isActive && daysDiff <= 30 && (
+                  <button
+                    onClick={() => setShowRenewModal(true)}
+                    className="mt-4 px-4 py-2 bg-orange-100 text-orange-600 rounded-lg text-sm hover:bg-orange-200 font-semibold"
+                  >
+                    Renew / Upgrade Plan
                   </button>
                 )}
               </div>
@@ -949,6 +963,14 @@ export default function Profile() {
       )}
 
       {showInboxModal && <InboxModal setShowInboxModal={setShowInboxModal} />}
+
+      {showRenewModal && (
+        <RenewMembershipModal
+          profile={profile}
+          onClose={() => setShowRenewModal(false)}
+          onSuccess={fetchProfile}
+        />
+      )}
     </div>
   );
 }
