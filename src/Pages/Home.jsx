@@ -85,27 +85,9 @@ const Home = () => {
     fetchEvents();
   }, []);
 
-  // Fallback events if API fails or returns no events
-  const eventsData = events.length > 0 ? events : [
-    {
-      title: "AINET Foundation Week Programmes.",
-      location: "Online",
-      date: "5 - 12 September 2025",
-      link: "/conference"
-    },
-    {
-      title: "Rural ELT Conference.",
-      location: "Maharashtra",
-      date: "October 2025",
-      link: "/webinar"
-    },
-    {
-      title: "Webinar on HELE.",
-      location: "Online",
-      date: "TBA",
-      link: "/fdlecture"
-    },
-  ];
+  // Show only API events (no hardcoded fallback). If API returns empty,
+  // the UI below will show "No upcoming events at the moment."
+  const eventsData = events;
   return (
     <>
       <Highlight />
@@ -223,48 +205,6 @@ const Home = () => {
           className="mt-12 relative w-full h-full rounded-3xl overflow-hidden  flex flex-col bg-no-repeat p-6 md:p-8 lg:p-14 bg-cover bg-center"
           style={{ backgroundImage: `url(${bg2})` }}
         >
-          {/* top */}
-          {/* <h2 className="text-3xl w-full font-medium">UPCOMING CONFERENCE</h2>
-          <div className="w-full h-1/2 flex flex-col md:flex-row p-0 md:p-6 gap-8">
-            <div className="w-full md:w-1/2 h-full flex justify-center items-center">
-              {loading ? (
-                <div className="w-full h-auto max-w-md rounded-2xl bg-gray-200 animate-pulse aspect-video"></div>
-              ) : banners[2]?.image_url ? (
-                banners[2].link_url ? (
-                  <a href={banners[2].link_url} target="_blank" rel="noopener noreferrer">
-                    <img 
-                      src={banners[2].image_url} 
-                      alt={banners[2].title || "upcoming conference"} 
-                      className="w-full h-auto max-w-md rounded-2xl object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                    />
-                  </a>
-                ) : (
-                  <img 
-                    src={banners[2].image_url} 
-                    alt={banners[2].title || "upcoming conference"} 
-                    className="w-full h-auto max-w-md rounded-2xl object-cover"
-                  />
-                )
-              ) : (
-                <img src={upcoming} alt="upcoming conference" />
-              )}
-            </div>
-
-            <div className=" w-full md:w-1/2 h-full flex items-center  md:items-start justify-center flex-col gap-8">
-              <h3 className="font-bold text-3xl md:text-4xl">
-                <strong>9th AINET International Conference </strong>
- <br />
-              </h3>
-              <p className="text-xl text-center md:text-left">
-                
-              15-17 JANUARY 2026 SONIPAT (Delhi-NCR), India
-              </p>
-              <button className="uppercase bg-[#D0E8C5] border border-[#47b81361] md:border-none rounded-4xl p-4 w-[305px] font-xl font-bold  btnshadow cursor-pointer" onClick={()=>window.location.href="/Conference"}>
-               Coming soon
-              </button>
-            </div>
-          </div> */}
-
           {/* bottom */}
           <h2 className="text-3xl w-full font-medium mt-10 font-sans">UPCOMING EVENTS</h2>
 
