@@ -7,7 +7,7 @@ import newh2 from "/newh22.jpg";
 
 import { FaCalendar } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MembershipPlans from "../Components/shared/MembershipPlans";
 import Archives from "../Components/specific/Home/Archives";
 import Gallery from "../Components/specific/Home/Gallery";
@@ -19,6 +19,7 @@ import { baseUrl } from "../utils/constant";
 
 const Home = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [banners, setBanners] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -70,7 +71,11 @@ const Home = () => {
             title: event.title,
             location: event.location || "Online",
             date: event.date_display || "TBA",
-            link: event.link_url || "/conference"
+            link: event.link_url || "",
+            description: event.description || "",
+            topic_description: event.topic_description || "",
+            banner_image: event.banner_image || "",
+            event_type: event.event_type || "",
           }));
           
           setEvents(mappedEvents);
@@ -88,6 +93,14 @@ const Home = () => {
   // Show only API events (no hardcoded fallback). If API returns empty,
   // the UI below will show "No upcoming events at the moment."
   const eventsData = events;
+  const handleEventClick = (event) => {
+    if (event.link) {
+      window.location.href = event.link;
+      return;
+    }
+    navigate(`/events/${event.id}`, { state: { event } });
+  };
+
   return (
     <>
       <Highlight />
@@ -242,7 +255,7 @@ const Home = () => {
                     </p>
                   </div>
 
-                  <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer hover:bg-gray-800 transition-colors" onClick={()=>window.location.href=event.link}>
+                  <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer hover:bg-gray-800 transition-colors" onClick={() => handleEventClick(event)}>
                     <img src="./arrowright.svg" alt="arrowright" />
                   </button>
                 </div>

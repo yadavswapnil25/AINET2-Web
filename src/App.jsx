@@ -35,6 +35,7 @@ const Webinar = lazy(() => import("./Pages/Webinar"));
 const Author = lazy(() => import("./Pages/Author"));
 const News = lazy(() => import("./Pages/News"));
 const NewsDetails = lazy(() => import("./Pages/NewsDetails"));
+const EventDetails = lazy(() => import("./Pages/EventDetails"));
 const FDLecture = lazy(() => import("./Pages/FDLecture"));
 const AboutAINETAffiliates = lazy(() => import("./Pages/AboutAINETAffiliates"));
 const AboutWomenInAINET = lazy(() => import("./Pages/AboutWomenInAINET"));
@@ -99,6 +100,7 @@ const App = () => {
           <Route path="/AINETConnect" element={<AINETConnect />} />
           <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/news/newsDetail" element={<NewsDetails />} />
+          <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
           <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
