@@ -1,7 +1,40 @@
 import React from "react";
 import { FaUser, FaUniversity, FaCheck } from "react-icons/fa";
+import {
+  useMembershipPricing,
+  PRICING_CONTEXT,
+  formatPrice,
+} from "../utils/pricing";
+
+const PriceTag = ({ priced, loading, promoLabel }) => {
+  if (loading || !priced) {
+    return <div className="h-10 w-32 mx-auto mb-4 bg-gray-200 rounded animate-pulse" />;
+  }
+
+  const discounted = Number(priced.discount_percentage) > 0;
+
+  return (
+    <div className="mb-4">
+      <p className="text-4xl font-extrabold text-gray-800">
+        \u20b9{formatPrice(priced.price)}
+      </p>
+      {discounted && (
+        <p className="mt-1 text-sm text-gray-500">
+          <span className="line-through mr-2">\u20b9{formatPrice(priced.base_price)}</span>
+          <span className="font-semibold text-green-700">
+            {Math.round(priced.discount_percentage)}% off
+            {promoLabel ? ` - ${promoLabel}` : ""}
+          </span>
+        </p>
+      )}
+    </div>
+  );
+};
 
 const MembershipArea = () => {
+  const { plans: pricing, promo, loading: pricingLoading } = useMembershipPricing(
+    PRICING_CONTEXT.NEW
+  );
   const membershipSections = [
     {
       title: "Membership privileges",
@@ -43,12 +76,13 @@ const MembershipArea = () => {
   const membershipTypes = [
     {
       type: "Individual",
+      typeKey: "Individual",
       icon: <FaUser className="mr-2 text-lg" />,
       iconForCard: <FaUser className="inline-block text-xl mr-2" />,
       plans: [
         {
           name: "Individual Annual",
-          price: "₹500.00",
+          planKey: "Annual",
           features: [
             "1-year Membership",
             "Indian Access only",
@@ -58,7 +92,7 @@ const MembershipArea = () => {
         },
         {
           name: "Individual Long Term",
-          price: "₹1200.00",
+          planKey: "LongTerm",
           features: [
             "3-year Membership",
             "Indian Access only",
@@ -68,7 +102,7 @@ const MembershipArea = () => {
         },
         {
           name: "Individual Overseas",
-          price: "₹1725.00",
+          planKey: "Overseas",
           features: [
             "1-year Membership",
             "Global Access",
@@ -80,12 +114,13 @@ const MembershipArea = () => {
     },
     {
       type: "Institutional",
+      typeKey: "Institutional",
       icon: <FaUniversity className="mr-2 text-lg" />,
       iconForCard: <FaUniversity className="inline-block text-xl mr-2" />,
       plans: [
         {
           name: "Institutional Annual",
-          price: "₹1000.00",
+          planKey: "Annual",
           features: [
             "1-year Membership",
             "Indian Access only",
@@ -95,7 +130,7 @@ const MembershipArea = () => {
         },
         {
           name: "Institutional Long Term",
-          price: "₹2500.00",
+          planKey: "LongTerm",
           features: [
             "3-year Membership",
             "Indian Access only",
@@ -105,7 +140,7 @@ const MembershipArea = () => {
         },
         {
           name: "Institutional Overseas",
-          price: "₹2600.00",
+          planKey: "Overseas",
           features: [
             "1-year Membership",
             "Global Access only",
@@ -122,7 +157,6 @@ const MembershipArea = () => {
     console.log("Initiating payment for:", {
       membershipType: type,
       planName: plan.name,
-      price: plan.price,
       features: plan.features
     });
 
@@ -177,7 +211,11 @@ const MembershipArea = () => {
                       {type.iconForCard}
                       {plan.name}
                     </h3>
-                    <p className="text-4xl font-extrabold mb-4 text-gray-800">{plan.price}</p>
+                    <PriceTag
+                      priced={pricing?.[type.typeKey]?.[plan.planKey]}
+                      loading={pricingLoading}
+                      promoLabel={promo?.active ? promo?.label : null}
+                    />
                   </div>
                   <ul className="mt-4 mb-4 space-y-2 text-base">
                     {plan.features.map((feature, fIdx) => (

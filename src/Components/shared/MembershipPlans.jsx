@@ -3,10 +3,33 @@ import { FaUser, FaUniversity } from 'react-icons/fa';
 import PlanCard from '../shared/Plancard';
 import bg3 from "/bg3.png";
 import { useNavigate } from 'react-router-dom';
+import { useMembershipPricing, PRICING_CONTEXT } from '../../utils/pricing';
+
+// Prices and the promotional discount come from the API, so this list only
+// describes each plan - never what it costs.
+const PLAN_META = {
+    individual: {
+        type: 'Individual',
+        plans: [
+            { title: 'Annual', duration: '1', badge: 'Basic' },
+            { title: 'LongTerm', duration: '3', badge: '20 % OFF' },
+            { title: 'Overseas', duration: '1', badge: '' },
+        ],
+    },
+    institutional: {
+        type: 'Institutional',
+        plans: [
+            { title: 'Annual', duration: '1', badge: 'Basic' },
+            { title: 'LongTerm', duration: '3', badge: '20 % OFF' },
+            { title: 'Overseas', duration: '1', badge: '' },
+        ],
+    },
+};
 
 export default function MembershipPlans() {
     const [planType, setPlanType] = useState('individual');
     const navigate = useNavigate()
+    const { plans: pricing, promo, loading: pricingLoading } = useMembershipPricing(PRICING_CONTEXT.NEW);
 
     const planFeatures = [
         "Membership Privileges",
@@ -18,63 +41,24 @@ export default function MembershipPlans() {
         setPlanType(type);
     };
 
-    const individualPlans = [
-        {
-            title: "Annual",
-            price: "500.00",
-            currency: "INR",
-            duration: "1",
-            type: "Individual",
-            discountPercentage: "Basic",
-        },
-        {
-            title: "LongTerm",
-            price: "1200.00",
-            currency: "INR",
-            duration: "3",
-            type: "Individual",
-            discountPercentage: "20 % OFF",
-          
-        },
-        {
-            title: "Overseas",
-            price: "1725.00",
-            currency: "INR",
-            duration: "1",
-            type: "Individual",
-            discountPercentage: "",
+    const { type: membershipType, plans: planMeta } = PLAN_META[planType];
 
-        }
-    ];
+    const plansToShow = planMeta.map((meta) => {
+        const priced = pricing?.[membershipType]?.[meta.title];
+        const discount = Number(priced?.discount_percentage ?? 0);
 
-    const institutionalPlans = [
-        {
-            title: "Annual",
-            price: "1000.00",
-            currency: "INR",
-            duration: "1",
-            type: "Institutional",
-            discountPercentage: "Basic",
-        },
-        {
-            title: "LongTerm",
-            price: "2500.00",
-            currency: "INR",
-            duration: "3",
-            type: "Institutional",
-            discountPercentage: "20 % OFF",
-        },
-        {
-            title: "Overseas",
-            price: "5000.00",
-            currency: "INR",
-            duration: "1",
-            type: "Institutional",
-            discountPercentage: "",
-        }
-    ];
-
-    const plansToShow = planType === 'individual' ? individualPlans : institutionalPlans;
+        return {
+            ...meta,
+            type: membershipType,
+            currency: priced?.currency ?? 'INR',
+            price: priced?.price,
+            basePrice: priced?.base_price,
+            discountPercentage: discount > 0
+                ? `${Math.round(discount)}% OFF`
+                : meta.badge,
+            showStrikethrough: discount > 0,
+        };
+    });
 
 
     const handlePayNow = (plan) => {
@@ -133,11 +117,14 @@ export default function MembershipPlans() {
                         key={index}
                         title={plan.title}
                         price={plan.price}
+                        basePrice={plan.showStrikethrough ? plan.basePrice : null}
                         currency={plan.currency}
                         duration={plan.duration}
                         accessType={plan.accessType}
                         planType={planType}
                         discountPercentage={plan.discountPercentage}
+                        promoLabel={promo?.active ? promo?.label : null}
+                        loading={pricingLoading || !plan.price}
                         planFeatures={planFeatures}
                         handleClick={() => handlePayNow(plan)}
                     />

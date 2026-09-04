@@ -1,66 +1,19 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { baseUrl } from "../../utils/constant";
-import { processMembershipPayment } from "../../utils/utility";
+import { processMembershipRenewalPayment } from "../../utils/utility";
+import { useMembershipPricing, PRICING_CONTEXT, formatPrice } from "../../utils/pricing";
 
-const PLANS = {
+const PLAN_META = {
   Individual: [
-    {
-      title: "Annual",
-      price: 500,
-      currency: "INR",
-      months: 12,
-      label: "1 Year",
-      badge: "Basic",
-      highlight: false,
-    },
-    {
-      title: "LongTerm",
-      price: 1200,
-      currency: "INR",
-      months: 36,
-      label: "3 Years",
-      badge: "20% OFF",
-      highlight: true,
-    },
-    {
-      title: "Overseas",
-      price: 1725,
-      currency: "INR",
-      months: 12,
-      label: "1 Year",
-      badge: "Overseas",
-      highlight: false,
-    },
+    { title: "Annual", label: "1 Year", badge: "Basic", highlight: false },
+    { title: "LongTerm", label: "3 Years", badge: "20% OFF", highlight: true },
+    { title: "Overseas", label: "1 Year", badge: "Overseas", highlight: false },
   ],
   Institutional: [
-    {
-      title: "Annual",
-      price: 1000,
-      currency: "INR",
-      months: 12,
-      label: "1 Year",
-      badge: "Basic",
-      highlight: false,
-    },
-    {
-      title: "LongTerm",
-      price: 2500,
-      currency: "INR",
-      months: 36,
-      label: "3 Years",
-      badge: "20% OFF",
-      highlight: true,
-    },
-    {
-      title: "Overseas",
-      price: 5000,
-      currency: "INR",
-      months: 12,
-      label: "1 Year",
-      badge: "Overseas",
-      highlight: false,
-    },
+    { title: "Annual", label: "1 Year", badge: "Basic", highlight: false },
+    { title: "LongTerm", label: "3 Years", badge: "20% OFF", highlight: true },
+    { title: "Overseas", label: "1 Year", badge: "Overseas", highlight: false },
   ],
 };
 
@@ -78,7 +31,26 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const token = localStorage.getItem("ainetToken");
-  const plans = PLANS[currentType] || PLANS.Individual;
+  const { plans: pricing, promo, loading: pricingLoading } = useMembershipPricing(
+    PRICING_CONTEXT.RENEWAL
+  );
+
+  const plans = (PLAN_META[currentType] || PLAN_META.Individual).map((meta) => {
+    const priced = pricing?.[currentType]?.[meta.title];
+    const discount = Number(priced?.discount_percentage ?? 0);
+
+    return {
+      ...meta,
+      currency: priced?.currency ?? "INR",
+      months: priced?.months,
+      price: priced?.price,
+      basePrice: priced?.base_price,
+      discountPercentage: discount,
+      badge: discount > 0 ? `${Math.round(discount)}% OFF` : meta.badge,
+      highlight: discount > 0 ? true : meta.highlight,
+    };
+  });
+
   const chosenPlan = plans.find((p) => p.title === selectedPlan) || plans[0];
 
   const isUpgrade = selectedPlan !== currentPlan;
@@ -88,9 +60,10 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
     setIsProcessing(true);
 
     try {
-      const { order, payment } = await processMembershipPayment({
-        amount: chosenPlan.price,
-        currency: "INR",
+      const { order, payment } = await processMembershipRenewalPayment({
+        membershipPlan: chosenPlan.title,
+        membershipType: currentType,
+        token,
         customer: {
           name: profile?.name || "",
           email: profile?.email || "",
@@ -199,12 +172,23 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
                     {PLAN_DISPLAY_NAMES[plan.title]}
                   </p>
                   <p className="text-gray-500 text-xs mb-2">{plan.label}</p>
-                  <p className="text-blue-700 font-bold text-lg">
-                    ₹{plan.price.toLocaleString("en-IN")}
-                    <span className="text-gray-400 text-xs font-normal ml-1">
-                      / {currentType === "Individual" ? "person" : "institution"}
-                    </span>
-                  </p>
+                  {pricingLoading || !plan.price ? (
+                    <div className="h-6 w-24 bg-gray-200 rounded animate-pulse" />
+                  ) : (
+                    <>
+                      <p className="text-blue-700 font-bold text-lg">
+                        ₹{formatPrice(plan.price)}
+                        <span className="text-gray-400 text-xs font-normal ml-1">
+                          / {currentType === "Individual" ? "person" : "institution"}
+                        </span>
+                      </p>
+                      {plan.discountPercentage > 0 && (
+                        <p className="text-xs text-gray-500 line-through">
+                          ₹{formatPrice(plan.basePrice)}
+                        </p>
+                      )}
+                    </>
+                  )}
 
                   {isSelected && (
                     <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
@@ -243,9 +227,23 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
               <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between text-sm">
                 <span className="font-semibold text-gray-800">Total Amount</span>
                 <span className="font-bold text-blue-700 text-base">
-                  ₹{chosenPlan.price.toLocaleString("en-IN")}
+                  {chosenPlan.discountPercentage > 0 && (
+                    <span className="text-gray-400 font-normal line-through mr-2">
+                      ₹{formatPrice(chosenPlan.basePrice)}
+                    </span>
+                  )}
+                  ₹{formatPrice(chosenPlan.price)}
                 </span>
               </div>
+              {chosenPlan.discountPercentage > 0 && promo?.active && (
+                <div className="mt-2 text-xs text-green-700 font-medium bg-green-50 rounded-lg px-3 py-1.5">
+                  {promo.label}: {Math.round(chosenPlan.discountPercentage)}% off renewals
+                  {promo.ends_at
+                    ? ` until ${new Date(promo.ends_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}`
+                    : ""}
+                  .
+                </div>
+              )}
               {isUpgrade && (
                 <div className="mt-2 text-xs text-orange-600 font-medium bg-orange-50 rounded-lg px-3 py-1.5">
                   This will upgrade your plan from {PLAN_DISPLAY_NAMES[currentPlan]} to{" "}
@@ -266,12 +264,14 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
             </button>
             <button
               onClick={handleProceed}
-              disabled={isProcessing || !chosenPlan}
+              disabled={isProcessing || pricingLoading || !chosenPlan?.price}
               className="flex-1 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isProcessing
                 ? "Processing..."
-                : `Pay ₹${chosenPlan?.price?.toLocaleString("en-IN") || 0}`}
+                : pricingLoading || !chosenPlan?.price
+                ? "Loading price..."
+                : `Pay ₹${formatPrice(chosenPlan.price)}`}
             </button>
           </div>
         </div>

@@ -12,32 +12,57 @@ const loadRazorpayScript = () =>
         document.body.appendChild(script);
     });
 
-export const createRazorpayOrder = async ({
-    amount,
-    currency = "INR",
-    receipt,
-    notes = {},
-    customer = {},
-}) => {
-    const response = await fetch(`${baseUrl}/client/payments/order`, {
+/**
+ * Creates the Razorpay order for a pending signup.
+ *
+ * The amount is decided by the API from the plan stored against the user, so
+ * the browser never sends a price and the promotional cut-off cannot be
+ * side-stepped with a stale page or a wrong device clock.
+ */
+export const createMembershipSignupOrder = async ({ userId }) => {
+    const response = await fetch(`${baseUrl}/client/membership-signup/order`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
         },
+        body: JSON.stringify({ user_id: userId }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data?.status) {
+        throw new Error(data?.message || "Failed to create payment order.");
+    }
+
+    return data.data;
+};
+
+/**
+ * Creates the Razorpay order for a renewal / upgrade. Also priced server side.
+ */
+export const createMembershipRenewalOrder = async ({
+    membershipPlan,
+    membershipType,
+    token,
+}) => {
+    const response = await fetch(`${baseUrl}/client/auth/membership/renew/order`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
-            amount,
-            currency,
-            receipt,
-            notes,
-            customer,
+            membership_plan: membershipPlan,
+            membership_type: membershipType,
         }),
     });
 
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok || !data?.status) {
-        throw new Error(data?.message || "Failed to create Razorpay order.");
+        throw new Error(data?.message || "Failed to create renewal order.");
     }
 
     return data.data;
@@ -81,18 +106,33 @@ export const initiatePayment = async ({ order, customer = {}, notes = {} }) => {
     });
 };
 
-export const processMembershipPayment = async ({
-    amount,
-    currency = "INR",
+export const processMembershipPayment = async ({ userId, customer, notes }) => {
+    const orderData = await createMembershipSignupOrder({ userId });
+
+    const paymentResponse = await initiatePayment({
+        order: orderData.order,
+        customer: orderData.customer || customer,
+        notes,
+    });
+
+    return {
+        order: orderData.order,
+        payment: paymentResponse,
+        pricing: orderData.pricing,
+    };
+};
+
+export const processMembershipRenewalPayment = async ({
+    membershipPlan,
+    membershipType,
+    token,
     customer,
     notes,
 }) => {
-    const orderData = await createRazorpayOrder({
-        amount,
-        currency,
-        customer,
-        notes,
-        receipt: `AINET-${Date.now()}`,
+    const orderData = await createMembershipRenewalOrder({
+        membershipPlan,
+        membershipType,
+        token,
     });
 
     const paymentResponse = await initiatePayment({
@@ -104,6 +144,7 @@ export const processMembershipPayment = async ({
     return {
         order: orderData.order,
         payment: paymentResponse,
+        pricing: orderData.pricing,
     };
 };
 

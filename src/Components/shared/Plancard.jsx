@@ -1,14 +1,18 @@
 import React from 'react';
 import { FaUser, FaUniversity, FaCheck } from 'react-icons/fa';
 import { TbCirclePercentageFilled } from 'react-icons/tb';
+import { formatPrice } from '../../utils/pricing';
 
 const PlanCard = ({
   title,
   price,
+  basePrice,
   currency,
   duration,
   planType,
   discountPercentage,
+  promoLabel,
+  loading = false,
   planFeatures,
   handleClick
 }) => (
@@ -33,8 +37,28 @@ const PlanCard = ({
       <h3 className="text-2xl md:text-3xl font-semibold mb-10 mt-10">
         {planType === 'individual' ? 'Individual' : 'Institutional'} {title}
       </h3>
-      <div className="text-4xl md:text-5xl font-bold mb-10">
-        {currency === 'INR' ? '₹' : '$'} {price}
+      <div className="mb-10">
+        {loading ? (
+          <div className="h-12 w-40 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <>
+            <div className="text-4xl md:text-5xl font-bold">
+              {currency === 'INR' ? '₹' : '$'} {formatPrice(price)}
+            </div>
+            {basePrice ? (
+              <div className="mt-2 flex flex-wrap items-baseline gap-2">
+                <span className="text-xl text-gray-500 line-through">
+                  {currency === 'INR' ? '₹' : '$'} {formatPrice(basePrice)}
+                </span>
+                {promoLabel && (
+                  <span className="text-sm font-semibold text-green-700">
+                    {promoLabel}
+                  </span>
+                )}
+              </div>
+            ) : null}
+          </>
+        )}
       </div>
 
       <ul className="space-y-4 mb-10">
@@ -62,7 +86,7 @@ const PlanCard = ({
       </ul>
     </div>
 
-    <button onClick={handleClick} className="mt-auto bg-green-100 border border-green-300 hover:bg-green-200 transition-colors w-full py-3 rounded-full flex items-center justify-center relative">
+    <button onClick={handleClick} disabled={loading} className="mt-auto bg-green-100 border border-green-300 hover:bg-green-200 transition-colors w-full py-3 rounded-full flex items-center justify-center relative disabled:opacity-60 disabled:cursor-not-allowed">
       <span className=" mr-2 font-semibold" >PAY NOW</span>
       <img src="/arrow_pay.svg" alt="arrow_white" className="absolute left-1" />
     </button>

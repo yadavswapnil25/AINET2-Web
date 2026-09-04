@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { baseUrl } from '../../../utils/constant';
 import { processMembershipPayment, confirmMembershipPayment } from '../../../utils/utility';
+import { usePlanPrice } from '../../../utils/pricing';
 import PaymentConfirmationModal from '../../PaymentIntegration/PaymentConfirmationModal';
 import PaymentSuccessModal from '../../PaymentIntegration/Popup';
 import Loader from '../../shared/Loader';
@@ -101,6 +102,7 @@ export default function FormIndLongterm() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
     const [pendingMembership, setPendingMembership] = useState(null);
+    const { plan: planPrice, promo, loading: pricingLoading } = usePlanPrice("Individual", "LongTerm");
 
 
 
@@ -503,8 +505,7 @@ export default function FormIndLongterm() {
             };
 
             const { order, payment } = await processMembershipPayment({
-                amount: 1200,
-                currency: "INR",
+                userId: pendingMembership.id,
                 customer: customerDetails,
                 notes,
             });
@@ -589,7 +590,11 @@ export default function FormIndLongterm() {
                 show={showPaymentConfirmation}
                 onClose={() => setShowPaymentConfirmation(false)}
                 onProceed={handlePaymentProceed}
-                amount={1200}
+                amount={planPrice?.price}
+                basePrice={planPrice?.base_price}
+                discountPercentage={planPrice?.discount_percentage}
+                promoLabel={promo?.active ? promo?.label : null}
+                loading={pricingLoading || !planPrice}
                 currency={"INR"}
             />
 
