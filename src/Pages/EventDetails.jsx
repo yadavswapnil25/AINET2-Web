@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { FaCalendar } from "react-icons/fa";
+import { FaCalendar, FaRegClock } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { baseUrl } from "../utils/constant";
 
@@ -85,6 +85,12 @@ export default function EventDetails() {
             <FaCalendar className="mr-2" />
             {event.date_display || event.date || "TBA"}
           </p>
+          {(event.time_display || event.time) && (
+            <p className="flex items-center text-lg font-medium">
+              <FaRegClock className="mr-2" />
+              {event.time_display || event.time}
+            </p>
+          )}
         </div>
 
         <div className="prose max-w-none text-gray-700">

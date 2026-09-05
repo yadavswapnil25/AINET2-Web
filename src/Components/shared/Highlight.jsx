@@ -1,99 +1,126 @@
 import React, { useState, useEffect } from "react";
 import { baseUrl } from "../../utils/constant";
 
+const DEFAULT_HEADING = "HIGHLIGHTS";
+
+// The marquee travels 200% of its own width in a fixed time (see
+// `.marquee-animation` in index.css), so a longer line would scroll
+// proportionally faster. Scale the duration with the amount of text instead,
+// so the reading speed stays the same however many highlights are running.
+const SECONDS_PER_CHARACTER = 0.5;
+const MIN_SCROLL_SECONDS = 20;
+
+const isExternalUrl = (url) =>
+  url.startsWith("http://") || url.startsWith("https://");
+
+const HighlightText = ({ highlight }) => {
+  const url = highlight.link_url;
+
+  if (!url) {
+    return <span>{highlight.subheading}</span>;
+  }
+
+  const external = isExternalUrl(url);
+
+  return (
+    <a
+      href={url}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="hover:underline underline-offset-4"
+    >
+      {highlight.subheading}
+    </a>
+  );
+};
+
+const Separator = ({ className }) => (
+  <span className={`text-[#A6AEBF] ${className}`} aria-hidden="true">
+    &bull;
+  </span>
+);
+
 const Highlight = () => {
-  const [highlightData, setHighlightData] = useState({
-    heading: "HIGHLIGHTS",
-    subheading: "",
-    link_url: null
-  });
+  const [highlights, setHighlights] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Always fetch from API to get the latest highlight
-    fetchHighlight();
-  }, []);
+    let alive = true;
 
-  const fetchHighlight = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`${baseUrl}/client/highlights`);
-      const data = await response.json();
-      if (data.status && data.data?.highlight) {
-        setHighlightData({
-          heading: data.data.highlight.heading || "HIGHLIGHTS",
-          subheading: data.data.highlight.subheading || "",
-          link_url: data.data.highlight.link_url || null
-        });
+    const fetchHighlights = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/client/highlights`);
+        const data = await response.json();
+        if (!alive) return;
+
+        if (data.status && Array.isArray(data.data?.highlights)) {
+          setHighlights(data.data.highlights);
+        } else if (data.status && data.data?.highlight) {
+          // Older API shape that returned a single highlight.
+          setHighlights([data.data.highlight]);
+        }
+      } catch (error) {
+        console.error("Error fetching highlights:", error);
+        // Keep default values on error
+      } finally {
+        if (alive) setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching highlight:", error);
-      // Keep default values on error
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
+
+    fetchHighlights();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   if (isLoading) {
     return null; // Or return a loading placeholder
   }
 
-  const handleClick = (e) => {
-    if (highlightData.link_url) {
-      e.preventDefault();
-      e.stopPropagation();
-      // Check if it's an absolute URL or relative path
-      if (highlightData.link_url.startsWith('http://') || highlightData.link_url.startsWith('https://')) {
-        window.open(highlightData.link_url, '_blank', 'noopener,noreferrer');
-      } else {
-        // Relative path - use React Router or window.location
-        window.location.href = highlightData.link_url;
-      }
-    }
-  };
+  const items = highlights.filter((highlight) => highlight?.subheading);
+  const heading = items[0]?.heading || DEFAULT_HEADING;
 
-  const highlightContent = (
-    <div className="flex-1 overflow-hidden relative min-w-0">
-      {/* Desktop: Marquee animation */}
-      <span className="hidden md:block marquee-animation text-[#FF3D00] items-center text-center whitespace-nowrap px-12 py-2">
-        {highlightData.subheading}
-      </span>
-      {/* Mobile: Full text, no truncation */}
-      <span className="md:hidden text-[#FF3D00] items-center text-center px-4 py-2 text-sm leading-tight block">
-        {highlightData.subheading}
-      </span>
-    </div>
+  // Roughly how much text is scrolling past, separators included.
+  const totalCharacters = items.reduce(
+    (total, highlight) => total + highlight.subheading.length + 6,
+    0
+  );
+  const scrollSeconds = Math.max(
+    MIN_SCROLL_SECONDS,
+    Math.round(totalCharacters * SECONDS_PER_CHARACTER)
   );
 
+  // Every highlight runs in the same line, one after another, separated by a
+  // dot. Each one keeps its own link.
+  const renderItems = (separatorClassName) =>
+    items.map((highlight, index) => (
+      <React.Fragment key={highlight.id ?? index}>
+        {index > 0 && <Separator className={separatorClassName} />}
+        <HighlightText highlight={highlight} />
+      </React.Fragment>
+    ));
+
   return (
-    <>
-      {highlightData.link_url ? (
-        <div 
-          onClick={handleClick}
-          className="w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative cursor-pointer hover:bg-[#C0D8B5] transition-colors active:bg-[#B0C8A5]"
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              handleClick(e);
-            }
-          }}
-          aria-label={`Click to visit: ${highlightData.subheading}`}
+    <div className="w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative">
+      <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl">
+        {heading}
+      </span>
+
+      <div className="flex-1 overflow-hidden relative min-w-0">
+        {/* Desktop: every highlight scrolls past in one marquee */}
+        <span
+          className="hidden md:block marquee-animation text-[#FF3D00] items-center text-center whitespace-nowrap px-12 py-2"
+          style={{ animationDuration: `${scrollSeconds}s` }}
         >
-          <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl pointer-events-none">
-            {highlightData.heading}
-          </span>
-          {highlightContent}
-        </div>
-      ) : (
-        <div className="w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative">
-          <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl">
-            {highlightData.heading}
-          </span>
-          {highlightContent}
-        </div>
-      )}
-    </>
+          {renderItems("mx-10")}
+        </span>
+        {/* Mobile: full text, no truncation */}
+        <span className="md:hidden text-[#FF3D00] items-center text-center px-4 py-2 text-sm leading-tight block">
+          {renderItems("mx-2")}
+        </span>
+      </div>
+    </div>
   );
 };
 

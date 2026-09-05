@@ -5,7 +5,7 @@ import bg2 from "/bg2.png";
 import newh1 from "/newh11.jpg";
 import newh2 from "/newh22.jpg";
 
-import { FaCalendar } from "react-icons/fa";
+import { FaCalendar, FaRegClock } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MembershipPlans from "../Components/shared/MembershipPlans";
@@ -71,6 +71,7 @@ const Home = () => {
             title: event.title,
             location: event.location || "Online",
             date: event.date_display || "TBA",
+            time: event.time_display || "",
             link: event.link_url || "",
             description: event.description || "",
             topic_description: event.topic_description || "",
@@ -253,6 +254,12 @@ const Home = () => {
                       <FaCalendar className="mr-2 text-xl" />
                       {event.date}
                     </p>
+                    {event.time && (
+                      <p className="flex items-center text-black text-xl font-medium">
+                        <FaRegClock className="mr-2 text-xl" />
+                        {event.time}
+                      </p>
+                    )}
                   </div>
 
                   <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer hover:bg-gray-800 transition-colors" onClick={() => handleEventClick(event)}>
