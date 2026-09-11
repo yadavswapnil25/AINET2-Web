@@ -108,14 +108,14 @@ export default function ConferencePage() {
     const fallbackConference = {
         bannerImage: "/9thconference.png",
         details: {
-            startDate: "16TH JANUARY 2026",
+            startDate: "10TH JANUARY 2027",
             startTime: "9:00 AM",
-            endDate: "17TH JANUARY 2026",
+            endDate: "11TH JANUARY 2027",
             endTime: "6:00 PM",
-            location: "SONIPAT (Delhi-NCR)",
-            registrationLink: "https://conf.theainet.net/",
-            theme: "English Language Education Today: Educate, Empower, Employ, Innovate",
-            fullTitle: "9th AINET INTERNATIONAL CONFERENCE , 15-17 JANUARY 2026"
+            location: "ONLINE",
+            registrationLink: "/ainet2027drf",
+            theme: "ELE for Gen Z, Alpha and Beyond",
+            fullTitle: "10th AINET International Conference 2027 (Online), 10 - 11 January 2027"
         },
         subThemes: [
             "ELE for an Inclusive World",
@@ -135,6 +135,13 @@ export default function ConferencePage() {
     };
 
     const fallbackPreviousConferences = [
+        {
+            id: 0,
+            title: "9th AINET INTERNATIONAL CONFERENCE",
+            location: "SONIPAT (Delhi-NCR)",
+            dates: "JANUARY 15-17, 2026",
+            image: "/9thconference.png"
+        },
         {
             id: 1,
             title: "8th AINET INTERNATIONAL CONFERENCE",

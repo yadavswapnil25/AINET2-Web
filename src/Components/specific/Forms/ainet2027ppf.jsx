@@ -8,14 +8,14 @@ import { FaArrowRight } from "react-icons/fa";
 import CountryCodeSelector from "../../shared/CountryCodeSelector";
 import FormSubmissionConfirmation from "../../../Pages/FormSubmissionConfirmation";
 
-export default function AINET2026PresentationProposalForm() {
+export default function AINET2027PresentationProposalForm() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(() => {
-    const savedStep = localStorage.getItem("ainet2026ppf_currentStep");
+    const savedStep = localStorage.getItem("ainet2027ppf_currentStep");
     return savedStep ? parseInt(savedStep, 10) : 1;
   });
   const [formSubmissionConfirmation, setFormSubmissionConfirmation] = useState(false);
@@ -38,7 +38,7 @@ export default function AINET2026PresentationProposalForm() {
 
   // Initialize formData with saved data from localStorage if available
   const [formData, setFormData] = useState(() => {
-    const savedData = localStorage.getItem("ainet2026ppf_formData");
+    const savedData = localStorage.getItem("ainet2027ppf_formData");
     if (savedData) {
       try {
         return JSON.parse(savedData);
@@ -91,11 +91,11 @@ export default function AINET2026PresentationProposalForm() {
 
   // Auto-save functionality: Save form data and current step to localStorage
   useEffect(() => {
-    localStorage.setItem("ainet2026ppf_formData", JSON.stringify(formData));
+    localStorage.setItem("ainet2027ppf_formData", JSON.stringify(formData));
   }, [formData]);
 
   useEffect(() => {
-    localStorage.setItem("ainet2026ppf_currentStep", currentStep.toString());
+    localStorage.setItem("ainet2027ppf_currentStep", currentStep.toString());
   }, [currentStep]);
 
   const conferenceSubThemes = [
@@ -357,8 +357,8 @@ export default function AINET2026PresentationProposalForm() {
       setFormSubmissionConfirmation(true);
 
       // Clear auto-saved data from localStorage after successful submission
-      localStorage.removeItem("ainet2026ppf_formData");
-      localStorage.removeItem("ainet2026ppf_currentStep");
+      localStorage.removeItem("ainet2027ppf_formData");
+      localStorage.removeItem("ainet2027ppf_currentStep");
 
       // Reset form
       setFormData({
@@ -804,16 +804,16 @@ export default function AINET2026PresentationProposalForm() {
                 {/* Conference Details */}
                 <div className="text-center flex-1 flex flex-col justify-center">
                   <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-800 mb-2 md:mb-3 lg:mb-4 leading-tight font-serif italic">
-                    9th AINET INTERNATIONAL CONFERENCE
+                    10th AINET International Conference 2027 (Online)
                   </h1>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
-                    January 2026
+                    10 - 11 January 2027
                   </p>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
-                    Gateway Education, Sonipat, Delhi NCR
+                    Online
                   </p>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
-                    "English Language Education Today: Educate, Empower, Employ, Innovate"
+                    "ELE for Gen Z, Alpha and Beyond"
                   </p>
                   <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
                   <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">

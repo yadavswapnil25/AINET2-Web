@@ -49,7 +49,7 @@ const initialDrfFormData = {
   presentation_type: [],
 };
 
-export default function AINET2026DelegateRegistrationForm() {
+export default function AINET2027DelegateRegistrationForm() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -522,9 +522,9 @@ export default function AINET2026DelegateRegistrationForm() {
     const contactNumber = formData.mobile_no ? `${formData.country_code ? `+${formData.country_code}` : ""}${formData.mobile_no}` : undefined;
 
     // Build description with discount info
-    let description = "AINET 2026 Delegate Registration";
+    let description = "AINET 2027 Delegate Registration";
     if (discountApplied && originalAmount && discountedAmount) {
-      description = `AINET 2026 Delegate Registration (Member Discount: ₹${(originalAmount - discountedAmount).toFixed(2)} off)`;
+      description = `AINET 2027 Delegate Registration (Member Discount: ₹${(originalAmount - discountedAmount).toFixed(2)} off)`;
     }
 
     // Ensure we use the amount from Razorpay order (which should be discounted)
@@ -883,16 +883,16 @@ export default function AINET2026DelegateRegistrationForm() {
               {/* Conference Details */}
               <div className="text-center flex-1 flex flex-col justify-center">
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-800 mb-2 md:mb-3 lg:mb-4 leading-tight font-serif italic">
-                  9th AINET INTERNATIONAL CONFERENCE
+                  10th AINET International Conference 2027 (Online)
                 </h1>
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
-                  January 2026
+                  10 - 11 January 2027
                 </p>
                 <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
-                  Gateway Education, Sonipat, Delhi NCR
+                  Online
                 </p>
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
-                "English Language Education Today: Educate, Empower, Employ, Innovate"
+                "ELE for Gen Z, Alpha and Beyond"
                 </p>
                 <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
                   <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">
