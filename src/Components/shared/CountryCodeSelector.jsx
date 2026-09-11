@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import COUNTRY_DIAL_CODES from '../../utils/countryDialCodes';
 
 const CountryCodeSelector = ({ 
   value, 
@@ -12,82 +13,11 @@ const CountryCodeSelector = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const countries = COUNTRY_DIAL_CODES;
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const initialDirection = preferredDirection === 'up' ? 'up' : 'down';
   const [dropDirection, setDropDirection] = useState(initialDirection);
-
-  // Fetch countries data from free API
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Using REST Countries API (free, no API key required)
-        const response = await fetch('https://restcountries.com/v3.1/all?fields=name,idd,flag');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch countries data');
-        }
-        
-        const data = await response.json();
-        
-        // Transform API data to our format
-        const transformedCountries = data
-          .filter(country => country.idd && country.idd.root && country.idd.suffixes)
-          .map(country => {
-            const dialCode = country.idd.root + (country.idd.suffixes[0] || '');
-            return {
-              name: country.name.common,
-              code: dialCode,
-              flag: country.flag,
-              dialCode: dialCode.replace('+', '') // Remove + for storage
-            };
-          })
-          .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
-
-        const indiaEntry = transformedCountries.find(country => country.dialCode === '91');
-        let orderedCountries = transformedCountries;
-
-        if (indiaEntry) {
-          orderedCountries = [indiaEntry, ...transformedCountries.filter(country => country.dialCode !== '91')];
-        } else {
-          orderedCountries = [
-            { name: 'India', code: '+91', flag: '🇮🇳', dialCode: '91' },
-            ...transformedCountries
-          ];
-        }
-
-        setCountries(orderedCountries);
-      } catch (err) {
-        console.error('Error fetching countries:', err);
-        setError(err.message);
-        
-        // Fallback to essential countries if API fails
-        const fallbackCountries = [
-          { name: 'India', code: '+91', flag: '🇮🇳', dialCode: '91' },
-          { name: 'United States', code: '+1', flag: '🇺🇸', dialCode: '1' },
-          { name: 'United Kingdom', code: '+44', flag: '🇬🇧', dialCode: '44' },
-          { name: 'Canada', code: '+1', flag: '🇨🇦', dialCode: '1' },
-          { name: 'Australia', code: '+61', flag: '🇦🇺', dialCode: '61' },
-          { name: 'Germany', code: '+49', flag: '🇩🇪', dialCode: '49' },
-          { name: 'France', code: '+33', flag: '🇫🇷', dialCode: '33' },
-          { name: 'Japan', code: '+81', flag: '🇯🇵', dialCode: '81' },
-          { name: 'China', code: '+86', flag: '🇨🇳', dialCode: '86' },
-          { name: 'Brazil', code: '+55', flag: '🇧🇷', dialCode: '55' }
-        ];
-        setCountries(fallbackCountries);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCountries();
-  }, []);
 
   const topCountryDialCode = '91';
   const topCountry = countries.find(country => country.dialCode === topCountryDialCode);
@@ -139,8 +69,6 @@ const CountryCodeSelector = ({
   };
 
   const handleToggle = () => {
-    if (loading) return;
-
     if (!isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       const estimatedHeight = dropdownHeight;
@@ -203,24 +131,13 @@ const CountryCodeSelector = ({
       <button
         type="button"
         onClick={handleToggle}
-        disabled={loading}
         ref={buttonRef}
         className={`w-full p-3 border border-gray-300 rounded text-sm bg-white text-left flex items-center justify-between hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
           !selectedCountry ? 'text-gray-500' : 'text-gray-900'
-        } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        }`}
       >
         <div className="flex items-center">
-          {loading ? (
-            <span className="flex items-center">
-              <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading countries...
-            </span>
-          ) : error ? (
-            <span className="text-red-500">Error loading countries</span>
-          ) : selectedCountry ? (
+          {selectedCountry ? (
             <>
               <span className="text-lg mr-2">{selectedCountry.flag}</span>
               <span className="font-medium">{selectedCountry.code}</span>
@@ -242,7 +159,7 @@ const CountryCodeSelector = ({
         </svg>
       </button>
 
-      {isOpen && !loading && !error && (
+      {isOpen && (
         <div
           className={`absolute z-50 w-full ${
             dropDirection === 'up' ? 'bottom-full mb-1' : 'mt-1'
@@ -298,19 +215,6 @@ const CountryCodeSelector = ({
         </div>
       )}
 
-      {/* Error State */}
-      {error && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-red-300 rounded-md shadow-lg p-3">
-          <div className="text-red-600 text-sm">
-            <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              Failed to load countries. Using limited list.
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
