@@ -436,10 +436,10 @@ export default function Profile() {
                     <span className="text-gray-600 w-28">Gender :</span>
                     <span className="text-gray-900">{profile?.gender}</span>
                   </div>
-                  <div className="flex">
+                  {/*<div className="flex">
                     <span className="text-gray-600 w-28">DOB :</span>
                     <span className="text-gray-900">{profile?.dob}</span>
-                  </div>
+                  </div>*/}
                   {/* <div className="flex">
                     <span className="text-gray-600 w-28">Password :</span>
                     <span className="text-gray-900">••••••••</span>
