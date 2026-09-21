@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import "./index.css";
 import { AuthContext, AuthProvider } from "./context/AuthContext.jsx";
 import { initGA } from "./utils/analytics.js";
+import { registerSW } from "virtual:pwa-register";
 
 // Initialize Google Analytics
 const GA_MEASUREMENT_ID = "G-0D9M13RY6R";
@@ -45,27 +46,11 @@ if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
   };
 } 
 
-// Register service worker for PWA functionality
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        
-        // Listen for updates
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New content is available, show notification
-              // You can show a toast notification here if needed
-            }
-          });
-        });
-      })
-      .catch((registrationError) => {
-      });
-  });
-}
+// Register the service worker through vite-plugin-pwa's helper rather than
+// by hand. In `autoUpdate` mode it reloads the page as soon as a newly
+// deployed worker takes control, so nobody is left running an old bundle
+// that doesn't know about routes added since their last visit.
+registerSW({ immediate: true });
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -58,6 +58,7 @@ import FormIndLongterm from "./Components/specific/Forms/FormIndLongterm";
 import AINET2027DelegateRegistrationForm from "./Components/specific/Forms/ainet2027drf";
 import AINET2027PresentationProposalForm from "./Components/specific/Forms/ainet2027ppf";
 import FormSubmissionConfirmation from "./Pages/FormSubmissionConfirmation";
+import NotFound from "./Pages/NotFound";
 
 const App = () => {
   return (
@@ -114,6 +115,7 @@ const App = () => {
           <Route path="/ainet2027drf" element={<AINET2027DelegateRegistrationForm />} />
           <Route path="/ainet2027ppf" element={<AINET2027PresentationProposalForm />} />
           <Route path="/form-submission-confirmation" element={<FormSubmissionConfirmation />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
       <Footer />
