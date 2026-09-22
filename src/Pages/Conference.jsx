@@ -118,19 +118,13 @@ export default function ConferencePage() {
             fullTitle: "10th AINET International Conference 2027 (Online), 10 - 11 January 2027"
         },
         subThemes: [
-            "ELE for an Inclusive World",
-            "National and State Education Policies and ELE",
-            "Emerging Trends in the Teaching/Learning of English",
-            "English for Technical, Vocational and Professional Purposes",
-            "ELE in Multilingual Contexts",
-            "Technological Frontiers in ELE",
-            "English for Employability and Entrepreneurship",
-            "Trends and Innovations in ELE – Materials, Methods, Assessment",
-            "Teacher Education and Professional Development",
-            "Alternative and non-formal ELE",
-            "History of ELE in the Global South",
-            "Teaching English Literature in the Global South",
-            "Researching ELE in the Global South"
+            "Profiling Next Generation Learners",
+            "Teaching For and To the Future",
+            "Pedagogy, Andragogy, Heutagogy and Beyond",
+            "Exploring the Future in History",
+            "Multilingual Pedagogy – How Relevant for the Machine-Translating World?",
+            "Teacher Technologies and Learner Technologies – How the Twain Shall Meet?",
+            "AI as a Co-Teacher"
         ]
     };
 

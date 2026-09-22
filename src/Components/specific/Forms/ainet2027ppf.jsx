@@ -99,23 +99,17 @@ export default function AINET2027PresentationProposalForm() {
   }, [currentStep]);
 
   const conferenceSubThemes = [
-    "ELE for an Inclusive World",
-    "National and State Education Policies and ELE",
-    "Emerging Trends in the Teaching/Learning of English",
-    "English for Technical, Vocational and Professional Purposes",
-    "ELE in Multilingual Contexts",
-    "Technological Frontiers in ELE",
-    "English for Employability and Entrepreneurship",
-    "Trends and Innovations in ELE – Materials, Methods, Assessment",
-    "Teacher Education and Professional Development ",
-    "Alternative and non-formal ELE",
-    "History of ELE in the Global South",
-    "Teaching English Literature in the Global South",
-    "Researching ELE in the Global South",
+    "Profiling Next Generation Learners",
+    "Teaching For and To the Future",
+    "Pedagogy, Andragogy, Heutagogy and Beyond",
+    "Exploring the Future in History",
+    "Multilingual Pedagogy – How Relevant for the Machine-Translating World?",
+    "Teacher Technologies and Learner Technologies – How the Twain Shall Meet?",
+    "AI as a Co-Teacher",
     "Any Other (Specify)"
   ];
 
-  const presentationTypes = ["Paper (15 mins)", "Workshop (30 mins)", "Poster", "Virtual (15 mins)"];
+  const presentationTypes = ["Paper (15 mins)", "Video (4 min)", "Poster"];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -1506,7 +1500,7 @@ export default function AINET2027PresentationProposalForm() {
                               acceptance of your proposal, you and all your
                               co-presenters must register for the conference by
                               completing the Delegate Registration Form by{" "}
-                              <strong>25 December 2025</strong>
+                              <strong>31st December 2026</strong>
                             </p>
                           </div>
                         </div>
