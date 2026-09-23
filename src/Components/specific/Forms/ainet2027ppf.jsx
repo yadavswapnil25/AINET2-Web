@@ -801,12 +801,12 @@ export default function AINET2027PresentationProposalForm() {
                     10th AINET International Conference 2027 (Online)
                   </h1>
                   <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
-                    10 - 11 January 2027
+                    9 - 10 January 2027
                   </p>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
                     Online
                   </p>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-3 md:mb-4 lg:mb-5 font-serif drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)' }}>
+                  <p className="inline-block text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white bg-blue-700 px-4 py-1.5 rounded-md mb-3 md:mb-4 lg:mb-5 font-serif">
                     "ELE for Gen Z, Alpha and Beyond"
                   </p>
                   <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">

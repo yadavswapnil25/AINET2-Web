@@ -106,16 +106,16 @@ export default function ConferencePage() {
 
     // Fallback data
     const fallbackConference = {
-        bannerImage: "/9thconference.png",
+        bannerImage: "/conference.png",
         details: {
-            startDate: "10TH JANUARY 2027",
+            startDate: "9TH JANUARY 2027",
             startTime: "9:00 AM",
-            endDate: "11TH JANUARY 2027",
+            endDate: "10TH JANUARY 2027",
             endTime: "6:00 PM",
             location: "ONLINE",
             registrationLink: "/ainet2027drf",
             theme: "ELE for Gen Z, Alpha and Beyond",
-            fullTitle: "10th AINET International Conference 2027 (Online), 10 - 11 January 2027"
+            fullTitle: "10th AINET International Conference 2027 (Online), 9 - 10 January 2027"
         },
         subThemes: [
             "Profiling Next Generation Learners",
@@ -161,7 +161,7 @@ export default function ConferencePage() {
 
     // Use API data or fallback
     const conferenceData = conference ? {
-        bannerImage: conference.image_url || "/9thconference.png",
+        bannerImage: conference.image_url || "/conference.png",
         details: {
             startDate: conference.event_date ? formatDate(conference.event_date).toUpperCase() : "TBA",
             startTime: "9:00 AM",
@@ -218,7 +218,7 @@ export default function ConferencePage() {
                                 alt={conferenceData.details.fullTitle || "AINET International Conference Banner"}
                                 className="w-full h-auto object-contain"
                                 onError={(e) => {
-                                    e.target.src = "/9thconference.png";
+                                    e.target.src = "/conference.png";
                                 }}
                             />
                         </div>

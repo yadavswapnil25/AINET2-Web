@@ -886,7 +886,7 @@ export default function AINET2027DelegateRegistrationForm() {
                   10th AINET International Conference 2027 (Online)
                 </h1>
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
-                  10 - 11 January 2027
+                  9 - 10 January 2027
                 </p>
                 <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
                   Online
