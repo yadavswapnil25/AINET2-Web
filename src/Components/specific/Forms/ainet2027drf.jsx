@@ -1050,9 +1050,9 @@ export default function AINET2027DelegateRegistrationForm() {
                       </label>
                       <div className="grid grid-cols-1 gap-2">
                         {[
-                          "Research & PG Students (Indian)",
-                          "Others, Including Teachers (Indian)",
-                          "Overseas Participants",
+                          "Faculty & Professionals (India & SAARC Countries)",
+                          "Students (India & SAARC Countries)",
+                          "International Delegates",
                         ].map((type) => (
                           <label
                             key={type}
@@ -1553,23 +1553,23 @@ export default function AINET2027DelegateRegistrationForm() {
                       <div className="grid grid-cols-2 gap-4 mb-8">
                         <div>
                           <h5 className="font-semibold mb-3 text-blue-800 text-sm">
-                            Up to 31 December 2025
+                            Up to 31 December 2026
                           </h5>
                           <div className="space-y-2 text-sm">
-                            <p>• Research and PG students: INR 1200</p>
-                            <p>• Other Including teachers: INR 2500</p>
-                            <p>• All Overseas participants: INR 5000</p>
+                            <p>• Faculty &amp; Professionals (India &amp; SAARC): INR 1500</p>
+                            <p>• Students (India &amp; SAARC): INR 750</p>
+                            <p>• International Delegates: INR 2700 (approx. USD 30)</p>
                           </div>
                         </div>
                         <div>
                           <h5 className="font-semibold mb-3 text-blue-800 text-sm">
                             {" "}
-                            After 31 December 2025
+                            After 31 December 2026
                           </h5>
                           <div className="space-y-2 text-sm">
-                            <p>• Research and PG students: INR 2000</p>
-                            <p>• Other Including teachers: INR 3500</p>
-                            <p>• All Overseas participants: INR 5000</p>
+                            <p>• Faculty &amp; Professionals (India &amp; SAARC): INR 3000</p>
+                            <p>• Students (India &amp; SAARC): INR 1500</p>
+                            <p>• International Delegates: INR 5400 (approx. USD 60)</p>
                           </div>
                         </div>
                       </div>
