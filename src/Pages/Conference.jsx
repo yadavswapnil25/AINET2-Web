@@ -114,6 +114,7 @@ export default function ConferencePage() {
             endTime: "6:00 PM",
             location: "ONLINE",
             registrationLink: "/ainet2027drf",
+            conferenceSite: "https://conf.theainet.net/",
             theme: "ELE for Gen Z, Alpha and Beyond",
             fullTitle: "10th AINET International Conference 2027 (Online), 9 - 10 January 2027"
         },
@@ -286,6 +287,14 @@ export default function ConferencePage() {
                                     <span className="text-black font-semibold mr-2">Registration Link :</span>
                                     <a href={conferenceData.details.registrationLink} className="text-blue-500 underline">
                                         {conferenceData.details.registrationLink}
+                                    </a>
+                                </div>
+                            </div>
+                             <div className="mt-4">
+                                <div className="flex items-center">
+                                    <span className="text-black font-semibold mr-2">Conference Site :</span>
+                                    <a href={conferenceData.details.conferenceSite} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                        {conferenceData.details.conferenceSite}
                                     </a>
                                 </div>
                             </div>
