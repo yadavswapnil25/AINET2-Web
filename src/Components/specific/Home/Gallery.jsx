@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
-import { FaChevronRight } from 'react-icons/fa';
+import { useEffect, useRef, useState } from 'react';
+import { FaArrowRight, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../../../utils/constant';
+import SectionHeading from '../../shared/SectionHeading';
+import { containerClass } from '../../shared/sectionStyles';
 
 // Fallback banner images
 import galleryBan1 from "../../../assets/gallery/homegal-1.png";
@@ -69,16 +71,36 @@ const fallbackSmallImages = [
   { id: 28, src: gallery20, alt: "Event moment 20" },
 ];
 
+const placeholder = (width, height) =>
+  `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"%3E%3Crect fill="%23ddd" width="${width}" height="${height}"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E`;
+
+const showPlaceholder = (width, height) => (e) => {
+  e.currentTarget.onerror = null;
+  e.currentTarget.src = placeholder(width, height);
+};
+
+const SLIDE_INTERVAL_MS = 4500;
+const SWIPE_THRESHOLD_PX = 40;
+
+// Large slides keep their shape at every width; thumbnails grow in steps.
+const slideShapeClass = "aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9]";
+const thumbClass = "aspect-[3/2] w-[160px] shrink-0 sm:w-[220px] lg:w-[280px]";
+const arrowClass =
+  "absolute top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-ink shadow-lg transition hover:bg-white sm:size-12";
+
 export default function Gallery() {
   const [galleries, setGalleries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchStartX = useRef(null);
 
   useEffect(() => {
     const fetchGalleries = async () => {
       try {
         const response = await fetch(`${baseUrl}/client/galleries`);
         const data = await response.json();
-        
+
         if (data.status && data.data && data.data.galleries) {
           // Map API galleries to match component structure
           const mappedGalleries = data.data.galleries
@@ -88,7 +110,7 @@ export default function Gallery() {
               src: gallery.image_url,
               alt: gallery.title || `Gallery image ${gallery.id}`,
             }));
-          
+
           setGalleries(mappedGalleries);
         }
       } catch (error) {
@@ -101,158 +123,150 @@ export default function Gallery() {
     fetchGalleries();
   }, []);
 
-  // Split galleries: first 8 for banners, rest for small images
+  // Split galleries: first 8 for the slider, the rest for the scrolling strip.
   // Use API galleries if available, otherwise fallback
   const allImages = galleries.length > 0 ? galleries : [...fallbackBannerImages, ...fallbackSmallImages];
   const bannerImages = allImages.slice(0, 8);
   const smallImages = allImages.slice(8);
+  const slideCount = bannerImages.length;
+  const activeSlide = slideCount ? slide % slideCount : 0;
 
+  useEffect(() => {
+    if (paused || slideCount < 2) return undefined;
+    const timer = setInterval(() => setSlide((current) => (current + 1) % slideCount), SLIDE_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [paused, slideCount]);
 
+  const goTo = (index) => setSlide((index + slideCount) % slideCount);
+  const showPrevious = () => goTo(activeSlide - 1);
+  const showNext = () => goTo(activeSlide + 1);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    setPaused(true);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const distance = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    setPaused(false);
+    if (Math.abs(distance) > SWIPE_THRESHOLD_PX) {
+      if (distance < 0) showNext();
+      else showPrevious();
+    }
+  };
 
   return (
-    <div className="relative w-full rounded-[25px] overflow-hidden z-1 flex flex-col p-4 md:p-14">
-      <div className="flex justify-between items-center mb-6 border-b pb-2">
-        <h2 className="text-xl font-bold tracking-wide">OUR GALLERY</h2>
-        <Link to="/gallery" className="text-gray-400 hover:text-blue-500 flex items-center text-sm">
-          View All <FaChevronRight className="h-4 w-4 ml-1" />
-        </Link>
-      </div>
+    <section aria-labelledby="gallery-title" className="pb-16 sm:pb-20">
+      <div className={containerClass}>
+        <SectionHeading
+          id="gallery-title"
+          eyebrow="Gallery"
+          title="Our Gallery"
+          action={
+            <Link
+              to="/gallery"
+              className="group inline-flex items-center gap-2 rounded-full bg-sky-soft px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-white"
+            >
+              View all
+              <FaArrowRight className="text-xs transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            </Link>
+          }
+        />
 
-      <div className="space-y-2 md:space-y-8">
-        {/* Top Banner Section - Infinite Scroll (Slow) */}
-        <div className="relative overflow-hidden rounded-lg h-[250px] md:h-auto">
+        <div className="mt-10 space-y-4 sm:space-y-5">
+          {/* Large photos: one at a time, auto-advancing, swipeable */}
           {loading ? (
-            <div className="flex">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 w-[100vw] h-[200px] md:h-[450px] bg-gray-200 animate-pulse rounded-lg mr-0"
-                ></div>
+            <div className={`${slideShapeClass} w-full animate-pulse rounded-3xl bg-sky-soft`} />
+          ) : slideCount > 0 && (
+            <div
+              className="relative overflow-hidden rounded-3xl shadow-lg"
+              aria-roledescription="carousel"
+              aria-label="Event photos"
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
+              <div
+                className="flex transition-transform duration-700 ease-in-out"
+                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+              >
+                {bannerImages.map((image, index) => (
+                  <div
+                    key={image.id}
+                    className={`${slideShapeClass} w-full shrink-0`}
+                    aria-hidden={index !== activeSlide}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="h-full w-full object-cover"
+                      onError={showPlaceholder(400, 300)}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {slideCount > 1 && (
+                <>
+                  <button type="button" onClick={showPrevious} aria-label="Previous photo" className={`${arrowClass} left-3 sm:left-5`}>
+                    <FaChevronLeft aria-hidden="true" />
+                  </button>
+                  <button type="button" onClick={showNext} aria-label="Next photo" className={`${arrowClass} right-3 sm:right-5`}>
+                    <FaChevronRight aria-hidden="true" />
+                  </button>
+
+                  <div className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
+                    {bannerImages.map((image, index) => (
+                      <button
+                        key={image.id}
+                        type="button"
+                        onClick={() => goTo(index)}
+                        aria-label={`Show photo ${index + 1}`}
+                        aria-current={index === activeSlide ? "true" : undefined}
+                        className={`h-2.5 rounded-full shadow transition-all ${index === activeSlide ? "w-6 bg-white" : "w-2.5 bg-white/60 hover:bg-white/80"}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Small photos: a continuous strip */}
+          {loading ? (
+            <div className="flex gap-3 overflow-hidden">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className={`${thumbClass} animate-pulse rounded-2xl bg-sky-soft`} />
               ))}
             </div>
-          ) : (
-            <div className="flex animate-scroll-slow">
-              {/* First set of images */}
-              {bannerImages.map((image) => (
-                <div
-                  key={image.id}
-                  className="flex-shrink-0 w-[100vw] h-[200px] md:h-[450px] object-cover mr-0 cursor-pointer transition-transform rounded-lg"
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover rounded-2xl"
-                    onError={(e) => {
-                      // Fallback to a placeholder if image fails to load
-                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E';
-                    }}
-                  />
-                </div>
-              ))}
-              {/* Duplicate set for seamless loop */}
-              {bannerImages.map((image) => (
-                <div
-                  key={`duplicate-${image.id}`}
-                  className="flex-shrink-0 w-[100vw] h-[200px] md:h-[450px] object-cover mr-0 cursor-pointer transition-transform rounded-lg"
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover rounded-2xl"
-                    onError={(e) => {
-                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E';
-                    }}
-                  />
-                </div>
-              ))}
+          ) : smallImages.length > 0 && (
+            <div className="fade-edges overflow-hidden">
+              <div
+                className="gallery-marquee"
+                style={{ animationDuration: `${Math.max(30, smallImages.length * 3)}s` }}
+              >
+                {[...smallImages, ...smallImages].map((image, index) => (
+                  <div
+                    key={`${image.id}-${index}`}
+                    className={`${thumbClass} mr-3 overflow-hidden rounded-2xl`}
+                    aria-hidden={index >= smallImages.length || undefined}
+                  >
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                      onError={showPlaceholder(300, 200)}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
-
-        {/* Bottom Small Images Section - Infinite Scroll (Fast) */}
-        <div className="relative overflow-hidden rounded-lg ">
-          {loading ? (
-            <div className="flex">
-              {Array.from({ length: 10 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 w-[150px] md:w-[300px] h-[100px] md:h-[200px] bg-gray-200 animate-pulse rounded-lg mr-3"
-                ></div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex animate-scroll-fast">
-              {/* First set of small images */}
-              {smallImages.map((image) => (
-                <div
-                  key={image.id}
-                  className="flex-shrink-0 w-[150px] md:w-[300px] h-[100px] md:h-[200px] mr-3 cursor-pointer transition-transform hover:scale-105"
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover rounded-lg shadow-md"
-                    onError={(e) => {
-                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E';
-                    }}
-                  />
-                </div>
-              ))}
-              {/* Duplicate set for seamless loop */}
-              {smallImages.map((image) => (
-                <div
-                  key={`duplicate-${image.id}`}
-                  className="flex-shrink-0 w-[150px] md:w-[300px] h-[100px] md:h-[200px] mr-3 cursor-pointer transition-transform hover:scale-105"
-                >
-                  <img
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full h-full object-cover rounded-lg shadow-md"
-                    onError={(e) => {
-                      e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="200"%3E%3Crect fill="%23ddd" width="300" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="16" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E';
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
-
-     
-
-      <style jsx>{`
-        @keyframes scroll-slow {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(calc(-100vw * ${bannerImages.length}));
-          }
-        }
-
-        @keyframes scroll-fast {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-
-        .animate-scroll-slow {
-          animation: scroll-slow 32s steps(${bannerImages.length}, end) infinite;
-        }
-
-        .animate-scroll-fast {
-          animation: scroll-fast 20s linear infinite;
-        }
-
-        .animate-scroll-slow:hover,
-        .animate-scroll-fast:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-    </div>
+    </section>
   );
 }

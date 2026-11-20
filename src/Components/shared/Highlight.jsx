@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { baseUrl } from "../../utils/constant";
+import { containerClass } from "./sectionStyles";
 
 const DEFAULT_HEADING = "HIGHLIGHTS";
 
@@ -27,7 +28,7 @@ const HighlightText = ({ highlight }) => {
       href={url}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      className="hover:underline underline-offset-4"
+      className="underline-offset-4 hover:underline"
     >
       {highlight.subheading}
     </a>
@@ -35,7 +36,7 @@ const HighlightText = ({ highlight }) => {
 };
 
 const Separator = ({ className }) => (
-  <span className={`text-[#A6AEBF] ${className}`} aria-hidden="true">
+  <span className={`text-flame ${className}`} aria-hidden="true">
     &bull;
   </span>
 );
@@ -75,10 +76,16 @@ const Highlight = () => {
   }, []);
 
   if (isLoading) {
-    return null; // Or return a loading placeholder
+    return null;
   }
 
   const items = highlights.filter((highlight) => highlight?.subheading);
+
+  // Nothing to announce: hide the bar instead of showing an empty strip.
+  if (items.length === 0) {
+    return null;
+  }
+
   const heading = items[0]?.heading || DEFAULT_HEADING;
 
   // Roughly how much text is scrolling past, separators included.
@@ -102,23 +109,33 @@ const Highlight = () => {
     ));
 
   return (
-    <div className="w-full min-h-[50px] bg-[#D0E8C5] flex items-center font-bold text-lg overflow-hidden relative">
-      <span className="pr-4 w-[185px] flex-shrink-0 clippath bg-[#A6AEBF] h-full text-white capitalize grid place-items-center z-10 px-4 text-[15px] md:text-xl">
-        {heading}
-      </span>
+    <div className="bg-sage font-display text-ink">
+      <div className={`${containerClass} flex items-center gap-3 py-2`}>
+        <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ink px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-white sm:text-xs">
+          <span className="relative flex size-2" aria-hidden="true">
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-flame opacity-75 motion-reduce:hidden" />
+            <span className="relative inline-flex size-2 rounded-full bg-flame" />
+          </span>
+          {heading}
+        </span>
 
-      <div className="flex-1 overflow-hidden relative min-w-0">
-        {/* Desktop: every highlight scrolls past in one marquee */}
-        <span
-          className="hidden md:block marquee-animation text-[#FF3D00] items-center text-center whitespace-nowrap px-12 py-2"
-          style={{ animationDuration: `${scrollSeconds}s` }}
-        >
-          {renderItems("mx-10")}
-        </span>
-        {/* Mobile: full text, no truncation */}
-        <span className="md:hidden text-[#FF3D00] items-center text-center px-4 py-2 text-sm leading-tight block">
-          {renderItems("mx-2")}
-        </span>
+        <div className="relative min-w-0 flex-1 overflow-hidden">
+          {/* Wider screens: every highlight scrolls past in one line. The
+              wrapper does the hiding: `.marquee-animation` sets its own
+              display, which would otherwise beat `hidden` on phones. */}
+          <div className="fade-edges hidden md:block">
+            <span
+              className="marquee-animation py-1 text-[15px] font-semibold"
+              style={{ animationDuration: `${scrollSeconds}s` }}
+            >
+              {renderItems("mx-8")}
+            </span>
+          </div>
+          {/* Phones: the full text, no scrolling */}
+          <p className="text-sm font-semibold leading-snug md:hidden">
+            {renderItems("mx-2")}
+          </p>
+        </div>
       </div>
     </div>
   );

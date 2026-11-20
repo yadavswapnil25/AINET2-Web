@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FaUser, FaUniversity } from 'react-icons/fa';
 import PlanCard from '../shared/Plancard';
-import bg3 from "/bg3.png";
 import { useNavigate } from 'react-router-dom';
 import { useMembershipPricing, PRICING_CONTEXT } from '../../utils/pricing';
+import SectionHeading from './SectionHeading';
+import { containerClass } from './sectionStyles';
+
+const PLAN_TYPES = [
+    { key: 'individual', label: 'Individual', Icon: FaUser },
+    { key: 'institutional', label: 'Institutional', Icon: FaUniversity },
+];
 
 // Prices and the promotional discount come from the API, so this list only
 // describes each plan - never what it costs.
@@ -36,10 +42,6 @@ export default function MembershipPlans() {
         "Member Rights",
         "Membership Terms"
     ];
-
-    const handlePlanTypeChange = (type) => {
-        setPlanType(type);
-    };
 
     const { type: membershipType, plans: planMeta } = PLAN_META[planType];
 
@@ -83,53 +85,60 @@ export default function MembershipPlans() {
     }
 
     return (
-        <div id='membershipplan'
-            className="relative w-full  min-h-screen  rounded-[25px] overflow-hidden bg-no-repeat bg-cover bg-center px-6 sm:px-10 md:px-14 py-10 md:py-14"
-            style={{ backgroundImage: `url(${bg3})` }}
+        <section
+            id='membershipplan'
+            aria-labelledby="plans-title"
+            className="scroll-mt-24 bg-cream-soft py-16 sm:py-20 lg:py-24"
         >
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12 gap-6">
-                <h1 className="md:text-5xl font-bold text-gray-900 text-center md:text-left  text-3xl">
-                    Select Plan
-                </h1>
+            <div className={containerClass}>
+                <SectionHeading id="plans-title" eyebrow="Membership" title="Select Plan" align="center" />
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-10">
-                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => handlePlanTypeChange('individual')}>
-                        <FaUser className="text-gray-900 text-xl sm:text-2xl" />
-                        <span className="text-lg sm:text-xl">Individual</span>
-                        <div className={`w-5 h-5 rounded-full border-2 border-gray-900 flex items-center justify-center ${planType === 'individual' ? 'bg-gray-900' : 'bg-transparent'}`}>
-                            {planType === 'individual' && <div className="w-2 h-2 rounded-full bg-white"></div>}
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => handlePlanTypeChange('institutional')}>
-                        <FaUniversity className="text-gray-900 text-xl sm:text-2xl" />
-                        <span className="text-lg sm:text-xl">Institutional</span>
-                        <div className={`w-5 h-5 rounded-full border-2 border-gray-900 flex items-center justify-center ${planType === 'institutional' ? 'bg-gray-900' : 'bg-transparent'}`}>
-                            {planType === 'institutional' && <div className="w-2 h-2 rounded-full bg-white"></div>}
-                        </div>
+                <div className="mt-8 flex justify-center">
+                    <div
+                        role="radiogroup"
+                        aria-label="Membership type"
+                        className="inline-flex rounded-full bg-white p-1.5 shadow-sm ring-1 ring-ink/10"
+                    >
+                        {PLAN_TYPES.map((option) => {
+                            const { key, label, Icon } = option;
+                            const active = planType === key;
+                            return (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={active}
+                                    onClick={() => setPlanType(key)}
+                                    className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors sm:px-6 sm:text-base ${active ? 'bg-ink text-white shadow' : 'text-ink/70 hover:text-ink'}`}
+                                >
+                                    <Icon aria-hidden="true" />
+                                    {label}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6">
-                {plansToShow.map((plan, index) => (
-                    <PlanCard
-                        key={index}
-                        title={plan.title}
-                        price={plan.price}
-                        basePrice={plan.showStrikethrough ? plan.basePrice : null}
-                        currency={plan.currency}
-                        duration={plan.duration}
-                        accessType={plan.accessType}
-                        planType={planType}
-                        discountPercentage={plan.discountPercentage}
-                        promoLabel={promo?.active ? promo?.label : null}
-                        loading={pricingLoading || !plan.price}
-                        planFeatures={planFeatures}
-                        handleClick={() => handlePayNow(plan)}
-                    />
-                ))}
+                <div className="mt-12 grid items-stretch gap-6 md:grid-cols-3 md:gap-5 lg:gap-8">
+                    {plansToShow.map((plan) => (
+                        <PlanCard
+                            key={plan.title}
+                            featured={plan.title === 'LongTerm'}
+                            title={plan.title}
+                            price={plan.price}
+                            basePrice={plan.showStrikethrough ? plan.basePrice : null}
+                            currency={plan.currency}
+                            duration={plan.duration}
+                            planType={planType}
+                            discountPercentage={plan.discountPercentage}
+                            promoLabel={promo?.active ? promo?.label : null}
+                            loading={pricingLoading || !plan.price}
+                            planFeatures={planFeatures}
+                            handleClick={() => handlePayNow(plan)}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
+        </section>
     );
 }

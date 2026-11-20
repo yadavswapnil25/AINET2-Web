@@ -1,7 +1,28 @@
-import React from 'react';
-import { FaUser, FaUniversity, FaCheck } from 'react-icons/fa';
-import { TbCirclePercentageFilled } from 'react-icons/tb';
+import { FaArrowRight, FaCheck, FaUniversity, FaUser } from 'react-icons/fa';
 import { formatPrice } from '../../utils/pricing';
+
+const LIGHT = {
+  card: 'bg-white text-ink shadow-sm ring-1 ring-ink/10',
+  iconTile: 'bg-sky-soft text-ink',
+  badge: 'bg-sky text-ink',
+  muted: 'text-ink/55',
+  promo: 'text-sage-deep',
+  divider: 'border-ink/10',
+  check: 'bg-ink text-white',
+  button: 'bg-ink text-white hover:bg-ink/85',
+};
+
+// The featured plan (3-year) is dark so it stands out from the other two.
+const FEATURED = {
+  card: 'bg-ink text-white shadow-2xl shadow-ink/25 md:-my-4',
+  iconTile: 'bg-white/10 text-sage',
+  badge: 'bg-sage text-ink',
+  muted: 'text-white/60',
+  promo: 'text-sage',
+  divider: 'border-white/15',
+  check: 'bg-sage text-ink',
+  button: 'bg-sage text-ink hover:bg-white',
+};
 
 const PlanCard = ({
   title,
@@ -14,46 +35,54 @@ const PlanCard = ({
   promoLabel,
   loading = false,
   planFeatures,
-  handleClick
-}) => (
-  <div className="flex flex-col justify-between h-full bg-yellow-50 p-5 py-6 md:p-10 md:py-15 rounded-xl shadow-sm">
-    <div>
-      <div className="flex justify-between mb-2">
-        {planType === 'individual' ? (
-          <FaUser className="text-gray-900 text-3xl" />
-        ) : (
-          <FaUniversity className="text-gray-900 text-3xl" />
-        )}
-        {discountPercentage && (
-          <div className="bg-[#C5D3E8] text-black font-bold text-lg py-2 px-5 rounded-md flex items-center">
-            {discountPercentage}
-          </div>
-        )}
-        
+  handleClick,
+  featured = false,
+}) => {
+  const Icon = planType === 'individual' ? FaUser : FaUniversity;
+  const tone = featured ? FEATURED : LIGHT;
+  const symbol = currency === 'INR' ? '₹' : '$';
+  const years = Number(duration) || 1;
+  const features = [`${duration} year Membership`, ...planFeatures];
 
-      
+  return (
+    <div className={`flex h-full flex-col rounded-3xl p-6 sm:p-8 md:p-6 lg:p-8 ${tone.card}`}>
+      {/* Same height with or without a badge, so the cards stay aligned. */}
+      <div className="flex min-h-12 items-start justify-between gap-3">
+        <span className={`grid size-12 shrink-0 place-items-center rounded-2xl text-xl ${tone.iconTile}`}>
+          <Icon aria-hidden="true" />
+        </span>
+        {discountPercentage && (
+          <span className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-wide sm:text-sm ${tone.badge}`}>
+            {discountPercentage}
+          </span>
+        )}
       </div>
 
-      <h3 className="text-2xl md:text-3xl font-semibold mb-10 mt-10">
+      {/* Two lines are reserved side by side, so the prices line up too. */}
+      <h3 className="mt-6 text-xl font-bold leading-tight md:min-h-[2.5em] lg:text-2xl">
         {planType === 'individual' ? 'Individual' : 'Institutional'} {title}
       </h3>
-      <div className="mb-10">
+
+      <div className="mt-4">
         {loading ? (
-          <div className="h-12 w-40 bg-gray-200 rounded animate-pulse" />
+          <div className="h-12 w-40 max-w-full animate-pulse rounded-xl bg-current opacity-10" />
         ) : (
           <>
-            <div className="text-4xl md:text-5xl font-bold">
-              {currency === 'INR' ? '₹' : '$'} {formatPrice(price)}
-            </div>
+            <p className="flex flex-wrap items-baseline gap-x-2">
+              <span className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+                {symbol}{formatPrice(price)}
+              </span>
+              <span className={`text-sm font-medium ${tone.muted}`}>
+                / {years} {years > 1 ? 'years' : 'year'}
+              </span>
+            </p>
             {basePrice ? (
-              <div className="mt-2 flex flex-wrap items-baseline gap-2">
-                <span className="text-xl text-gray-500 line-through">
-                  {currency === 'INR' ? '₹' : '$'} {formatPrice(basePrice)}
+              <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                <span className={`text-lg line-through ${tone.muted}`}>
+                  {symbol}{formatPrice(basePrice)}
                 </span>
                 {promoLabel && (
-                  <span className="text-sm font-semibold text-green-700">
-                    {promoLabel}
-                  </span>
+                  <span className={`text-sm font-semibold ${tone.promo}`}>{promoLabel}</span>
                 )}
               </div>
             ) : null}
@@ -61,36 +90,30 @@ const PlanCard = ({
         )}
       </div>
 
-      <ul className="space-y-4 mb-10">
-        <li className="flex items-center gap-2">
-          <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
-            <FaCheck className="text-white text-xs" />
-          </div>
-          <span>{duration} year Membership</span>
-        </li>
-        {/* <li className="flex items-center gap-2">
-          <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
-            <FaCheck className="text-white text-xs" />
-          </div>
-          <span>{accessType}</span>
-        </li> */}
-
-        {planFeatures.map((feature, index) => (
-          <li key={index} className="flex items-center gap-2">
-            <div className="bg-black rounded-full w-5 h-5 flex items-center justify-center">
-              <FaCheck className="text-white text-xs" />
-            </div>
+      <ul className={`mt-6 space-y-3 border-t pt-6 ${tone.divider}`}>
+        {features.map((feature) => (
+          <li key={feature} className="flex items-start gap-3 text-[15px]">
+            <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${tone.check}`}>
+              <FaCheck className="text-[10px]" aria-hidden="true" />
+            </span>
             <span>{feature}</span>
           </li>
         ))}
       </ul>
-    </div>
 
-    <button onClick={handleClick} disabled={loading} className="mt-auto bg-green-100 border border-green-300 hover:bg-green-200 transition-colors w-full py-3 rounded-full flex items-center justify-center relative disabled:opacity-60 disabled:cursor-not-allowed">
-      <span className=" mr-2 font-semibold" >PAY NOW</span>
-      <img src="/arrow_pay.svg" alt="arrow_white" className="absolute left-1" />
-    </button>
-  </div>   
-);
+      <div className="mt-auto pt-8">
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={loading}
+          className={`inline-flex w-full items-center justify-center gap-2 rounded-full py-3.5 font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${tone.button}`}
+        >
+          Pay now
+          <FaArrowRight className="text-sm" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default PlanCard;

@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { baseUrl } from '../../../utils/constant';
-import bg1 from "/bg1.png";
 import Loader from '../../shared/Loader';
+import { containerClass } from '../../shared/sectionStyles';
+
+const labelClass = "block text-sm font-semibold text-ink";
+const inputClass =
+  "mt-1.5 h-12 w-full rounded-xl border border-ink/15 bg-white px-4 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60";
 
 export default function NewsletterSignup() {
   const [formData, setFormData] = useState({
@@ -65,87 +69,89 @@ export default function NewsletterSignup() {
     }
   };
 
-
-
   return (
-    <div className="w-full  mx-auto p-4 bg-cover rounded-[25px] font-inter"
-      style={{
-        backgroundImage: `url(${bg1})`
-      }}
-    >
-      <div className="w-full h-full  md:h-[80vh]">
-        <div className="flex flex-col md:flex-row">
-          {/* Left side - Word Cloud */}
-          <div className="w-full md:w-3/5 p-8 relative min-h-[300px] md:min-h-[400px]">
-            <h2 className="text-2xl md:text-[45px]  text-white mb-6 font-semibold font-inter">Newsletter</h2>
+    <section aria-labelledby="newsletter-title" className="pb-16 sm:pb-20">
+      <div className={containerClass}>
+        <div className="relative overflow-hidden rounded-[2rem] bg-mist-deep px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
+          <div aria-hidden="true" className="hero-dots pointer-events-none absolute inset-0" />
+          <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-sage/25 blur-3xl" />
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -left-16 size-80 rounded-full bg-sky/25 blur-3xl" />
 
-            {/* Word Cloud */}
-            <div className="relative">
-              <img src="./newsletterimg.png" alt="newsletterImg" className=' object-cover h-full w-full' />
+          <div className="relative grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <div className="text-center lg:text-left">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-sage">
+                <span className="h-0.5 w-6 rounded-full bg-current" aria-hidden="true" />
+                Newsletter
+              </p>
+              <h2 id="newsletter-title" className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Stay Curious,
+                <br />
+                Stay Informed!
+              </h2>
+              <img
+                src="/newsletterimg.png"
+                alt=""
+                className="mx-auto mt-8 w-full max-w-md lg:mx-0"
+              />
             </div>
-          </div>
 
-          {/* Right side - Form */}
-          <div className="w-full md:w-2/5  p-8 flex flex-col justify-center">
-            <div className="mb-8 text-left md:text-4xl  font-medium text-[35px]">
-              <h3 className="  text-white mb-2">Stay Curious,</h3>
-              <h3 className="  text-white">Stay Informed!</h3>
-            </div>
+            <form onSubmit={handleSubmit} className="w-full space-y-5 rounded-3xl bg-white p-6 shadow-2xl shadow-black/20 sm:p-8">
+              <label className="block">
+                <span className={labelClass}>Name</span>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Enter your name"
+                  autoComplete="name"
+                  className={inputClass}
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
 
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your name"
-                    className="w-full h-[50px] px-4 py-3 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder:text-[#0102038C] placeholder:text-[18px] placeholder:font-semibold placeholder:font-Poppins"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+              <label className="block">
+                <span className={labelClass}>Email</span>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your Mail Id"
+                  autoComplete="email"
+                  className={inputClass}
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
 
-                <div>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Enter your Mail Id"
-                    className="w-full h-[50px] px-4 py-3 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder:text-[#0102038C] placeholder:text-[18px] placeholder:font-semibold placeholder:font-Poppins"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+              <label className="block">
+                <span className={labelClass}>WhatsApp number</span>
+                <input
+                  type="tel"
+                  name="whatsapp_no"
+                  placeholder="Enter your WhatsApp No."
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  className={inputClass}
+                  value={formData.whatsapp_no}
+                  maxLength={10}
+                  minLength={10}
+                  required
+                  onChange={handleChange}
+                />
+              </label>
 
-                <div>
-                  <input
-                    type="tel"
-                    name="whatsapp_no"
-                    placeholder="Enter your WhatsApp No."
-                    className="w-full h-[50px] px-4 py-3 rounded-full bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 placeholder:text-[#0102038C] placeholder:text-[18px] placeholder:font-semibold placeholder:font-Poppins"
-                    value={formData.whatsapp_no}
-                    maxLength={10}
-                    minLength={10}
-                    required
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <button
-                    type="submit"
-                    className="w-full bg-[#FFF8DE] transition-colors duration-300 text-black font-semibold py-3 px-6 rounded-full flex items-center justify-center text-lg btnshadow"
-                    disabled={loading}
-                  >
-                    {loading ? <Loader /> : "Submit"}
-                  </button>
-                </div>
-              </div>
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center rounded-full bg-ink px-6 py-3.5 text-base font-bold text-white transition-colors hover:bg-ink/85 disabled:opacity-70"
+                disabled={loading}
+              >
+                {loading ? <Loader /> : "Subscribe"}
+              </button>
             </form>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

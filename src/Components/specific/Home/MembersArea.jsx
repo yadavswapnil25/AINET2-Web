@@ -1,6 +1,6 @@
-import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { containerClass } from "../../shared/sectionStyles";
 
 const types = [
   "Membership Privileges",
@@ -12,49 +12,56 @@ const types = [
 
 const MembersArea = () => {
   return (
-    <>
-      <div className="py-4 px-8  bg-[#A6AEBF] w-full h-auto md:h-[200px] mt-12 flex flex-col md:flex-row rounded-[25px] gap-4 md:gap-0">
-        {/* first */}
-        <div className="w-full md:w-1/3">
-          <h4 className="text-white font-bold underline underline-offset-2 text-[18px]">
-            AINET MEMBERS' AREA
-          </h4>
+    <section aria-labelledby="members-title" className="py-16 sm:py-20">
+      <div className={containerClass}>
+        <div className="relative overflow-hidden rounded-[2rem] bg-sage px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-14">
+          <div aria-hidden="true" className="pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-white/35" />
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-28 right-1/3 size-60 rounded-full bg-cream/60" />
 
-          <h3 className="text-2xl text-center  font-bold text-white mt-12">
-            Get Involved! <br />
-            Become an AINETian!
-          </h3>
-        </div>
+          <div className="relative grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
+            <div>
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-sage-deep">
+                <span className="h-0.5 w-6 rounded-full bg-current" aria-hidden="true" />
+                AINET Members&apos; Area
+              </p>
+              <h2 id="members-title" className="mt-3 text-3xl font-extrabold leading-tight tracking-tight text-ink sm:text-4xl">
+                Get Involved!
+                <br />
+                Become an AINETian!
+              </h2>
 
-        {/* second */}
-        <div className="flex flex-col w-full md:w-1/3 h-full mt-4 md:mt-0 md:pl-14">
-          {types?.map((type, index) => (
-            <div
-              className={`flex items-center gap-4  ${index === 0 ? "mt-0" : "mt-2"
-                }`}
-              key={index}
-            >
-              <FaCheckCircle className="text-white text-[20px]" />
-              <p className="text-white text-[18px]">{type}</p>
+              <ul className="mt-7 flex flex-wrap gap-2">
+                {types.map((type) => (
+                  <li
+                    key={type}
+                    className="inline-flex items-center gap-2 rounded-full bg-white/75 px-4 py-2 text-sm font-semibold text-ink"
+                  >
+                    <FaCheckCircle className="shrink-0 text-sage-deep" aria-hidden="true" />
+                    {type}
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
-        </div>
 
-        {/* third */}
-        <div className="w-full md:w-1/3 flex mt-4 md:mt-0 justify-around flex-col items-center gap-4">
-          <Link to="/#membershipplan" className="w-full text-center md:w-[340px] bg-[#FFF8DE] text-black font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
-            Not a member? Join in!
-          </Link>
-          <Link to="/login" className="w-full text-center md:w-[340px] bg-[#ffffff] text-[#000] font-bold py-3 p-2 md:p-4 rounded-[30px] uppercase">
-            ALREADY A MEMBER? LOG IN
-          </Link>
-
+            <div className="flex flex-col gap-3 sm:flex-row lg:ml-auto lg:w-full lg:max-w-sm lg:flex-col">
+              <Link
+                to="/#membershipplan"
+                className="rounded-full bg-ink px-6 py-4 text-center font-bold text-white shadow-lg shadow-ink/15 transition-colors hover:bg-ink/85 sm:flex-1 lg:flex-none"
+              >
+                Not a member? Join in!
+              </Link>
+              <Link
+                to="/login"
+                className="rounded-full bg-white px-6 py-4 text-center font-bold text-ink transition-colors hover:bg-cream sm:flex-1 lg:flex-none"
+              >
+                Already a member? Log in
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 
 export default MembersArea;
-
-

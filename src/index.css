@@ -1,5 +1,23 @@
 @import "tailwindcss";
 
+/* AINET design tokens: brand colours as utilities (bg-ink, text-sage-deep, ...)
+   and the display font used by the home page, header and footer (font-display). */
+@theme {
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-ink: #1d2638;
+  --color-mist: #a6aebf;
+  --color-mist-deep: #4a5468;
+  --color-sage: #d0e8c5;
+  --color-sage-soft: #eef6ea;
+  --color-sage-deep: #3d6b35;
+  --color-cream: #fff8de;
+  --color-cream-soft: #fffcf2;
+  --color-sky: #c5d3e8;
+  --color-sky-soft: #f1f5fb;
+  --color-flame: #ff3d00;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -76,6 +94,38 @@ button {
 
 .partner-slider:hover .slider-track {
   animation-play-state: paused;
+}
+
+/* Home gallery: thumbnails scrolling past in a loop (the list is rendered twice). */
+.gallery-marquee {
+  display: flex;
+  width: max-content;
+  animation: scroll 60s linear infinite;
+}
+
+.gallery-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Soft fade at both ends of a scrolling row. */
+.fade-edges {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Faint dot grid used on the dark home page panels. */
+.hero-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* People who ask their system for less motion get still rows instead. */
+@media (prefers-reduced-motion: reduce) {
+  .slider-track,
+  .gallery-marquee,
+  .marquee-animation {
+    animation: none !important;
+  }
 }
 
 

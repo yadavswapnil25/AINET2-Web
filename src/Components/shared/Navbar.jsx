@@ -3,793 +3,483 @@ import { AiFillYoutube } from "react-icons/ai";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { FaPinterest } from "react-icons/fa6";
 import { IoLogoFacebook } from "react-icons/io5";
-import { MdMail, MdOutlineKeyboardArrowDown, MdSearch } from "react-icons/md";
-import {
-  RiInstagramFill,
-  RiTelegramFill,
-  RiTwitterXLine,
-  RiWhatsappFill,
-} from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { MdLogout, MdMail, MdOutlineKeyboardArrowDown, MdPerson } from "react-icons/md";
+import { RiInstagramFill, RiTwitterXLine, RiWhatsappFill } from "react-icons/ri";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-    
+import { containerClass } from "./sectionStyles";
+
+const SOCIALS = [
+  { name: "Instagram", Icon: RiInstagramFill, link: "https://www.instagram.com/ainetindia/" },
+  { name: "Facebook", Icon: IoLogoFacebook, link: "https://www.facebook.com/ainetindia/" },
+  { name: "YouTube", Icon: AiFillYoutube, link: "https://www.youtube.com/AINETIndia" },
+  { name: "X", Icon: RiTwitterXLine, link: "https://x.com/ainetindia" },
+  { name: "Pinterest", Icon: FaPinterest, link: "https://in.pinterest.com/theainet/" },
+  { name: "WhatsApp", Icon: RiWhatsappFill, link: "https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET" },
+];
+
+const NAV_ITEMS = [
+  { label: "Home", to: "/" },
+  { label: "About us", to: "/about" },
+  {
+    label: "Projects & Initiatives",
+    children: [
+      { label: "Teacher Research", to: "/teacherResearch" },
+      { label: "AINET Connect", to: "/AINETConnect" },
+      { label: "Women in AINET", to: "/AboutWomenInAINET" },
+      { label: "Rural ELT", to: "/AboutRuralELT" },
+      { label: "AINET Affiliates", to: "/AboutAINETAffiliates" },
+      { label: "HELE", to: "/HELE" },
+      { label: "Decentring", to: "/Decentring" },
+      { label: "AINET PRELIM", to: "/Prelims" },
+    ],
+  },
+  { label: "Publications", to: "/publications" },
+  { label: "AINET Adda", to: "/BlogsSection1" },
+  { label: "Resources", to: "/resources" },
+  {
+    label: "Event",
+    children: [
+      { label: "Conferences", to: "/Conference" },
+      { label: "Webinars", to: "/webinar" },
+      { label: "FD Lectures", to: "/FDLecture" },
+    ],
+  },
+  {
+    label: "More",
+    children: [
+      { label: "Contact Us", to: "/ContactUs" },
+      { label: "Gallery", to: "/gallery" },
+      { label: "Archives", to: "/archives" },
+    ],
+  },
+];
+
+// The full menu needs a wide screen; below this width the slide-in menu is used.
+const DESKTOP_MIN_WIDTH = 1280;
+
+const pathMatches = (pathname, to) =>
+  to === "/" ? pathname === "/" : pathname === to || pathname.startsWith(`${to}/`);
+
+const isItemActive = (item, pathname) =>
+  item.children
+    ? item.children.some((child) => pathMatches(pathname, child.to))
+    : pathMatches(pathname, item.to);
+
+const desktopItemClass = (active) =>
+  `inline-flex items-center gap-1 rounded-full px-3 py-2 text-[15px] font-semibold transition-colors ${
+    active ? "bg-sky-soft text-ink" : "text-ink/70 hover:bg-sky-soft/70 hover:text-ink"
+  }`;
+
+const SocialLinks = ({ className = "", iconClassName = "" }) => (
+  <div className={`flex items-center ${className}`}>
+    {SOCIALS.map((social) => {
+      const { Icon } = social;
+      return (
+        <a
+          key={social.name}
+          href={social.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={social.name}
+          className={iconClassName}
+        >
+          <Icon aria-hidden="true" />
+        </a>
+      );
+    })}
+  </div>
+);
+
+const Avatar = ({ profile, className = "" }) => (
+  <img
+    src={profile?.image_url || "/placeholder.jpg"}
+    onError={(e) => {
+      e.currentTarget.onerror = null;
+      e.currentTarget.src = "/placeholder.jpg";
+    }}
+    alt=""
+    className={`shrink-0 rounded-full object-cover ${className}`}
+  />
+);
+
 const Navbar = () => {
-  const { logout, token ,profileData} = useAuth();
-  const navigate = useNavigate()
+  const { logout, profileData } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(null);
-  const [searchExpanded, setSearchExpanded] = useState(false);
-  const [mobileDropdown, setMobileDropdown] = useState(null);
-  const searchRef = useRef(null);
-  const navRef = useRef(null);
-  const [dropdownOpenProfile, setDropdownOpenProfile] = useState(false);
-  const dropdownRef = useRef(null);
-  const [user, setUser] = useState();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileSection, setMobileSection] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const headerRef = useRef(null);
 
-  // Close dropdown on click outside
+  // Close menus after moving to another page.
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpenProfile(false);
+    setMenuOpen(false);
+    setOpenDropdown(null);
+    setProfileOpen(false);
+  }, [location.pathname, location.hash]);
+
+  // A click outside the header, or Escape, closes whatever is open.
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (headerRef.current && !headerRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+        setProfileOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setOpenDropdown(null);
+        setProfileOpen(false);
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
-  const toggleDropdown = (menu) => {
-    setDropdownOpen(dropdownOpen === menu ? null : menu);
-  };
-
-  const toggleMobileDropdown = (menu) => {
-    setMobileDropdown(mobileDropdown === menu ? null : menu);
-  };
-
+  // Keep the page still behind the slide-in menu.
   useEffect(() => {
-    setUser(profileData);
-  }, [token,profileData]);
-  
-
-
-  const socials = [
-    {
-      name: "Instagram",
-      icon: <RiInstagramFill />,
-      link: "https://www.instagram.com/ainetindia/",
-    },
-    {
-      name: "Facebook",
-      icon: <IoLogoFacebook />,
-      link: "https://www.facebook.com/ainetindia/",
-    },
-    {
-      name: "Youtube",
-      icon: <AiFillYoutube />,
-      link: "https://www.youtube.com/AINETIndia",
-    },
-    { name: "X", icon: <RiTwitterXLine />, link: "https://x.com/ainetindia" },
-    // { name: "telegram", icon: <RiTelegramFill />, link: "#" },
-    {
-      name: "pinterest",
-      icon: <FaPinterest />,
-      link: "https://in.pinterest.com/theainet/",
-    },
-    {
-      name: "whatsapp",
-      icon: <RiWhatsappFill />,
-      link: "https://api.whatsapp.com/send?phone=919322890031&text=Hi,AINET",
-    },
-  ];
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchExpanded(false);
-      }
-
-      // Close mobile menu when clicking outside
-      if (isOpen && navRef.current && !navRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Prevent scrolling when mobile menu is open
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
+    if (!menuOpen) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = previous;
     };
-  }, [isOpen]);
+  }, [menuOpen]);
 
-  // Close mobile menu on window resize
+  // Close the slide-in menu once the window is wide enough for the full menu.
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsOpen(false);
-      }
+      if (window.innerWidth >= DESKTOP_MIN_WIDTH) setMenuOpen(false);
     };
-
     window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
-  const handleLogout = () => {
 
-    setDropdownOpenProfile(false);
-    logout();     
-    navigate("/login"); 
+  const closeMenu = () => setMenuOpen(false);
+
+  const handleLogout = () => {
+    setProfileOpen(false);
+    setMenuOpen(false);
+    logout();
+    navigate("/login");
   };
 
   return (
-    <nav
-      className="bg-white text-black   shadow-md sticky top-0 z-50 py-1.5"
-      ref={navRef}
-    >
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold z-10">
-          <img
-            src="/logo.svg"
-            alt="logo ainet"
-            className="h-[80px] md:h-[120px]"
-          />
-        </Link>
+    <>
+      {/* Contact strip (laptops and up) */}
+      <div className="hidden bg-ink font-display text-sm text-white/75 lg:block">
+        <div className={`${containerClass} flex h-10 items-center justify-between`}>
+          <a href="mailto:theainet@gmail.com" className="inline-flex items-center gap-2 transition-colors hover:text-white">
+            <MdMail className="text-base" aria-hidden="true" />
+            theainet@gmail.com
+          </a>
+          <SocialLinks className="gap-4" iconClassName="text-base transition-colors hover:text-sage" />
+        </div>
+      </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex md:flex-col space-y-2 lg:space-y-4 w-full">
-          <div className="flex flex-wrap lg:flex-nowrap justify-end items-center gap-2 lg:gap-4">
-            {/* mail */}
-            <a
-              className="flex items-center text-sm lg:text-base"
-              href="mailto:theainet@gmail.com"
-            >
-              <MdMail className="size-4 lg:size-5 mr-1" />
-              <span className="hidden sm:inline">theainet@gmail.com</span>
-            </a>
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-50 border-b border-ink/10 bg-white/95 font-display backdrop-blur supports-[backdrop-filter]:bg-white/85"
+      >
+        <div className={`${containerClass} flex h-16 items-center justify-between gap-4 lg:h-20`}>
+          <Link to="/" className="shrink-0" aria-label="AINET home">
+            <img src="/logo.svg" alt="AINET - Develop. Together." className="h-12 w-auto sm:h-14 lg:h-16" />
+          </Link>
 
-            {/* socials */}
-            <div className="flex items-center gap-2 lg:gap-3">
-              {socials.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.link}
-                  target="_blank"
-                  className="text-xl lg:text-2xl hover:text-gray-500 transition-colors"
-                  aria-label={social.name}
-                >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
-
-            {/* AUTH BTNS */}
-
-            <div className="relative" ref={dropdownRef}>
-              {profileData ? (
+          {/* Full menu (wide screens) */}
+          <nav aria-label="Main" className="hidden items-center gap-0.5 xl:flex">
+            {NAV_ITEMS.map((item, index) =>
+              item.children ? (
                 <div
-                  className="flex gap-3 px-3 py-2 cursor-pointer bg-[#A6AEBF] rounded-4xl items-center"
-                  onClick={() => setDropdownOpenProfile(!dropdownOpenProfile)}
+                  key={item.label}
+                  className="relative"
+                  onMouseEnter={() => setOpenDropdown(item.label)}
+                  onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  <img
-                    src={profileData?.image_url || "/placeholder.jpg"}
-                    onError={(e) => {
-                      e.target.src = "/placeholder.jpg";
-                    }}
-                    alt="profile"
-                    className="size-7 rounded-full cursor-pointer"
-                  />
-                  <span className=" text-white">{profileData?.name}</span>
+                  <button
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded={openDropdown === item.label}
+                    onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)}
+                    className={desktopItemClass(isItemActive(item, location.pathname))}
+                  >
+                    {item.label}
+                    <MdOutlineKeyboardArrowDown
+                      className={`text-lg transition-transform ${openDropdown === item.label ? "rotate-180" : ""}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  {openDropdown === item.label && (
+                    <div className={`absolute top-full z-50 pt-2 ${index >= NAV_ITEMS.length - 2 ? "right-0" : "left-0"}`}>
+                      <ul className="w-60 rounded-2xl bg-white p-2 shadow-xl ring-1 ring-ink/10">
+                        {item.children.map((child) => (
+                          <li key={child.to}>
+                            <NavLink
+                              to={child.to}
+                              onClick={() => setOpenDropdown(null)}
+                              className={({ isActive }) =>
+                                `block rounded-xl px-3 py-2.5 text-[15px] transition-colors ${
+                                  isActive ? "bg-sky-soft font-semibold text-ink" : "text-ink/75 hover:bg-sky-soft hover:text-ink"
+                                }`
+                              }
+                            >
+                              {child.label}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div className="flex items-center gap-2 lg:gap-4">
-                  <Link 
-                    to="/#membershipplan"
-                    className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#000000] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300 inline-block text-center"
-                  >
-                    JOIN US
-                  </Link>
-                  <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-white border border-[#000000] rounded-full text-[#000000] hover:bg-gray-100 transition-all duration-300">
-                    <Link to="/login">LOG IN</Link>
-                  </button>
-                </div>
-              )}
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === "/"}
+                  className={({ isActive }) => desktopItemClass(isActive)}
+                >
+                  {item.label}
+                </NavLink>
+              )
+            )}
+          </nav>
 
-              {/* Dropdown */}
-              {dropdownOpenProfile && (
-                <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl  z-50 border border-[#A6AEBF] shadow-2xl">
-                  {/* Profile Info */}
-                  <div className="flex flex-col items-center  border-b border-[#A6AEBF] p-5">
-                    <img
-                      src={profileData?.image_url || "/placeholder.jpg"}
-                      onError={(e) => {
-                        e.target.src = "/placeholder.jpg";
-                      }}
-                      alt={profileData?.name}
-                      className="w-16 h-16 rounded-full object-cover mb-2"
-                    />
-                    <h3 className="font-semibold text-lg text-gray-800">
-                      {profileData?.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">{profileData?.email}</p>
+          <div className="flex items-center gap-2">
+            {profileData ? (
+              <div className="relative hidden xl:block">
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen((open) => !open)}
+                  aria-haspopup="true"
+                  aria-expanded={profileOpen}
+                  className="flex items-center gap-2 rounded-full bg-sky-soft py-1.5 pl-1.5 pr-3 text-sm font-semibold text-ink transition-colors hover:bg-sky"
+                >
+                  <Avatar profile={profileData} className="size-8" />
+                  <span className="max-w-[10rem] truncate">{profileData?.name}</span>
+                  <MdOutlineKeyboardArrowDown
+                    className={`text-lg transition-transform ${profileOpen ? "rotate-180" : ""}`}
+                    aria-hidden="true"
+                  />
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-2xl bg-white p-2 shadow-xl ring-1 ring-ink/10">
+                    <div className="flex flex-col items-center gap-1 border-b border-ink/10 px-4 pb-4 pt-3 text-center">
+                      <Avatar profile={profileData} className="mb-2 size-16" />
+                      <p className="font-semibold text-ink">{profileData?.name}</p>
+                      <p className="break-all text-sm text-ink/60">{profileData?.email}</p>
+                    </div>
+                    <Link
+                      to="/profile"
+                      className="mt-2 flex items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-medium text-ink transition-colors hover:bg-sky-soft"
+                    >
+                      <MdPerson className="text-lg" aria-hidden="true" />
+                      Profile
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-[15px] font-medium text-red-600 transition-colors hover:bg-red-50"
+                    >
+                      <MdLogout className="text-lg" aria-hidden="true" />
+                      Log out
+                    </button>
                   </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="hidden rounded-full px-4 py-2.5 text-[15px] font-semibold text-ink transition-colors hover:bg-sky-soft xl:inline-flex"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/#membershipplan"
+                  className="hidden rounded-full bg-ink px-5 py-2.5 text-[15px] font-semibold text-white transition-colors hover:bg-ink/85 sm:inline-flex"
+                >
+                  Join us
+                </Link>
+              </>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={menuOpen}
+              className="grid size-11 place-items-center rounded-full text-ink transition-colors hover:bg-sky-soft xl:hidden"
+            >
+              <FaBars className="text-xl" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Slide-in menu (phones, tablets and small laptops). It sits outside the
+          header because the header's blur effect would trap a fixed panel. */}
+      <div
+        className={`fixed inset-0 z-[60] font-display xl:hidden ${menuOpen ? "" : "pointer-events-none"}`}
+        inert={!menuOpen}
+      >
+        <div
+          className={`absolute inset-0 bg-ink/50 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+
+        <aside
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          className={`absolute inset-y-0 right-0 flex w-[88%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-300 ease-out ${
+            menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex h-16 shrink-0 items-center justify-between border-b border-ink/10 px-5">
+            <Link to="/" onClick={closeMenu} aria-label="AINET home">
+              <img src="/logo.svg" alt="AINET - Develop. Together." className="h-10 w-auto" />
+            </Link>
+            <button
+              type="button"
+              onClick={closeMenu}
+              aria-label="Close menu"
+              className="grid size-10 place-items-center rounded-full text-ink transition-colors hover:bg-sky-soft"
+            >
+              <FaTimes className="text-lg" aria-hidden="true" />
+            </button>
+          </div>
+
+          <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-3 py-4">
+            <ul className="space-y-1">
+              {NAV_ITEMS.map((item) =>
+                item.children ? (
+                  <li key={item.label}>
+                    <button
+                      type="button"
+                      onClick={() => setMobileSection(mobileSection === item.label ? null : item.label)}
+                      aria-expanded={mobileSection === item.label}
+                      className={`flex w-full items-center justify-between rounded-xl px-3 py-3 text-left text-base font-semibold transition-colors hover:bg-sky-soft ${
+                        isItemActive(item, location.pathname) ? "text-ink" : "text-ink/80"
+                      }`}
+                    >
+                      {item.label}
+                      <MdOutlineKeyboardArrowDown
+                        className={`text-xl transition-transform ${mobileSection === item.label ? "rotate-180" : ""}`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {mobileSection === item.label && (
+                      <ul className="mb-2 ml-4 space-y-0.5 border-l-2 border-sage pl-3">
+                        {item.children.map((child) => (
+                          <li key={child.to}>
+                            <NavLink
+                              to={child.to}
+                              onClick={closeMenu}
+                              className={({ isActive }) =>
+                                `block rounded-lg px-3 py-2.5 text-[15px] transition-colors ${
+                                  isActive ? "bg-sky-soft font-semibold text-ink" : "text-ink/70 hover:bg-sky-soft hover:text-ink"
+                                }`
+                              }
+                            >
+                              {child.label}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ) : (
+                  <li key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      end={item.to === "/"}
+                      onClick={closeMenu}
+                      className={({ isActive }) =>
+                        `block rounded-xl px-3 py-3 text-base font-semibold transition-colors ${
+                          isActive ? "bg-sky-soft text-ink" : "text-ink/80 hover:bg-sky-soft"
+                        }`
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                )
+              )}
+            </ul>
+          </nav>
+
+          <div className="shrink-0 space-y-4 border-t border-ink/10 p-5">
+            {profileData ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 rounded-2xl bg-sky-soft p-3">
+                  <Avatar profile={profileData} className="size-12" />
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-ink">{profileData?.name}</p>
+                    <p className="truncate text-sm text-ink/60">{profileData?.email}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
                   <Link
                     to="/profile"
-                    onClick={() => setDropdownOpenProfile(false)}
-                    className=" w-full text-center flex justify-center py-2 hover:text-gray-500 text-lg border-b border-[#A6AEBF]"
+                    onClick={closeMenu}
+                    className="rounded-full py-3 text-center text-sm font-semibold text-ink ring-1 ring-ink/15 transition-colors hover:bg-sky-soft"
                   >
                     Profile
                   </Link>
-                  {/* Logout */}
-                  <div className="flex w-full justify-center">
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                       
-                      }}
-                      className="w-[90%] flex items-center justify-center gap-2 my-5 py-3 text-black hover:text-white font-semibold rounded-4xl bg-orange-500 hover:bg-orange-600 transition duration-300 ease-in group"
-                    >
-                      <img
-                        src="/logout.svg"
-                        alt="logout"
-                        className="w-5 h-5 transition-all duration-300 ease-in group-hover:brightness-0 group-hover:invert"
-                      />
-                      LOG OUT
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="rounded-full bg-ink py-3 text-sm font-semibold text-white transition-colors hover:bg-ink/85"
+                  >
+                    Log out
+                  </button>
                 </div>
-              )}
-            </div>
-
-            {/* Search */}
-            <div
-              ref={searchRef}
-              className={`relative flex items-center transition-all duration-300 ${
-                searchExpanded ? "flex-row" : "flex-row-reverse"
-              }`}
-            >
-              {searchExpanded && (
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    className="border border-gray-300 rounded-4xl pl-10 pr-2 py-2 outline-none w-36 lg:w-48 text-sm"
-                    autoFocus
-                  />
-                  <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-                    <MdSearch className="w-5 h-5 text-gray-700" />
-                  </div>
-                </div>
-              )}
-
-              {!searchExpanded && (
-                <button
-                  onClick={() => setSearchExpanded((prev) => !prev)}
-                  className="p-1"
-                  aria-label="Search"
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="rounded-full py-3 text-center text-sm font-semibold text-ink ring-1 ring-ink/20 transition-colors hover:bg-sky-soft"
                 >
-                  <MdSearch className="w-8 h-8 text-gray-700" />
-                </button>
-              )}
-            </div>
-          </div>
+                  Log in
+                </Link>
+                <Link
+                  to="/#membershipplan"
+                  onClick={closeMenu}
+                  className="rounded-full bg-ink py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-ink/85"
+                >
+                  Join us
+                </Link>
+              </div>
+            )}
 
-          {/* Desktop Navigation Links */}
-          <div className="flex flex-wrap justify-end text-sm lg:text-base space-x-2 lg:space-x-6">
-            <Link to="/" className="hover:text-[#A6AEBF] transition-colors">
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className="hover:text-[#A6AEBF] transition-colors"
-            >
-              About us
-            </Link>
-
-            {/* Desktop Dropdowns */}
-            <div
-              className="relative group"
-              onMouseEnter={() => toggleDropdown("Projects")}
-              onMouseLeave={() => toggleDropdown(null)}
-            >
-              <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
-                Projects & Initiatives
-                <MdOutlineKeyboardArrowDown
-                  className={`ml-1 transition-transform ${
-                    dropdownOpen === "Projects" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {dropdownOpen === "Projects" && (
-                <div className="absolute bg-white mt-2 py-4 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link
-                    to="/teacherResearch"
-                    className="block px-2 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Teacher Research
-                  </Link>
-                  <Link
-                    to="/AINETConnect"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    AINET Connect
-                  </Link>
-                  <Link
-                    to="/AboutWomenInAINET"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Women in AINET
-                  </Link>
-                  <Link
-                    to="/AboutRuralELT"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Rural ELT
-                  </Link>
-                  <Link
-                    to="/AboutAINETAffiliates"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    AINET Affiliates
-                  </Link>
-                  <Link
-                    to="/HELE"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    {" "}
-                    HELE
-                  </Link>
-                  <Link
-                    to="Decentring"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Decentring
-                  </Link>
-                  <Link
-                    to="/Prelims"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    AINET PRELIM
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <Link
-              to="/publications"
-              className="hover:text-[#A6AEBF] transition-colors"
-            >
-              Publications
-            </Link>
-            <Link
-              to="/BlogsSection1"
-              className="hover:text-[#A6AEBF] transition-colors"
-            >
-              AINET Adda
-            </Link>
-            <Link
-              to="/resources"
-              className="hover:text-[#A6AEBF] transition-colors"
-            >
-              Resources
-            </Link>
-
-            <div
-              className="relative group"
-              onMouseEnter={() => toggleDropdown("event")}
-              onMouseLeave={() => toggleDropdown(null)}
-            >
-              <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
-                Event
-                <MdOutlineKeyboardArrowDown
-                  className={`ml-1 transition-transform ${
-                    dropdownOpen === "event" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {dropdownOpen === "event" && (
-                <div className="absolute bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link
-                    to="/Conference"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Conferences
-                  </Link>
-                  <Link
-                    to="webinar"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Webinars
-                  </Link>
-                  <Link
-                    to="/FDLecture"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    FD Lectures
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <div
-              className="relative group"
-              onMouseEnter={() => toggleDropdown("more")}
-              onMouseLeave={() => toggleDropdown(null)}
-            >
-              <button className="hover:text-[#A6AEBF] flex items-center transition-colors">
-                More
-                <MdOutlineKeyboardArrowDown
-                  className={`ml-1 transition-transform ${
-                    dropdownOpen === "more" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              {dropdownOpen === "more" && (
-                <div className="absolute right-0 bg-white mt-2 py-2 w-40 rounded shadow-lg z-10 top-3.5">
-                  <Link
-                    to="/ContactUs"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Contact Us
-                  </Link>
-                  <Link
-                    to="/gallery"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Gallery
-                  </Link>
-                  <Link
-                    to="/archives"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                  >
-                    Archives
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden z-50 mr-5"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-        >
-          {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
-
-        {/* Mobile Menu */}
-        <div
-          className={`fixed inset-0 bg-white z-40 flex flex-col p-5 pt-16 overflow-y-auto transform transition-transform duration-300 ease-in-out ${
-            isOpen ? "translate-x-0" : "translate-x-full"
-          } md:hidden`}
-        >
-          {/* Mobile Logo */}
-          <div className="mb-6 pb-4 border-b border-gray-200">
-            <Link to="/" onClick={() => setIsOpen(false)}>
-              <img
-                src="/logo.svg"
-                alt="logo ainet"
-                className="h-[60px]"
-              />
-            </Link>
-          </div>
-
-          <div className="flex flex-col space-y-4 mb-6">
-            {/* Mobile Search */}
-            <div className="relative flex border-b border-gray-200 pb-4">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full border border-gray-300 rounded-full px-4 py-2 outline-none"
-              />
-              <button className="absolute right-3 top-2.5">
-                <MdSearch className="w-5 h-5 text-gray-700" />
-              </button>
-            </div>
-
-            {/* Mobile Navigation Links */}
-            <Link
-              to="/"
-              className="py-3 border-b border-gray-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className="py-3 border-b border-gray-200"
-              onClick={() => setIsOpen(false)}
-            >
-              About us
-            </Link>
-
-            {/* Mobile Dropdowns */}
-            <div className="py-3 border-b border-gray-200">
-              <button
-                className="flex justify-between items-center w-full"
-                onClick={() => toggleMobileDropdown("initiatives")}
-              >
-                Projects & Initiatives
-                <MdOutlineKeyboardArrowDown
-                  className={`transition-transform ${
-                    mobileDropdown === "initiatives" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {mobileDropdown === "initiatives" && (
-                <div className="mt-2 pl-4 space-y-2">
-                  <Link
-                    to="/teacherResearch"
-                    className="block px-2 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Teacher Research
-                  </Link>
-                  <Link
-                    to="/AINETConnect"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    AINET Connect
-                  </Link>
-                  <Link
-                    to="/AboutWomenInAINET"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Women in AINET
-                  </Link>
-                  <Link
-                    to="/AboutRuralELT"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Rural ELT
-                  </Link>
-                  <Link
-                    to="/AboutAINETAffiliates"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    AINET Affiliates
-                  </Link>
-                  <Link
-                    to="/HELE"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {" "}
-                    HELE
-                  </Link>
-                  <Link
-                    to="/Decentring"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Decentring
-                  </Link>
-                  <Link
-                    to="/Prelims"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    AINET PRELIM
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <Link
-              to="/publications"
-              className="py-3 border-b border-gray-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Publications
-            </Link>
-            <Link
-              to="/BlogsSection1"
-              className="py-3 border-b border-gray-200"
-              onClick={() => setIsOpen(false)}
-            >
-              AINET Adda
-            </Link>
-            <Link
-              to="/resources"
-              className="py-3 border-b border-gray-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Resources
-            </Link>
-
-            <div className="py-3 border-b border-gray-200">
-              <button
-                className="flex justify-between items-center w-full"
-                onClick={() => toggleMobileDropdown("event")}
-              >
-                Event
-                <MdOutlineKeyboardArrowDown
-                  className={`transition-transform ${
-                    mobileDropdown === "event" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {mobileDropdown === "event" && (
-                <div className="mt-2 pl-4 space-y-2">
-                  <Link
-                    to="/Conference"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Conferences
-                  </Link>
-                  <Link
-                    to="webinar"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Webinars
-                  </Link>
-                  <Link
-                    to="/FDLecture"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    FD Lectures
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <div className="py-3 border-b border-gray-200">
-              <button
-                className="flex justify-between items-center w-full"
-                onClick={() => toggleMobileDropdown("more")}
-              >
-                More
-                <MdOutlineKeyboardArrowDown
-                  className={`transition-transform ${
-                    mobileDropdown === "more" ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {mobileDropdown === "more" && (
-                <div className="mt-2 pl-4 space-y-2">
-                  <Link
-                    to="/ContactUs"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Contact Us
-                  </Link>
-                  <Link
-                    to="/gallery"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Gallery
-                  </Link>
-                  <Link
-                    to="/archives"
-                    className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Archives
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-
-           {/* Mobile Contact */}
-           <div className="mt-auto">
-             {/* Mobile Profile Section */}
-             <div className="mb-6 pb-4 border-b border-gray-200">
-               {profileData ? (
-                 <div className="space-y-3">
-                   {/* Profile Info Card */}
-                   <div className="flex flex-col items-center p-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-sm border border-gray-200">
-                     <div className="relative mb-3">
-                       <img
-                         src={profileData?.image_url || "/placeholder.jpg"}
-                         onError={(e) => {
-                           e.target.src = "/placeholder.jpg";
-                         }}
-                         alt={profileData?.name}
-                         className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md"
-                       />
-                       <div className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 rounded-full border-2 border-white"></div>
-                     </div>
-                     <h3 className="font-bold text-lg text-gray-800 mb-1">
-                       {profileData?.name}
-                     </h3>
-                     <p className="text-sm text-gray-600">{profileData?.email}</p>
-                   </div>
-                   
-                   {/* Profile Link */}
-                   <Link
-                     to="/profile"
-                     onClick={() => setIsOpen(false)}
-                     className="flex items-center justify-center gap-2 w-full py-3.5 px-4 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm active:scale-[0.98]"
-                   >
-                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                     </svg>
-                     View Profile
-                   </Link>
-                   
-                   {/* Logout Button */}
-                   <button
-                     onClick={() => {
-                       handleLogout();
-                       setIsOpen(false);
-                     }}
-                     className="w-full flex items-center justify-center gap-2 py-3.5 px-4 text-white font-semibold rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98] group"
-                   >
-                     <img
-                       src="/logout.svg"
-                       alt="logout"
-                       className="w-5 h-5 transition-all duration-300 ease-in group-hover:brightness-0 group-hover:invert"
-                     />
-                     <span>LOG OUT</span>
-                   </button>
-                 </div>
-               ) : (
-                 /* Mobile Auth Buttons */
-                 <div className="flex flex-col space-y-3">
-                   <Link 
-                     to="/#membershipplan"
-                     className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-[#000000] rounded-full text-[#F5F5F5] cursor-pointer hover:bg-[#8a91a3] transition-all duration-300 inline-block text-center"
-                     onClick={() => setIsOpen(false)}
-                   >
-                     JOIN US
-                   </Link>
-                   <button className="px-3 py-1 lg:px-6 lg:py-2 text-sm lg:text-base font-semibold bg-white border border-[#000000] rounded-full text-[#000000] hover:bg-gray-100 transition-all duration-300">
-                     <Link to="/login" onClick={() => setIsOpen(false)}>
-                       LOG IN
-                     </Link>
-                   </button>
-                 </div>
-               )}
-             </div>
-
-            {/* Mobile Email */}
             <a
-              className="flex items-center justify-center gap-2 py-3"
               href="mailto:theainet@gmail.com"
+              className="flex items-center justify-center gap-2 text-sm text-ink/70 transition-colors hover:text-ink"
             >
-              <MdMail className="size-5" />
+              <MdMail aria-hidden="true" />
               theainet@gmail.com
             </a>
-
-            {/* Mobile Social Icons */}
-            <div className="flex justify-center gap-4 py-4">
-              {socials.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.link}
-                  className="text-2xl hover:text-gray-500 transition-colors"
-                  aria-label={social.name}
-                >
-                  {social.icon}
-                </a>
-              ))}
-            </div>
+            <SocialLinks
+              className="justify-center gap-2"
+              iconClassName="grid size-10 place-items-center rounded-full bg-sky-soft text-lg text-ink transition-colors hover:bg-ink hover:text-white"
+            />
           </div>
-        </div>
+        </aside>
       </div>
-    </nav>
+    </>
   );
 };
 
