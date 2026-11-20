@@ -53,10 +53,8 @@ export default function AINET2027Conference() {
           ))}
           <li>
             <span className="text-[#F05A5A] font-semibold">Membership Offer:</span> Be an AINETian to get a 10%
-            discount on registration fees!
-            <div className="mt-3">
-              <Link to="/#membershipplan" className={linkClass}>Become a Member</Link>
-            </div>
+            discount on registration fees!{" "}
+            <Link to="/#membershipplan" className={linkClass}>Become a Member</Link>
           </li>
         </ul>
 
