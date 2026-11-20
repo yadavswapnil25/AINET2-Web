@@ -797,26 +797,26 @@ export default function AINET2027PresentationProposalForm() {
 
                 {/* Conference Details */}
                 <div className="text-center flex-1 flex flex-col justify-center">
-                  <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-800 mb-2 md:mb-3 lg:mb-4 leading-tight font-serif italic">
+                  <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-ink mb-2 md:mb-3 lg:mb-4 leading-tight font-extrabold tracking-tight">
                     10th AINET International Conference 2027 (Online)
                   </h1>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-ink/75 mb-1 md:mb-2 leading-tight font-extrabold tracking-tight">
                     9 - 10 January 2027
                   </p>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-ink mb-3 md:mb-4 lg:mb-5">
                     Online
                   </p>
-                  <p className="inline-block text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white bg-blue-700 px-4 py-1.5 rounded-md mb-3 md:mb-4 lg:mb-5 font-serif">
+                  <p className="inline-block text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white bg-ink px-4 py-1.5 rounded-full mb-3 md:mb-4 lg:mb-5">
                     "ELE for Gen Z, Alpha and Beyond"
                   </p>
                   <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
-                  <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">
+                  <span className="px-3 py-1 bg-sage text-ink font-semibold rounded-full inline-block">
                     Supported by British Council &amp; RELO, American Embassy
                   </span>
                 </p>
 
                   {/* Registration Button */}
-                  <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-gray-700 hover:text-white transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
+                  <button className="w-full rounded-full bg-ink text-white py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-ink/85 transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
                     PRESENTATION PROPOSAL FORM
                   </button>
                 </div>
@@ -833,17 +833,17 @@ export default function AINET2027PresentationProposalForm() {
                   <div key={step} className="flex items-center">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${step === currentStep
-                          ? "bg-gray-800 text-white"
+                          ? "bg-ink text-white"
                           : step < currentStep
-                            ? "bg-green-500 text-white"
-                            : "bg-gray-200 text-gray-500"
+                            ? "bg-sage-deep text-white"
+                            : "bg-sky-soft text-ink/50"
                         }`}
                     >
                       {step}
                     </div>
                     {step < 6 && (
                       <div
-                        className={` md:w-12 w-6 h-0.5 mx-1 transition-all duration-300 ${step < currentStep ? "bg-green-500" : "bg-gray-200"
+                        className={` md:w-12 w-6 h-0.5 mx-1 transition-all duration-300 ${step < currentStep ? "bg-sage-deep" : "bg-sky-soft"
                           }`}
                       ></div>
                     )}
@@ -858,8 +858,8 @@ export default function AINET2027PresentationProposalForm() {
                 {/* Step 1: Main Presenter Information & Contact */}
                 {currentStep === 1 && (
                   <div className="flex-1 flex flex-col space-y-4">
-                    <div className="bg-gray-400 p-3 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Main Presenter Information
                       </h2>
                     </div>
@@ -868,14 +868,14 @@ export default function AINET2027PresentationProposalForm() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {/* Title */}
                         <div className="col-span-1 sm:col-span-1">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Title: <span className="text-red-500">*</span>
                           </label>
                           <select
                             name="main_title"
                             value={formData.main_title}
                             onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           >
                             <option value="">Select Title</option>
                             <option value="Mr.">Mr.</option>
@@ -888,7 +888,7 @@ export default function AINET2027PresentationProposalForm() {
 
                         {/* Full Name */}
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Full Name: <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -897,13 +897,13 @@ export default function AINET2027PresentationProposalForm() {
                             value={formData.main_full_name}
                             onChange={handleChange}
                             placeholder="Enter Your Full Name"
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Place Of Work: <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -912,12 +912,12 @@ export default function AINET2027PresentationProposalForm() {
                           value={formData.main_place_of_work}
                           onChange={handleChange}
                           placeholder="Enter Your Place Of Work"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Main Presenter's BIO (Max. 30 words):{" "}
                           <span className="text-red-500">*</span>
                           <span className="text-sm text-gray-500 ml-2">
@@ -944,8 +944,8 @@ export default function AINET2027PresentationProposalForm() {
                       </div>
                     </div>
 
-                    <div className="bg-gray-400 p-2 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Contact Information
                       </h2>
                     </div>
@@ -953,7 +953,7 @@ export default function AINET2027PresentationProposalForm() {
                     <div className="space-y-3">
                       <div className="grid grid-cols-3 gap-4">
                         <div className="col-span-1 sm:col-span-1">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Country Code: <span className="text-red-500">*</span>
                           </label>
                           <CountryCodeSelector
@@ -965,7 +965,7 @@ export default function AINET2027PresentationProposalForm() {
                           />
                         </div>
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Mobile No: <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -975,13 +975,13 @@ export default function AINET2027PresentationProposalForm() {
                             value={formData.main_mobile}
                             onChange={handleChange}
                             placeholder="Enter Your Mobile Number"
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Email: <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -990,7 +990,7 @@ export default function AINET2027PresentationProposalForm() {
                           value={formData.main_email}
                           onChange={handleChange}
                           placeholder="Enter Your Email"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
                     </div>
@@ -1000,8 +1000,8 @@ export default function AINET2027PresentationProposalForm() {
                 {/* Step 2: Co-Presenter 1 */}
                 {currentStep === 2 && (
                   <div className="flex-1 flex flex-col space-y-4">
-                    <div className="bg-gray-400 p-3 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Co-Presenter 1 (Optional)
                       </h2>
                     </div>
@@ -1010,14 +1010,14 @@ export default function AINET2027PresentationProposalForm() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {/* Title */}
                         <div className="col-span-1 sm:col-span-1">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Title:
                           </label>
                           <select
                             name="co1_title"
                             value={formData.co1_title}
                             onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           >
                             <option value="">Select Title</option>
                             <option value="Mr.">Mr.</option>
@@ -1030,7 +1030,7 @@ export default function AINET2027PresentationProposalForm() {
 
                         {/* Full Name */}
                         <div className="col-span-1 sm:col-span-2  ">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Full Name:
                           </label>
                           <input
@@ -1039,13 +1039,13 @@ export default function AINET2027PresentationProposalForm() {
                             value={formData.co1_full_name}
                             onChange={handleChange}
                             placeholder="Enter Full Name"
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Place Of Work:
                         </label>
                         <input
@@ -1054,13 +1054,13 @@ export default function AINET2027PresentationProposalForm() {
                           value={formData.co1_place_of_work}
                           onChange={handleChange}
                           placeholder="Enter Place Of Work"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
                     </div>
 
-                    <div className="bg-gray-400 p-2 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Contact Information
                       </h2>
                     </div>
@@ -1069,7 +1069,7 @@ export default function AINET2027PresentationProposalForm() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {/* Country Code */}
                         <div className="col-span-1 sm:col-span-1">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Country Code:
                             {(formData.co1_full_name || formData.co1_place_of_work) && (
                               <span className="text-red-500">*</span>
@@ -1085,7 +1085,7 @@ export default function AINET2027PresentationProposalForm() {
                         </div>
                         {/* Mobile No */}
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Mobile No:
                             {(formData.co1_full_name || formData.co1_place_of_work) && (
                               <span className="text-red-500">*</span>
@@ -1097,13 +1097,13 @@ export default function AINET2027PresentationProposalForm() {
                             value={formData.co1_mobile}
                             onChange={handleChange}
                             placeholder="Enter Mobile Number"
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Email:
                           {(formData.co1_full_name || formData.co1_place_of_work) && (
                             <span className="text-red-500">*</span>
@@ -1115,13 +1115,13 @@ export default function AINET2027PresentationProposalForm() {
                           value={formData.co1_email}
                           onChange={handleChange}
                           placeholder="Enter Email Address"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
 
                       {formData.co1_full_name && (
                         <div>
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Co-Presenter 1 Bio (Max. 30 words):<span className="text-red-500">*</span>
                             <span className="text-sm text-gray-500 ml-2">
                               ({getWordCount(formData.co1_presenter_bio)}/30
@@ -1153,8 +1153,8 @@ export default function AINET2027PresentationProposalForm() {
                 {/* Step 3: Co-Presenter 2 & Additional Co-Presenters */}
                 {currentStep === 3 && (
                   <div className="flex-1 flex flex-col space-y-4">
-                    <div className="bg-gray-400 p-3 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Co-Presenter 2 (Optional)
                       </h2>
                     </div>
@@ -1163,14 +1163,14 @@ export default function AINET2027PresentationProposalForm() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {/* Title */}
                         <div className="col-span-1 sm:col-span-1">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Title:
                           </label>
                           <select
                             name="co2_title"
                             value={formData.co2_title}
                             onChange={handleChange}
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           >
                             <option value="">Select Title</option>
                             <option value="Mr.">Mr.</option>
@@ -1183,7 +1183,7 @@ export default function AINET2027PresentationProposalForm() {
 
                         {/* Full Name */}
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Full Name:
                           </label>
                           <input
@@ -1192,13 +1192,13 @@ export default function AINET2027PresentationProposalForm() {
                             value={formData.co2_full_name}
                             onChange={handleChange}
                             placeholder="Enter Full Name"
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Place Of Work:
                         </label>
                         <input
@@ -1207,13 +1207,13 @@ export default function AINET2027PresentationProposalForm() {
                           value={formData.co2_place_of_work}
                           onChange={handleChange}
                           placeholder="Enter Place Of Work"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
                     </div>
 
-                    <div className="bg-gray-400 p-2 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Contact Information
                       </h2>
                     </div>
@@ -1222,7 +1222,7 @@ export default function AINET2027PresentationProposalForm() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                         {/* Country Code */}
                         <div className="col-span-1 sm:col-span-1">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Country Code:
                             {(formData.co2_full_name || formData.co2_place_of_work) && (
                               <span className="text-red-500">*</span>
@@ -1238,7 +1238,7 @@ export default function AINET2027PresentationProposalForm() {
                         </div>
                         {/* Mobile No */}
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Mobile No:
                             {(formData.co2_full_name || formData.co2_place_of_work) && (
                               <span className="text-red-500">*</span>
@@ -1250,13 +1250,13 @@ export default function AINET2027PresentationProposalForm() {
                             value={formData.co2_mobile}
                             onChange={handleChange}
                             placeholder="Enter Mobile Number"
-                            className="w-full p-3 border border-gray-300 rounded text-sm"
+                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Email:
                           {(formData.co2_full_name || formData.co2_place_of_work) && (
                             <span className="text-red-500">*</span>
@@ -1268,13 +1268,13 @@ export default function AINET2027PresentationProposalForm() {
                           value={formData.co2_email}
                           onChange={handleChange}
                           placeholder="Enter Email Address"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
 
                       {(formData.co2_full_name || formData.co2_place_of_work) && (
                         <div>
-                          <label className="block text-sm font-semibold mb-2 text-gray-700">
+                          <label className="mb-1.5 block text-sm font-semibold text-ink">
                             Co-Presenter 2 Bio (Max. 30 words):
                             <span className="text-red-500">*</span>
                             <span className="text-sm text-gray-500 ml-2">
@@ -1302,15 +1302,15 @@ export default function AINET2027PresentationProposalForm() {
                       )}
                     </div>
 
-                    <div className="bg-gray-400 p-2 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Additional Co-Presenters (Optional)
                       </h2>
                     </div>
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Remaining Co-Presenters (if any):
                         </label>
                         <textarea
@@ -1329,15 +1329,15 @@ export default function AINET2027PresentationProposalForm() {
                 {/* Step 4: Conference Theme & Presentation Type */}
                 {currentStep === 4 && (
                   <div className="flex-1 flex flex-col space-y-4">
-                    <div className="bg-gray-400 p-2 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Conference Theme & Presentation Type
                       </h2>
                     </div>
 
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Conference Sub-theme:{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -1345,7 +1345,7 @@ export default function AINET2027PresentationProposalForm() {
                           name="conference_sub_theme"
                           value={formData.conference_sub_theme}
                           onChange={handleChange}
-                          className="w-full p-3 border border-gray-300 rounded text-sm bg-white"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 bg-white"
                         >
                           <option value="">Select Conference Sub-theme</option>
                           {conferenceSubThemes.map((theme) => (
@@ -1359,7 +1359,7 @@ export default function AINET2027PresentationProposalForm() {
                       {formData.conference_sub_theme ===
                         "Any Other (Specify)" && (
                           <div>
-                            <label className="block text-sm font-semibold mb-2 text-gray-700">
+                            <label className="mb-1.5 block text-sm font-semibold text-ink">
                               Please specify:{" "}
                               <span className="text-red-500">*</span>
                             </label>
@@ -1375,7 +1375,7 @@ export default function AINET2027PresentationProposalForm() {
                         )}
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Presentation Type:{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -1405,15 +1405,15 @@ export default function AINET2027PresentationProposalForm() {
                 {/* Step 5: Presentation Details */}
                 {currentStep === 5 && (
                   <div className="flex-1 flex flex-col space-y-4">
-                    <div className="bg-gray-400 p-3 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Presentation Details
                       </h2>
                     </div>
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Presentation Title (Max. 10 words):{" "}
                           <span className="text-red-500">*</span>
                           <span className="text-sm text-gray-500 ml-2">
@@ -1439,7 +1439,7 @@ export default function AINET2027PresentationProposalForm() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Abstract (Max. 150 words):{" "}
                           <span className="text-red-500">*</span>
                           <span className="text-sm text-gray-500 ml-2">
@@ -1471,8 +1471,8 @@ export default function AINET2027PresentationProposalForm() {
                 {/* Step 6: Agreement & Terms */}
                 {currentStep === 6 && (
                   <div className="flex-1 flex flex-col space-y-4">
-                    <div className="bg-gray-400 p-2 rounded">
-                      <h2 className="text-white text-lg font-semibold">
+                    <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                      <h2 className="text-lg font-bold text-ink">
                         Agreement & Terms
                       </h2>
                     </div>
@@ -1529,13 +1529,13 @@ export default function AINET2027PresentationProposalForm() {
                 )}
 
                 {/* Navigation Buttons - Inside Form */}
-                <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-ink/10">
                   {/* Back Button */}
                   {currentStep > 1 && (
                     <button
                       type="button"
                       onClick={handlePrevious}
-                      className="px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105"
+                      className="px-6 py-3.5 bg-white ring-1 ring-ink/15 hover:bg-sky-soft text-ink font-bold rounded-full transition-all duration-300 flex items-center"
                     >
                       <svg
                         className="w-5 h-5 mr-2"
@@ -1561,7 +1561,7 @@ export default function AINET2027PresentationProposalForm() {
                   <button
                     type="button"
                     onClick={handleNext}
-                    className={`px-15 py-4 bg-yellow-200 hover:bg-yellow-300 text-black font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 ${currentStep === 1 ? "absolute left-1/2 -translate-x-1/2" : "relative"}`}
+                    className={`px-10 py-3.5 bg-ink hover:bg-ink/85 text-white font-bold rounded-full transition-all duration-300 flex items-center shadow-lg shadow-ink/10 ${currentStep === 1 ? "absolute left-1/2 -translate-x-1/2" : "relative"}`}
                   >
                     <span className="text-lg">
                       {currentStep === 6 ? "Submit" : "Continue"}

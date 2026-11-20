@@ -1,23 +1,29 @@
+import { FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Breadcrumbs = ({ links = [] }) => {
   return (
-    <div className="flex items-center text-sm lg:text-[20px] font-medium">
-      {links.map((item, index) => (
-        <div key={index} className="flex items-center">
-          {item.to ? (
-            <Link to={item.to} className="text-black hover:underline">
-              {item.label}
-            </Link>
-          ) : (
-            <span className="text-gray-400">{item.label}</span>
-          )}
-          {index < links.length - 1 && (
-            <span className="mx-2 text-gray-400">/</span>
-          )}
-        </div>
-      ))}
-    </div>
+    <nav aria-label="Breadcrumb">
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium">
+        {links.map((item, index) => {
+          const last = index === links.length - 1;
+          return (
+            <li key={`${item.label}-${index}`} className="flex items-center gap-2">
+              {item.to ? (
+                <Link to={item.to} className="text-ink/60 transition-colors hover:text-ink">
+                  {item.label}
+                </Link>
+              ) : (
+                <span className={last ? "font-semibold text-ink" : "text-ink/60"} aria-current={last ? "page" : undefined}>
+                  {item.label}
+                </span>
+              )}
+              {!last && <FaChevronRight className="text-[10px] text-ink/30" aria-hidden="true" />}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 };
 

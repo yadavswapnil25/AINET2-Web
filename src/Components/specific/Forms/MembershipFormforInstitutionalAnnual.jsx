@@ -459,10 +459,10 @@ export default function MembershipFormforInstitutionalAnnual() {
 
       {loading.states && <Loader />}
 
-      <div className="max-w-5xl mx-auto my-10 p-4 border border-blue-500 rounded-lg bg-white shadow-md">
+      <div className="relative mx-auto my-8 max-w-5xl rounded-[2rem] bg-white p-5 shadow-xl shadow-ink/5 ring-1 ring-ink/10 sm:my-12 sm:p-8 lg:p-10">
         <div className="relative mb-4 pb-2">
-          <h1 className="text-4xl font-bold py-4 text-center">Membership Form for Institutional Annual</h1>
-          <button className="absolute top-0 right-0 bg-black rounded-full p-2">
+          <h1 className="px-10 py-2 text-center text-2xl font-extrabold tracking-tight text-ink sm:text-3xl lg:text-4xl">Membership Form for Institutional Annual</h1>
+          <button className="absolute right-4 top-4 rounded-full bg-ink p-2 transition hover:bg-ink/80">
             <Link to={{ pathname: '/', hash: '#membershipplan' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -475,32 +475,32 @@ export default function MembershipFormforInstitutionalAnnual() {
         <form onSubmit={handleSubmit}>
           {/* Institution Information Section */}
           <div className="mb-4">
-            <div className="bg-gray-400 text-white p-2 mb-2">
+            <div className="mt-8 mb-4 rounded-2xl bg-sky-soft px-5 py-3 font-bold text-ink">
               <h2 className="text-xl ml-2">Institution Information</h2>
             </div>
 
             <div className="space-y-2 px-1">
               <div>
-                <label className="block text-base mb-2 mt-1">Name of the Institution : <span className="text-red-500">*</span></label>
+                <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Name of the Institution : <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   name="institution_name"
                   value={formData.institution_name}
                   onChange={handleChange}
                   placeholder="Enter Your Institutional Name"
-                  className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   required
                 />
               </div>
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Type of institution : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Type of institution : <span className="text-red-500">*</span></label>
                   <select
                     name="institution_type"
                     value={formData.institution_type}
                     onChange={handleChange}
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     required
                   >
                     <option value="">Select Type of Institution</option>
@@ -511,21 +511,21 @@ export default function MembershipFormforInstitutionalAnnual() {
                   </select>
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Other :</label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Other :</label>
                   <input
                     type="text"
                     name="other_type"
                     value={formData.other_type}
                     onChange={handleChange}
                     placeholder="Enter your info"
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   />
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Contact No. : <span className="text-red-500">*</span></label>
                   <input
                     type="tel"
                     maxLength={10}
@@ -533,12 +533,12 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.contact_no}
                     onChange={handleChange}
                     placeholder="Enter Your No."
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     required
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">WhatsApp No. :</label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">WhatsApp No. :</label>
                   <input
                     type="tel"
                     maxLength={10}
@@ -546,14 +546,14 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.whatsapp_no}
                     onChange={handleChange}
                     placeholder="Enter Your No."
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   />
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Email : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Email : <span className="text-red-500">*</span></label>
                   <input
                     type="email"
                     name="email"
@@ -561,31 +561,31 @@ export default function MembershipFormforInstitutionalAnnual() {
                     onChange={handleChange}
                     onBlur={checkEmailExists}
                     placeholder="Enter Your Email"
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     required
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Website :</label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Website :</label>
                   <input
                     type="text"
                     name="website"
                     value={formData.website}
                     onChange={handleChange}
                     placeholder="Enter Your Website address"
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Address (Institutional) : <span className="text-red-500">*</span></label>
+                <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Address (Institutional) : <span className="text-red-500">*</span></label>
                 <textarea
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
                   placeholder="Enter Your Address"
-                  className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   rows="2"
                   required
                 ></textarea>
@@ -593,12 +593,12 @@ export default function MembershipFormforInstitutionalAnnual() {
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">State : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">State : <span className="text-red-500">*</span></label>
                   <select
                     name="state"
                     value={formData.state}
                     onChange={handleChange}
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     disabled={loading.states}
                     required
                   >
@@ -618,7 +618,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   {error.states && <p className="text-red-500 text-xs mt-1">{error.states}</p>}
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">District : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">District : <span className="text-red-500">*</span></label>
                   <select
                     name="district"
                     value={formData.district}
@@ -650,27 +650,27 @@ export default function MembershipFormforInstitutionalAnnual() {
 
           {/* Other Information Section */}
           <div className="mb-4">
-            <div className="bg-gray-400 text-white p-2 mb-2">
+            <div className="mt-8 mb-4 rounded-2xl bg-sky-soft px-5 py-3 font-bold text-ink">
               <h2 className="text-base ml-2">Other Information</h2>
             </div>
 
             <div className="space-y-2 px-1">
               <div>
-                <label className="block text-base mb-2 mt-1">Name of the contact person : <span className="text-red-500">*</span></label>
+                <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Name of the contact person : <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   name="contact_person"
                   value={formData.contact_person}
                   onChange={handleChange}
                   placeholder="Enter Your Name"
-                  className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   required
                 />
               </div>
 
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Contact No. : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Contact No. : <span className="text-red-500">*</span></label>
                   <input
                     type="tel"
                     maxLength={10}
@@ -678,31 +678,31 @@ export default function MembershipFormforInstitutionalAnnual() {
                     value={formData.mobileperson}
                     onChange={handleChange}
                     placeholder="Enter Your No."
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     required
                   />
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Email : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Email : <span className="text-red-500">*</span></label>
                   <input
                     type="email"
                     name="emailperson"
                     value={formData.emailperson}
                     onChange={handleChange}
                     placeholder="Enter Your Email"
-                    className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Would you like to host an event/collaborate with AINET?</label>
+                <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Would you like to host an event/collaborate with AINET?</label>
                 <select
                   name="host_event"
                   value={formData.host_event}
                   onChange={handleChange}
-                  className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 >
                   <option value="YES">YES</option>
                   <option value="NO">NO</option>
@@ -710,24 +710,24 @@ export default function MembershipFormforInstitutionalAnnual() {
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Your expectations from AINET :</label>
+                <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Your expectations from AINET :</label>
                 <textarea
                   name="expectations"
                   value={formData.expectations}
                   onChange={handleChange}
                   placeholder="Enter your expectations"
-                  className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   rows="2"
                 ></textarea>
               </div>
 
               <div>
-                <label className="block text-base mb-2 mt-1">Like to receive newsletter ?</label>
+                <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Like to receive newsletter ?</label>
                 <select
                   name="has_newsletter"
                   value={formData.has_newsletter}
                   onChange={handleChange}
-                  className="w-full p-2 bg-white border border-gray-300 rounded text-base"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 >
                   <option value="YES">YES</option>
                   <option value="NO">NO</option>
@@ -737,7 +737,7 @@ export default function MembershipFormforInstitutionalAnnual() {
               {/* Enhanced Password Fields */}
               <div className="flex gap-2">
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Password : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Password : <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -745,7 +745,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                       value={formData.password}
                       onChange={e => { handleChange(e); setPasswordTouched(true); }}
                       placeholder="Enter Your Password"
-                      className="w-full p-2 bg-white border border-gray-300 rounded text-base pr-10"
+                      className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 pr-10"
                       required
                     />
                     <button
@@ -794,7 +794,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   </div>
                 </div>
                 <div className="w-1/2">
-                  <label className="block text-base mb-2 mt-1">Re-Enter Password : <span className="text-red-500">*</span></label>
+                  <label className="mb-1.5 mt-1 block text-sm font-semibold text-ink">Re-Enter Password : <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <input
                       type={showPasswordConfirm ? "text" : "password"}
@@ -802,7 +802,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                       value={formData.password_confirmation}
                       onChange={handleChange}
                       placeholder="Re-Enter Your Password"
-                      className="w-full p-2 bg-white border border-gray-300 rounded text-base pr-10"
+                      className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 pr-10"
                       required
                     />
                     <button
@@ -835,7 +835,7 @@ export default function MembershipFormforInstitutionalAnnual() {
                   id="agree"
                   checked={formData.agree}
                   onChange={handleChange}
-                  className="mt-1 mr-1 accent-green-600 w-5 h-5"
+                  className="mt-1 mr-1 accent-sage-deep w-5 h-5"
                   required
                 />
                 <label className="text-xs" htmlFor="agree">I agree to the terms and conditions of the membership. <span className="text-red-500">*</span></label>
@@ -847,9 +847,9 @@ export default function MembershipFormforInstitutionalAnnual() {
             <button
               type="submit"
               disabled={isSubmitting || !isFormValid()}
-              className={`px-6 py-2 rounded-full text-sm font-bold transition-colors ${isSubmitting || !isFormValid()
-                ? 'bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed'
-                : 'bg-amber-200 hover:bg-amber-300 cursor-pointer'
+              className={`rounded-full px-8 py-3.5 text-sm font-bold transition-colors ${isSubmitting || !isFormValid()
+                ? 'bg-ink/30 text-white cursor-not-allowed disabled:cursor-not-allowed'
+                : 'bg-ink text-white hover:bg-ink/85 cursor-pointer'
                 }`}
               style={{
                 cursor: isSubmitting || !isFormValid() ? 'not-allowed' : 'pointer'

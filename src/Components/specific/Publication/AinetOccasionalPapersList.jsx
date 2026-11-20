@@ -1,168 +1,100 @@
-import React, { useState, useRef, useEffect } from "react";
-import Breadcrumbs from "../../shared/Breadcrumbs";
+import { FaDownload, FaRegCalendarAlt } from "react-icons/fa";
 import occasionalPaper1 from "../../../assets/pdf/OP1.pdf";
 import occasionalPaper2 from "../../../assets/pdf/OP2.pdf";
+import { buttonPrimary } from "../../shared/sectionStyles";
+
+const papers = [
+  {
+    id: 1,
+    title: "AINET Occasional Papers No. 2",
+    date: "November 2016",
+    author: {
+      name: "Dr. Krishna Dixit",
+      institution: "Yeshwant Mahavidyalaya, Seloo, Wardha, India",
+    },
+    description:
+      "Teacher Motivation: A Conceptual Overview Dr. Krishna Dixit, Ambedkar University Delhi, India AINET Association of English Teachers",
+    image: "/ainetPaper.png",
+    alt: "AINET Occasional Papers No. 2",
+    pdf: occasionalPaper2,
+  },
+  {
+    id: 2,
+    title: "AINET Occasional Papers No. 1",
+    date: "April 2014",
+    author: {
+      name: "Dr. Martin Wedell",
+      institution: "School of Education, University of Leeds, UK",
+    },
+    description:
+      "Initial English Teacher Education and English Curriculum Goals: Bridging the Gap Dr. Martin Wedell, School of Education, University of Leeds, UK AINET Association of English Teachers",
+    image: "/ainetPaper.png",
+    alt: "AINET Occasional Papers No. 1",
+    pdf: occasionalPaper1,
+  },
+];
+
+// "Dr. Krishna Dixit" -> "KD"
+const initials = (name) =>
+  name
+    .replace(/^(Dr|Prof|Mr|Ms|Mrs)\.?\s+/i, "")
+    .split(/\s+/)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+const handleDownload = (pdf) => {
+  const link = document.createElement('a');
+  link.href = pdf;
+  // Set the download attribute to force download instead of navigation
+  link.setAttribute('download', pdf.split('/').pop());
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 export default function AinetOccasionalPapersList() {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const searchRef = useRef(null);
-
-  // Handle clicks outside the search box
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setSearchOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [searchRef]);
-
-  const handleDownload = (pdf) => {
-    // Create an anchor element
-    const link = document.createElement('a');
-    link.href = pdf;
-    // Set the download attribute to force download instead of navigation
-    link.setAttribute('download', pdf.split('/').pop());
-    // Append to the document
-    document.body.appendChild(link);
-    // Trigger the download
-    link.click();
-    // Clean up
-    document.body.removeChild(link);
-  };
-
-  const papers = [
-    {
-      id: 1,
-      title: "AINET Occasional Papers No. 2",
-      date: "November 2016",
-      author: {
-        name: "Dr. Krishna Dixit",
-        institution: "Yeshwant Mahavidyalaya, Seloo, Wardha, India",
-        avatar: "/api/placeholder/32/32",
-      },
-      description:
-        "Teacher Motivation: A Conceptual Overview Dr. Krishna Dixit, Ambedkar University Delhi, India AINET Association of English Teachers",
-      image: "/ainetPaper.png",
-      alt: "AINET Occasional Papers No. 2",
-      pdf: occasionalPaper2,
-    },
-    {
-      id: 2,
-      title: "AINET Occasional Papers No. 1",
-      date: "April 2014",
-      author: {
-        name: "Dr. Martin Wedell",
-        institution: "School of Education, University of Leeds, UK",
-        avatar: "/api/placeholder/32/32",
-      },
-      description:
-        "Initial English Teacher Education and English Curriculum Goals: Bridging the Gap Dr. Martin Wedell, School of Education, University of Leeds, UK AINET Association of English Teachers",
-      image: "/ainetPaper.png",
-      alt: "AINET Occasional Papers No. 1",
-      pdf: occasionalPaper1,
-    },
-  ];
-
   return (
-    <div className=" w-full h-auto">
-      <Breadcrumbs
-        links={[
-          { label: "Home", to: "/" },
-          { label: "Publications", to: "/publications" },
-          { label: "Occasional Papers", to: null },
-        ]}
-      />
-      <div className="flex justify-between items-start mb-6 mt-12 flex-col md:flex-row">
-        <h1 className="md:text-[40px] text-2xl text-left font-bold mb-10">AINET Occasional Papers</h1>
-        <div className="flex items-center space-x-2">
-          <div ref={searchRef} className="relative">
-            {searchOpen ? (
-              <input
-                type="text"
-                className="border border-gray-300 rounded-full py-1 px-4 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                placeholder="Search papers..."
-                autoFocus
-              />
-            ) : (
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="text-gray-500 hover:text-gray-800"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-          <button className="text-gray-500 hover:text-gray-800">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
+    <div className="grid gap-6 lg:grid-cols-2">
       {papers.map((paper) => (
-        <div key={paper.id} className="bg-[#D0E8C5] rounded-lg p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="w-full md:w-1/4 flex justify-center">
-              <img
-                src={paper.image}
-                alt={paper.alt}
-                className="w-48 h-auto border border-gray-300"
-              />
-            </div>
-            <div className="w-full md:w-3/4">
-              <h2 className="text-xl font-semibold mb-1">{paper.title}</h2>
-              <p className="text-gray-700 mb-3">{paper.date}</p>
+        <article
+          key={paper.id}
+          className="flex flex-col gap-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-ink/10 sm:flex-row sm:p-8"
+        >
+          <img
+            src={paper.image}
+            alt={paper.alt}
+            className="mx-auto w-40 shrink-0 self-start rounded-xl shadow-lg shadow-ink/15 ring-1 ring-ink/10 sm:mx-0"
+          />
 
-              <div className="flex items-center mb-3">
-                <div className="w-8 h-8 rounded-full bg-gray-300 overflow-hidden mr-3">
-                  <img src={paper.author.avatar} alt={paper.author.name} />
-                </div>
-                <div>
-                  <p className="font-medium">{paper.author.name}</p>
-                  <p className="text-sm text-gray-600">
-                    {paper.author.institution}
-                  </p>
-                </div>
+          <div className="flex flex-1 flex-col">
+            <p className="inline-flex w-fit items-center gap-2 rounded-full bg-sky-soft px-3 py-1 text-xs font-semibold text-ink/70">
+              <FaRegCalendarAlt aria-hidden="true" />
+              {paper.date}
+            </p>
+            <h2 className="mt-3 text-xl font-bold leading-snug text-ink">{paper.title}</h2>
+
+            <div className="mt-4 flex items-center gap-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-sage text-sm font-bold text-sage-deep">
+                {initials(paper.author.name)}
+              </span>
+              <div>
+                <p className="font-semibold text-ink">{paper.author.name}</p>
+                <p className="text-sm text-ink/60">{paper.author.institution}</p>
               </div>
+            </div>
 
-              <p className="mb-4 text-gray-800">{paper.description}</p>
+            <p className="mt-4 text-[15px] leading-relaxed text-ink/75">{paper.description}</p>
 
-              <button className="bg-yellow-50 hover:bg-yellow-100 text-gray-800 py-2 px-6 rounded-full border border-yellow-200 transition duration-200" onClick={()=>handleDownload(paper.pdf)}>
+            <div className="mt-auto pt-6">
+              <button type="button" className={buttonPrimary} onClick={() => handleDownload(paper.pdf)}>
+                <FaDownload aria-hidden="true" />
                 Download PDF
               </button>
             </div>
           </div>
-        </div>
+        </article>
       ))}
     </div>
   );

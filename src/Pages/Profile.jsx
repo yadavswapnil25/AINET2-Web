@@ -323,28 +323,29 @@ export default function Profile() {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-sky-soft px-4 py-10 sm:py-14">
       {loading && <Loader />}
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="mb-8"><p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-sage-deep"><span className="h-0.5 w-6 rounded-full bg-current" aria-hidden="true" />My account</p><h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">Hello, {profile?.name || "member"}</h1></div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="space-y-6 max-w-full col-span-1  ">
             {/* Profile Card */}
-            <div className="bg-white rounded-2xl border border-[#A6AEBF] ">
-              <div className="flex items-center justify-between mb-6 border-b border-[#A6AEBF] p-6">
-                <h2 className="text-xl font-semibold text-gray-900">Profile</h2>
+            <div className="bg-white rounded-3xl shadow-sm ring-1 ring-ink/10 overflow-hidden">
+              <div className="flex items-center justify-between mb-6 border-b border-ink/10 p-6">
+                <h2 className="text-xl font-extrabold tracking-tight text-ink">Profile</h2>
                 <button
-                  className="flex items-center border text-lg border-[#A6AEBF] px-6 py-2 rounded-2xl gap-2 text-[#A6AEBF] hover:text-gray-700 font-semibold"
+                  className="inline-flex items-center gap-2 rounded-full bg-sky-soft px-4 py-2 text-sm font-semibold text-ink transition-colors hover:bg-sky"
                   onClick={handleEditProfileClick}
                 >
-                  <Edit className="w-6 h-6" />
+                  <Edit className="w-4 h-4" />
                   <span className="">Edit</span>
                 </button>
               </div>
 
               <div className="text-center mb-6">
                 <div
-                  className="relative group w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden cursor-pointer"
+                  className="relative group w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden cursor-pointer ring-4 ring-sage"
                   onClick={handleProfileClick}
                 >
                   <img
@@ -361,11 +362,11 @@ export default function Profile() {
                 </div>
 
                 {showModal && (
-                  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-                    <div className="bg-white rounded-xl p-6 relative w-full max-w-sm text-center shadow-lg">
+                  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-3xl p-8 relative w-full max-w-sm text-center shadow-2xl">
                       {/* Close Button */}
                       <button
-                        className="absolute top-2 right-2 text-gray-600 text-4xl font-bold"
+                        className="absolute right-4 top-4 grid size-10 place-items-center rounded-full text-3xl leading-none text-ink/60 transition hover:bg-sky-soft hover:text-ink"
                         onClick={closeModal}
                       >
                         &times;
@@ -392,7 +393,7 @@ export default function Profile() {
                       {/* Upload Button */}
                       <button
                         onClick={handleEditClick}
-                        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+                        className="mt-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-ink/85"
                       >
                         Upload New Profile
                       </button>
@@ -401,7 +402,7 @@ export default function Profile() {
                       {imageSelected && (
                         <button
                           onClick={handleSaveProfile}
-                          className="mt-4 px-4 py-2 ml-4 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
+                          className="mt-4 ml-3 rounded-full bg-sage px-5 py-2.5 text-sm font-semibold text-ink transition hover:bg-sage/80"
                         >
                           Save Profile
                         </button>
@@ -409,92 +410,92 @@ export default function Profile() {
                     </div>
                   </div>
                 )}
-                <h3 className="text-xl font-semibold text-gray-900 mb-1">
+                <h3 className="text-xl font-extrabold tracking-tight text-ink mb-1">
                   {profile?.name}
                 </h3>
-                <p className="text-gray-600">{profile?.email}</p>
+                <p className="text-ink/60">{profile?.email}</p>
               </div>
 
               <div className=" px-6 py-4">
-                <h4 className="font-semibold text-gray-900 mb-4">
+                <h4 className="font-semibold text-ink mb-4">
                   Personal Info:
                 </h4>
                 <div className="space-y-3">
                   <div className="flex">
-                    <span className="text-gray-600 w-28">Name :</span>
-                    <span className="text-gray-900">{profile?.name}</span>
+                    <span className="text-ink/60 w-28">Name :</span>
+                    <span className="text-ink">{profile?.name}</span>
                   </div>
                   <div className="flex">
-                    <span className="text-gray-600 w-28">Mobile No :</span>
-                    <span className="text-gray-900">{profile?.mobile}</span>
+                    <span className="text-ink/60 w-28">Mobile No :</span>
+                    <span className="text-ink">{profile?.mobile}</span>
                   </div>
                   <div className="flex">
-                    <span className="text-gray-600 w-28">Email :</span>
-                    <span className="text-gray-900">{profile?.email}</span>
+                    <span className="text-ink/60 w-28">Email :</span>
+                    <span className="text-ink">{profile?.email}</span>
                   </div>
                   <div className="flex">
-                    <span className="text-gray-600 w-28">Gender :</span>
-                    <span className="text-gray-900">{profile?.gender}</span>
+                    <span className="text-ink/60 w-28">Gender :</span>
+                    <span className="text-ink">{profile?.gender}</span>
                   </div>
                   {/*<div className="flex">
-                    <span className="text-gray-600 w-28">DOB :</span>
-                    <span className="text-gray-900">{profile?.dob}</span>
+                    <span className="text-ink/60 w-28">DOB :</span>
+                    <span className="text-ink">{profile?.dob}</span>
                   </div>*/}
                   {/* <div className="flex">
-                    <span className="text-gray-600 w-28">Password :</span>
-                    <span className="text-gray-900">••••••••</span>
+                    <span className="text-ink/60 w-28">Password :</span>
+                    <span className="text-ink">••••••••</span>
                   </div> */}
                   <div className="flex">
-                    <span className="text-gray-600 w-28">Address :</span>
-                    <span className="text-gray-900">{profile?.address}</span>
+                    <span className="text-ink/60 w-28">Address :</span>
+                    <span className="text-ink">{profile?.address}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* History Card */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+            <div className="bg-white rounded-3xl shadow-sm ring-1 ring-ink/10 p-6 sm:p-8">
+              <h3 className="text-xl font-extrabold tracking-tight text-ink mb-6">
               Membership History
               </h3>
 
               <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">
+                <h4 className="font-semibold text-ink mb-2">
                   Dear {profile?.name}
                 </h4>
-                <p className="text-gray-600 text-sm mb-4">
+                <p className="text-ink/60 text-sm mb-4">
                   Welcome to your member history
                 </p>
 
                 <div className="space-y-3">
                   <div className="flex">
-                    <span className="text-gray-600 w-40">Name :</span>
-                    <span className="text-gray-900">{profile?.name}</span>
+                    <span className="text-ink/60 w-40">Name :</span>
+                    <span className="text-ink">{profile?.name}</span>
                   </div>
                   <div className="flex">
-                    <span className="text-gray-600 w-40">Membership ID :</span>
-                    <span className="text-gray-900">{profile?.m_id}</span>
+                    <span className="text-ink/60 w-40">Membership ID :</span>
+                    <span className="text-ink">{profile?.m_id}</span>
                   </div>
                   <div className="flex">
-                    <span className="text-gray-600 w-40">
+                    <span className="text-ink/60 w-40">
                       Registered on :
                     </span>
-                    <span className="text-gray-900">{created}</span>
+                    <span className="text-ink">{created}</span>
                   </div>
                   <div className="flex">
-                    <span className="text-gray-600 w-40">
+                    <span className="text-ink/60 w-40">
                       Membership Renewed :
                     </span>
-                    <span className="text-gray-900">{renewed}</span>
+                    <span className="text-ink">{renewed}</span>
                   </div>
                   {/* <div className="flex">
-                    <span className="text-gray-600 w-40">
+                    <span className="text-ink/60 w-40">
                       Membership Expiring on :
                     </span>
-                    <span className="text-gray-900">{expired}</span>
+                    <span className="text-ink">{expired}</span>
                   </div> */}
                   <div className="flex">
-                    <span className="text-gray-600 w-40">
+                    <span className="text-ink/60 w-40">
                       Membership Status :
                     </span>
                     <div className="flex flex-col">
@@ -509,7 +510,7 @@ export default function Profile() {
                         {finalStatus}
                       </span>
                       {expiryDate && (
-                        <span className="text-xs text-gray-500 font-semibold">
+                        <span className="text-xs text-ink/50 font-semibold">
                           Expires: {expiryDate.toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',
@@ -521,7 +522,7 @@ export default function Profile() {
                         className={`text-xs ${finalStatus === 'ACTIVE'
                           ? daysDiff <= 30
                             ? "text-orange-500"
-                            : "text-gray-500"
+                            : "text-ink/50"
                           : "text-red-500"
                           }`}
                       >
@@ -550,27 +551,27 @@ export default function Profile() {
                 )}
               </div>
 
-              {/* <p className="text-xs text-gray-500 mt-6">
+              {/* <p className="text-xs text-ink/50 mt-6">
                 You last visited this site on: 20/06/2023
               </p> */}
             </div>
 
             {/* Inbox Card */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            <div className="bg-white rounded-3xl shadow-sm ring-1 ring-ink/10 p-6 sm:p-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">Inbox</h3>
+                <h3 className="text-xl font-extrabold tracking-tight text-ink">Inbox</h3>
               </div>
 
               <div className="space-y-4">
-                <div className="border-b border-gray-100 pb-4">
+                <div className="border-b border-ink/10 pb-4">
                   <div className="flex items-start gap-2 mb-2">
-                    <span className="text-xs text-gray-500 mt-1">📧</span>
+                    <span className="text-xs text-ink/50 mt-1">📧</span>
                     <div className="flex-1">
-                      <p onClick={() => setShowInboxModal(true)} className="text-sm font-medium text-gray-900 cursor-pointer hover:underline">
+                      <p onClick={() => setShowInboxModal(true)} className="text-sm font-medium text-ink cursor-pointer hover:underline">
                         Apply Now: AINET Scholarships, Grants & Sponsorships for
                         Members!
                       </p>
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-ink/50 mt-2">
                         06/06/2025 10:00AM 10h Ago
                       </p>
                     </div>
@@ -587,14 +588,14 @@ export default function Profile() {
           <div className="space-y-6 col-span-2">
             {/* Membership Kit */}
             <div >
-              {/* <h3 className="text-xl font-semibold text-gray-900 mb-6">
+              {/* <h3 className="text-xl font-extrabold tracking-tight text-ink mb-6">
                 Membership Kit
               </h3> */}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                 {/* Membership ID Card */}
                 {/* <div className="  col-span-2">
-                  <h4 className="font-semibold text-gray-900 mb-4">
+                  <h4 className="font-semibold text-ink mb-4">
                     Membership ID Card
                   </h4>
                   <div className="card-container" ref={cardRef} style={{ position: 'relative' }}>
@@ -658,7 +659,7 @@ export default function Profile() {
                     </div>
                   </div>
 
-                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200" onClick={() => handleDownload('png')}>
+                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-ink/60 rounded-lg hover:bg-gray-200" onClick={() => handleDownload('png')}>
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
@@ -666,7 +667,7 @@ export default function Profile() {
 
                 {/* Membership Certificate */}
                 {/* <div>
-                  <h4 className="font-semibold text-gray-900 mb-4">
+                  <h4 className="font-semibold text-ink mb-4">
                     Membership Certificate
                   </h4>
                   <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 border border-yellow-200 rounded-lg p-4 mb-4 text-center">
@@ -693,7 +694,7 @@ export default function Profile() {
                       membership.
                     </p>
                   </div>
-                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+                  <button className="w-full flex items-center justify-center gap-2 py-2 bg-gray-100 text-ink/60 rounded-lg hover:bg-gray-200">
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
@@ -702,7 +703,7 @@ export default function Profile() {
 
               {/* Member DP */}
               {/* <div className="mt-6">
-                <h4 className="font-semibold text-gray-900 mb-4">Member DP</h4>
+                <h4 className="font-semibold text-ink mb-4">Member DP</h4>
                 <div className="bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg p-6 text-white text-center">
                   <p className="text-sm mb-2">
                     AINET ASSOCIATION OF ENGLISH TEACHERS
@@ -720,7 +721,7 @@ export default function Profile() {
                   <h5 className="font-bold text-lg mb-1">{profile?.name}</h5>
                   <p className="text-sm opacity-90">I'm an AINETian</p>
                 </div>
-                <button className="w-full flex items-center justify-center gap-2 py-2 mt-4 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+                <button className="w-full flex items-center justify-center gap-2 py-2 mt-4 bg-gray-100 text-ink/60 rounded-lg hover:bg-gray-200">
                   <Download className="w-4 h-4" />
                   <span className="text-sm">Download</span>
                 </button>
@@ -728,10 +729,10 @@ export default function Profile() {
             </div>
 
             {/* Badge Section */}
-            {/* <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            {/* <div className="bg-white rounded-3xl shadow-sm ring-1 ring-ink/10 p-6 sm:p-8">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <h4 className="font-semibold text-gray-900 mb-4">badge 1</h4>
+                  <h4 className="font-semibold text-ink mb-4">badge 1</h4>
                   <div className="w-24 h-24 mx-auto mb-4">
                     <div className="w-full h-full bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center relative">
                       <Award className="w-8 h-8 text-white" />
@@ -740,20 +741,20 @@ export default function Profile() {
                       </div>
                     </div>
                   </div>
-                  <button className="flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 w-full">
+                  <button className="flex items-center justify-center gap-2 py-2 bg-gray-100 text-ink/60 rounded-lg hover:bg-gray-200 w-full">
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
                 </div>
 
                 <div className="text-center">
-                  <h4 className="font-semibold text-gray-900 mb-4">badge 2</h4>
+                  <h4 className="font-semibold text-ink mb-4">badge 2</h4>
                   <div className="w-24 h-24 mx-auto mb-4">
                     <div className="w-full h-full bg-gradient-to-br from-red-400 to-pink-500 rounded-full flex items-center justify-center relative border-4 border-yellow-400">
                       <Star className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                  <button className="flex items-center justify-center gap-2 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 w-full">
+                  <button className="flex items-center justify-center gap-2 py-2 bg-gray-100 text-ink/60 rounded-lg hover:bg-gray-200 w-full">
                     <Download className="w-4 h-4" />
                     <span className="text-sm">Download</span>
                   </button>
@@ -762,12 +763,12 @@ export default function Profile() {
             </div> */}
 
             {/* AINET Scholarships */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+            <div className="bg-white rounded-3xl shadow-sm ring-1 ring-ink/10 p-6 sm:p-8">
+              <h3 className="text-xl font-extrabold tracking-tight text-ink mb-6">
                 AINET Scholarships
               </h3>
 
-              <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+              <div className="space-y-4 text-sm text-ink/75 leading-relaxed">
                 <p>
                   AINET is committed to support its members' professional
                   development. As one way of supporting, AINET offers a range of
@@ -785,7 +786,7 @@ export default function Profile() {
                   AINET members with innovative ideas may also approach us for
                   small funding support to undertake small-scale projects. For
                   more information or queries, write to{" "}
-                  <span className="text-blue-600 underline">
+                  <span className="font-semibold text-sage-deep underline underline-offset-2">
                     theainet@gmail.com
                   </span>
                   .
@@ -793,19 +794,19 @@ export default function Profile() {
               </div>
 
               <div className="mt-6 text-center">
-                <button className="bg-green-200 text-green-800 px-8 py-3 rounded-full font-semibold hover:bg-green-300">
+                <button className="rounded-full bg-ink px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-ink/85">
                   REGISTER NOW
                 </button>
               </div>
             </div>
 
             {/* IATEFL Memberships */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+            <div className="bg-white rounded-3xl shadow-sm ring-1 ring-ink/10 p-6 sm:p-8">
+              <h3 className="text-xl font-extrabold tracking-tight text-ink mb-6">
                 IATEFL Memberships
               </h3>
 
-              <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+              <div className="space-y-4 text-sm text-ink/75 leading-relaxed">
                 <p>
                   IATEFL, based in the UK, is a global organisation of teachers
                   of English. AINET members can join it at heavily discounted
@@ -840,7 +841,7 @@ export default function Profile() {
                   WMS places are limited and offered on first-come first-served
                   basis. Watch out for IATEFL WMS calls and apply immediately.
                   For more information or queries, write to{" "}
-                  <span className="text-blue-600 underline">
+                  <span className="font-semibold text-sage-deep underline underline-offset-2">
                     theainet@gmail.com
                   </span>
                   .
@@ -848,7 +849,7 @@ export default function Profile() {
               </div>
 
               <div className="mt-6 text-center">
-                <button className="bg-green-200 text-green-800 px-8 py-3 rounded-full font-semibold hover:bg-green-300">
+                <button className="rounded-full bg-ink px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-ink/85">
                   REGISTER NOW
                 </button>
               </div>
@@ -857,28 +858,28 @@ export default function Profile() {
         </div>
       </div>
       {showEditModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl p-6 relative w-full max-w-lg text-left shadow-lg">
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 relative w-full max-w-lg text-left shadow-2xl max-h-[90vh] overflow-y-auto">
             <button
-              className="absolute top-2 right-2 text-gray-600 text-4xl font-bold"
+              className="absolute right-4 top-4 grid size-10 place-items-center rounded-full text-3xl leading-none text-ink/60 transition hover:bg-sky-soft hover:text-ink"
               onClick={closeEditModal}
             >
               &times;
             </button>
-            <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
+            <h2 className="text-2xl font-extrabold tracking-tight text-ink mb-6">Edit Profile</h2>
             <form className="space-y-4" onSubmit={handleEdit}>
               <div>
-                <label className="block text-gray-700 mb-1">Name</label>
+                <label className="mb-1.5 block text-sm font-semibold text-ink">Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData?.name}
                   onChange={handleEditFormChange}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-1">Mobile No</label>
+                <label className="mb-1.5 block text-sm font-semibold text-ink">Mobile No</label>
                 <input
                   type="text"
                   name="mobile"
@@ -886,31 +887,31 @@ export default function Profile() {
                   max={10}
                   maxLength={10}
                   onChange={handleEditFormChange}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-1">Email</label>
+                <label className="mb-1.5 block text-sm font-semibold text-ink">Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData?.email}
                   onChange={handleEditFormChange}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 />
               </div>
               {/* <div>
-                <label className="block text-gray-700 mb-1">Gender</label>
+                <label className="mb-1.5 block text-sm font-semibold text-ink">Gender</label>
                 <input
                   type="text"
                   name="gender"
                   value={formData.gender}
                   onChange={handleEditFormChange}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 />
               </div> */}
               <div>
-                <label className="block text-gray-700 mb-1">DOB</label>
+                <label className="mb-1.5 block text-sm font-semibold text-ink">DOB</label>
                 <DatePicker
                   selected={formData.dob ? new Date(formData.dob) : null}
                   onChange={(date) => {
@@ -927,28 +928,28 @@ export default function Profile() {
                   dropdownMode="select"
                   placeholderText="Select your date of birth"
                   dateFormat="yyyy-MM-dd"
-                  className="w-full p-2 bg-white rounded border border-black"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                   required
                   popperClassName="date-picker-popper"
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-1">Address</label>
+                <label className="mb-1.5 block text-sm font-semibold text-ink">Address</label>
                 <input
                   type="text"
                   name="address"
                   value={formData.address}
                   onChange={handleEditFormChange}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                 />
               </div>
               <div className="w-full flex justify-center">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-6 py-2 rounded-full text-sm font-bold mx-auto  ${isSubmitting
-                    ? "bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed"
-                    : "bg-amber-200 hover:bg-amber-300 cursor-pointer"
+                  className={`rounded-full px-8 py-3 text-sm font-bold mx-auto ${isSubmitting
+                    ? "bg-ink/30 text-white cursor-not-allowed disabled:cursor-not-allowed"
+                    : "bg-ink text-white hover:bg-ink/85 cursor-pointer"
                     }`}
                   style={{
                     cursor: isSubmitting ? "not-allowed" : "pointer",
@@ -986,20 +987,20 @@ const InboxModal = ({ setShowInboxModal }) => {
 
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-white rounded-xl p-6 relative w-full max-w-[90%] md:max-w-2xl text-center shadow-lg">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl p-8 relative w-full max-w-[90%] md:max-w-2xl text-left shadow-2xl leading-relaxed text-ink/80">
         <button
-          className="absolute top-2 right-2 text-gray-600 text-4xl font-bold"
+          className="absolute right-4 top-4 grid size-10 place-items-center rounded-full text-3xl leading-none text-ink/60 transition hover:bg-sky-soft hover:text-ink"
           onClick={closeInboxModal}
         >
           &times;
         </button>
-        <h3 className="text-xl font-semibold mb-4">Inbox</h3>
+        <h3 className="text-2xl font-extrabold tracking-tight text-ink mb-4">Inbox</h3>
         <p>AINET is committed to support its members' professional development. As one way of supporting, AINET offers a range of scholarships, travel grants and sponsorships to attend AINET conferences and activities, events of other organisations, short-term courses, etc.
 
           Scholarships, sponsorships and grants are available only to members with valid membership. They are announced from time to time for specific events or courses. Please watch out for regular announcements!
 
-          AINET members with innovative ideas may also approach us for small funding support to undertake small-scale projects. For more information or queries, write to <a href="mailto:theainet@gmail.com" className="text-blue-500">theainet@gmail.com</a>.</p>
+          AINET members with innovative ideas may also approach us for small funding support to undertake small-scale projects. For more information or queries, write to <a href="mailto:theainet@gmail.com" className="font-semibold text-sage-deep underline">theainet@gmail.com</a>.</p>
       </div>
     </div>
   );

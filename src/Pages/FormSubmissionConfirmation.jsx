@@ -1,7 +1,8 @@
-import React from 'react';
+import { FaCheck } from 'react-icons/fa';
 import { Link, useSearchParams } from 'react-router-dom';
+import { buttonPrimary, buttonSecondary } from '../Components/shared/sectionStyles';
 
-const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
+const FormSubmissionConfirmation = () => {
   const [searchParams] = useSearchParams();
   const formType = searchParams.get('type') || 'ppf'; // Default to 'ppf' for backward compatibility
 
@@ -14,69 +15,44 @@ const FormSubmissionConfirmation = ({ line1, line2, line3, line4 }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        <div className="bg-white rounded-lg shadow-xl p-8 text-center">
-          {/* Success Icon */}
-          <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
-            <svg
-              className="h-12 w-12 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
+    <main className="relative flex min-h-[70vh] items-center justify-center overflow-hidden bg-cream-soft px-4 py-16">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-24 -top-24 size-96 rounded-full bg-sage/50 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -right-24 size-96 rounded-full bg-sky/50 blur-3xl" />
 
-          {/* Success Message */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Form Submitted Successfully!
-          </h1>
-          
-          <p className="text-lg text-gray-600 mb-6">
-            {getMessage()}
-          </p>
-
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/"
-              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-md hover:shadow-lg"
-            >
-              Return to Home
-            </Link>
-            
-            <Link
-              to="/conference"
-              className="px-8 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-colors duration-200 shadow-md hover:shadow-lg"
-            >
-              View Conference Details
-            </Link>
-          </div>
-
-          {/* Contact Information */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              If you have any questions, please contact us at{' '}
-              <a
-                href="mailto:theainet@gmail.com"
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                theainet@gmail.com
-              </a>
-            </p>
-          </div>
+      <div className="relative w-full max-w-2xl rounded-[2rem] bg-white p-8 text-center shadow-xl shadow-ink/10 ring-1 ring-ink/5 sm:p-12">
+        {/* Success Icon */}
+        <div className="mx-auto grid size-20 place-items-center rounded-full bg-sage text-3xl text-sage-deep">
+          <FaCheck aria-hidden="true" />
         </div>
+
+        {/* Success Message */}
+        <h1 className="mt-6 text-3xl font-extrabold tracking-tight text-ink">
+          Form Submitted Successfully!
+        </h1>
+
+        <p className="mt-4 text-lg leading-relaxed text-ink/70">
+          {getMessage()}
+        </p>
+
+        {/* Action Buttons */}
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link to="/" className={buttonPrimary}>
+            Return to Home
+          </Link>
+          <Link to="/conference" className={buttonSecondary}>
+            View Conference Details
+          </Link>
+        </div>
+
+        {/* Contact Information */}
+        <p className="mt-10 border-t border-ink/10 pt-6 text-sm text-ink/60">
+          If you have any questions, please contact us at{' '}
+          <a href="mailto:theainet@gmail.com" className="font-semibold text-sage-deep underline-offset-4 hover:underline">
+            theainet@gmail.com
+          </a>
+        </p>
       </div>
-    </div>
+    </main>
   );
 };
 

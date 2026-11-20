@@ -56,6 +56,12 @@ const MembersArea = () => {
               >
                 Already a member? Log in
               </Link>
+               <Link
+                to="/login"
+                className="rounded-full bg-white px-6 py-4 text-center font-bold text-ink transition-colors hover:bg-cream sm:flex-1 lg:flex-none"
+              >
+                Renew membership!
+              </Link>
             </div>
           </div>
         </div>

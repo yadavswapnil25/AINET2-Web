@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { FaCalendarAlt, FaChevronRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PageUnderConstruct from "../../../Pages/PageUnderConstruct";
+import Highlight from "../../shared/Highlight";
+import PageHeader from "../../shared/PageHeader";
 
 const BlogsSection1 = () => {
     // Multiple authors
@@ -118,9 +120,20 @@ const BlogsSection1 = () => {
         },
     ];
 
-    const [showAll, setShowAll] = useState(false);
+    const [showAll] = useState(false); // the blog list stays hidden until it has real posts
 
     return (
+        <>
+        <Highlight />
+        <main>
+        <PageHeader
+            breadcrumbs={[
+                { label: "Home", to: "/" },
+                { label: "AINET Adda", to: null },
+            ]}
+            eyebrow="Blogs"
+            title="AINET Adda"
+        />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Top Blogs Section */}
             {showAll && (
@@ -239,8 +252,10 @@ const BlogsSection1 = () => {
             </div>
             )}
 
-            <PageUnderConstruct/>
+            <PageUnderConstruct headingAs="h2" />
         </div>
+        </main>
+        </>
     );
 };
 

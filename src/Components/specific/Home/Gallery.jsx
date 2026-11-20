@@ -80,6 +80,7 @@ const showPlaceholder = (width, height) => (e) => {
 };
 
 const SLIDE_INTERVAL_MS = 4500;
+const MAX_SLIDES = 12;
 const SWIPE_THRESHOLD_PX = 40;
 
 // Large slides keep their shape at every width; thumbnails grow in steps.
@@ -106,7 +107,8 @@ export default function Gallery() {
           const mappedGalleries = data.data.galleries
             .filter(gallery => gallery.image_url) // Only include galleries with images
             .map(gallery => ({
-              id: gallery.id,
+              // Prefixed so uploaded ids never clash with the built-in photo ids.
+              id: `uploaded-${gallery.id}`,
               src: gallery.image_url,
               alt: gallery.title || `Gallery image ${gallery.id}`,
             }));
@@ -123,11 +125,10 @@ export default function Gallery() {
     fetchGalleries();
   }, []);
 
-  // Split galleries: first 8 for the slider, the rest for the scrolling strip.
-  // Use API galleries if available, otherwise fallback
-  const allImages = galleries.length > 0 ? galleries : [...fallbackBannerImages, ...fallbackSmallImages];
-  const bannerImages = allImages.slice(0, 8);
-  const smallImages = allImages.slice(8);
+  // Photos uploaded in the portal come first. The built-in photos follow, so
+  // the slider and the strip stay full even when only a few have been uploaded.
+  const bannerImages = [...galleries, ...fallbackBannerImages].slice(0, MAX_SLIDES);
+  const smallImages = [...galleries.slice(MAX_SLIDES), ...fallbackSmallImages];
   const slideCount = bannerImages.length;
   const activeSlide = slideCount ? slide % slideCount : 0;
 

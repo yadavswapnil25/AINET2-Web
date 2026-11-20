@@ -3,7 +3,8 @@ import { baseUrl } from "../../utils/constant";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
-import { useAuth } from "../../context/AuthContext";
+import AuthLayout from "./AuthLayout";
+import { buttonPrimary, inputClass, labelClass } from "./sectionStyles";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const REMEMBER_EMAIL_KEY = "rememberedEmail";
@@ -29,15 +30,15 @@ export default function Login() {
       try {
         // Store the token
         localStorage.setItem("ainetToken", autoLoginToken);
-        
+
         // Trigger a custom event to notify AuthContext about the token change
         window.dispatchEvent(new CustomEvent("authTokenChanged", { detail: { token: autoLoginToken } }));
-        
+
         toast.success("Login successful!");
-        
+
         // Remove token from URL for security
         window.history.replaceState({}, document.title, window.location.pathname);
-        
+
         // Navigate to profile
         navigate("/profile");
         return;
@@ -60,7 +61,7 @@ export default function Login() {
       // Navigate immediately to prevent seeing the login page
       navigate("/profile");
     }
-    
+
     // Check if user was redirected due to token expiration
     const expired = urlParams.get('expired');
     if (expired === 'true') {
@@ -100,8 +101,6 @@ export default function Login() {
 
     setLoading(true);
     setError("");
-
-
 
     try {
       const res = await fetch(`${baseUrl}/client/auth/login`, {
@@ -156,105 +155,85 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen p-4">
+    <>
       {loading && <Loader />}
-      <div className="max-w-7xl mx-auto">
-        {/* Header Logo */}
-        <div>
-          <img src="/loglogo.png" alt="Logo" className="w-1/6" />
-        </div>
+      <AuthLayout title="Journey Begins" subtitle="Log in with your email">
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
+            <label htmlFor="login-email" className={labelClass}>
+              Email
+            </label>
+            <input
+              required
+              id="login-email"
+              type="text"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className={inputClass}
+            />
+          </div>
 
-        {/* Main Content */}
-        <div
-          className="rounded-3xl shadow-2xl overflow-hidden bg-cover"
-          style={{ backgroundImage: "url('/bg5.png')" }}
-        >
-          <div className="flex flex-col lg:flex-row min-h-[600px] pt-8 lg:pt-0">
-            {/* Left Image */}
-            <div className="lg:w-1/2 relative overflow-hidden flex items-center justify-center">
-              <img
-                src="/LoginBg.jpg"
-                alt="Banner"
-                className="w-[85%] h-[85%] object-cover rounded-3xl"
+          <div>
+            <label htmlFor="login-password" className={labelClass}>
+              Password
+            </label>
+            <div className="relative">
+              <input
+                required
+                id="login-password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className={`${inputClass} pr-12`}
               />
-            </div>
-
-            {/* Right Login Form */}
-            <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-              <div className="max-w-md mx-auto w-full">
-                <div className="mb-8">
-                  <img src="/loglogo.png" alt="Logo" className="w-1/2" />
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    Journey Begins
-                  </h3>
-                  <p className="text-gray-600">Log in with your email</p>
-                </div>
-
-                {/* Login Inputs */}
-                <form onSubmit={handleLogin} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email
-                    </label>
-                    <input required
-                      type="text"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-transparent backdrop-blur-sm"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <input
-                        required
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-transparent backdrop-blur-sm"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
-                      >
-                        {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <label className="flex items-center text-sm text-black">
-                      <input
-                        type="checkbox"
-                        checked={rememberMe}
-                        onChange={(e) => setRememberMe(e.target.checked)}
-                        className="w-4 h-4 text-black border-gray-300 rounded focus:ring-gray-500"
-                      />
-                      <span className="ml-2">Remember me</span>
-                    </label>
-                    <Link to="/forgot-password" className="text-sm text-black hover:text-gray-800">
-                      Forgot password?
-                    </Link>
-                  </div>
-
-                  <button
-                    disabled={loading}
-                    className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200 disabled:opacity-60"
-                  >
-                    {loading ? "Logging in..." : "LOG IN"}
-                  </button>
-                </form>
-              </div>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-ink/50 transition-colors hover:text-ink focus:outline-none"
+              >
+                {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+              </button>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+
+          <div className="flex items-center justify-between gap-4">
+            <label className="flex items-center gap-2 text-sm text-ink/80">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="size-4 rounded accent-ink"
+              />
+              Remember me
+            </label>
+            <Link to="/forgot-password" className="text-sm font-semibold text-sage-deep hover:text-ink">
+              Forgot password?
+            </Link>
+          </div>
+
+          {error && (
+            <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700 ring-1 ring-red-100">
+              {error}
+            </p>
+          )}
+
+          <button disabled={loading} className={`${buttonPrimary} w-full py-3.5`}>
+            {loading ? "Logging in..." : "LOG IN"}
+          </button>
+
+          <p className="text-center text-sm text-ink/60">
+            Not a member yet?{" "}
+            <Link to="/#membershipplan" className="font-semibold text-sage-deep hover:text-ink">
+              Join AINET
+            </Link>
+          </p>
+        </form>
+      </AuthLayout>
+    </>
   );
 }

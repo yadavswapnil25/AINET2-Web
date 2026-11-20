@@ -882,26 +882,26 @@ export default function AINET2027DelegateRegistrationForm() {
 
               {/* Conference Details */}
               <div className="text-center flex-1 flex flex-col justify-center">
-                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-800 mb-2 md:mb-3 lg:mb-4 leading-tight font-serif italic">
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-ink mb-2 md:mb-3 lg:mb-4 leading-tight font-extrabold tracking-tight">
                   10th AINET International Conference 2027 (Online)
                 </h1>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-700 mb-1 md:mb-2 leading-tight font-serif italic">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-ink/75 mb-1 md:mb-2 leading-tight font-extrabold tracking-tight">
                   9 - 10 January 2027
                 </p>
                 <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-2 md:mb-3">
                   Online
                 </p>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-3 md:mb-4 lg:mb-5 font-serif">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-ink mb-3 md:mb-4 lg:mb-5">
                 "ELE for Gen Z, Alpha and Beyond"
                 </p>
                 <p className="text-xs sm:text-xs md:text-sm lg:text-sm text-gray-500 mb-4 md:mb-5 lg:mb-6">
-                  <span className="px-3 py-1 bg-yellow-200 text-gray-800 font-semibold rounded-full inline-block">
+                  <span className="px-3 py-1 bg-sage text-ink font-semibold rounded-full inline-block">
                     Supported by British Council &amp; RELO, American Embassy
                   </span>
                 </p>
 
                 {/* Registration Button */}
-                <button className="w-full bg-[rgba(217,217,217,1)] font-serif text-black py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-gray-700 hover:text-white transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
+                <button className="w-full rounded-full bg-ink text-white py-2 sm:py-3 md:py-4 lg:py-5 xl:py-6 px-3 sm:px-4 md:px-5 lg:px-6 font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl hover:bg-ink/85 transition-colors mb-3 md:mb-4 lg:mb-5 xl:mb-6 shadow-lg">
                   DELEGATE REGISTRATION FORM
                 </button>
               </div>
@@ -919,10 +919,10 @@ export default function AINET2027DelegateRegistrationForm() {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                       step === currentStep
-                        ? "bg-gray-800 text-white"
+                        ? "bg-ink text-white"
                         : step < currentStep
-                        ? "bg-green-500 text-white"
-                        : "bg-gray-200 text-gray-500"
+                        ? "bg-sage-deep text-white"
+                        : "bg-sky-soft text-ink/50"
                     }`}
                   >
                     {step}
@@ -930,7 +930,7 @@ export default function AINET2027DelegateRegistrationForm() {
                   {step < 5 && (
                     <div
                       className={` md:w-12 w-6 h-0.5 mx-1 transition-all duration-300 ${
-                        step < currentStep ? "bg-green-500" : "bg-gray-200"
+                        step < currentStep ? "bg-sage-deep" : "bg-sky-soft"
                       }`}
                     ></div>
                   )}
@@ -945,14 +945,14 @@ export default function AINET2027DelegateRegistrationForm() {
               {/* Step 1: AINET Membership Information */}
               {currentStep === 1 && (
                 <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                  <div className="bg-gray-400 p-3 rounded">
-                    <h2 className="text-white text-lg font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-lg font-bold text-ink">
                       AINET Membership Information
                     </h2>
                   </div>
 
                   <div>
-                    <label className="block text-base font-semibold mb-1 text-gray-700">
+                    <label className="block text-base font-semibold mb-1 text-ink/75">
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -962,13 +962,13 @@ export default function AINET2027DelegateRegistrationForm() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="Enter your email"
-                      className="w-full p-3 border border-gray-300 rounded text-sm"
+                      className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                     />
                   </div>
 
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-base font-semibold mb-1 text-gray-700">
+                      <label className="block text-base font-semibold mb-1 text-ink/75">
                         Are you an AINET member?{" "}
                         <span className="text-red-500">*</span>
                       </label>
@@ -1000,7 +1000,7 @@ export default function AINET2027DelegateRegistrationForm() {
 
                     {formData.is_ainet_member === "Yes" && (
                       <div>
-                        <label className="block text-xs font-semibold mb-1 text-gray-700">
+                        <label className="block text-xs font-semibold mb-1 text-ink/75">
                           Membership ID:
                         </label>
                         <input
@@ -1010,7 +1010,7 @@ export default function AINET2027DelegateRegistrationForm() {
                           onChange={handleChange}
                           onBlur={handleMembershipIdBlur}
                           placeholder="Enter Your Membership Number"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                           disabled={isValidatingMembership}
                         />
                         {isValidatingMembership && (
@@ -1036,15 +1036,15 @@ export default function AINET2027DelegateRegistrationForm() {
                     )}
                   </div>
 
-                  <div className="bg-gray-400 p-3 rounded">
-                    <h2 className="text-white text-lg font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-lg font-bold text-ink">
                       AINET Membership Information
                     </h2>
                   </div>
 
                   <div className="flex-1">
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         You are registering as:{" "}
                         <span className="text-red-500">*</span>
                       </label>
@@ -1083,8 +1083,8 @@ export default function AINET2027DelegateRegistrationForm() {
               {/* Step 2: Personal Information */}
               {currentStep === 2 && (
                 <div className="flex-1 flex flex-col space-y-6 overflow-y-auto">
-                  <div className="bg-gray-400 p-2 rounded">
-                    <h2 className="text-white text-sm font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-sm font-bold text-ink">
                       Personal Information
                     </h2>
                   </div>
@@ -1093,14 +1093,14 @@ export default function AINET2027DelegateRegistrationForm() {
                     <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
                       {/* Title */}
                       <div className="col-span-1 sm:col-span-1">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Title: <span className="text-red-500">*</span>
                         </label>
                         <select
                           name="title"
                           value={formData.title}
                           onChange={handleChange}
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         >
                           <option value="">Select Title</option>
                           <option value="Mr.">Mr.</option>
@@ -1113,7 +1113,7 @@ export default function AINET2027DelegateRegistrationForm() {
 
                       {/* Full Name */}
                       <div className="col-span-2 sm:col-span-1">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Full Name: <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1122,7 +1122,7 @@ export default function AINET2027DelegateRegistrationForm() {
                           value={formData.full_name}
                           onChange={handleChange}
                           placeholder="Enter Your Name"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
                     </div>
@@ -1130,14 +1130,14 @@ export default function AINET2027DelegateRegistrationForm() {
                     <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
                       {/* Gender */}
                       <div className="col-span-1 sm:col-span-1">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Gender: <span className="text-red-500">*</span>
                         </label>
                         <select
                           name="gender"
                           value={formData.gender}
                           onChange={handleChange}
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         >
                           <option value="">Select Your Gender</option>
                           <option value="Male">Male</option>
@@ -1148,7 +1148,7 @@ export default function AINET2027DelegateRegistrationForm() {
 
                       {/* Age Group */}
                       <div className="col-span-2 sm:col-span-1">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Age Group (years): <span className="text-red-500">*</span>
                         </label>
                         <div className="grid grid-cols-3 gap-2">
@@ -1239,15 +1239,15 @@ export default function AINET2027DelegateRegistrationForm() {
               {/* Step 3: Address & Contact Information */}
               {currentStep === 3 && (
                 <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                  <div className="bg-gray-400 py-1 px-2 rounded">
-                    <h2 className="text-white text-lg font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-lg font-bold text-ink">
                       Address Information
                     </h2>
                   </div>
 
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Institution Address:{" "}
                         <span className="text-red-500">*</span>
                       </label>
@@ -1256,13 +1256,13 @@ export default function AINET2027DelegateRegistrationForm() {
                         value={formData.institution_address}
                         onChange={handleChange}
                         placeholder="Enter Your Institution Address"
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         rows="3"
                       ></textarea>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Address for Correspondence:{" "}
                         <span className="text-red-500">*</span>
                       </label>
@@ -1271,14 +1271,14 @@ export default function AINET2027DelegateRegistrationForm() {
                         value={formData.correspondence_address}
                         onChange={handleChange}
                         placeholder="Enter Your Correspondence Address"
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         rows="3"
                       ></textarea>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         City: <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1287,11 +1287,11 @@ export default function AINET2027DelegateRegistrationForm() {
                         value={formData.city}
                         onChange={handleChange}
                         placeholder="Enter Your City"
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Pincode: <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1300,18 +1300,18 @@ export default function AINET2027DelegateRegistrationForm() {
                         value={formData.pincode}
                         onChange={handleChange}
                         placeholder="Enter Pincode"
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         State: <span className="text-red-500">*</span>
                       </label>
                       <select
                         name="state"
                         value={formData.state}
                         onChange={handleChange}
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                       >
                         <option value="">Select State / Union Territory</option>
                         {indianStates.map((stateName) => (
@@ -1323,8 +1323,8 @@ export default function AINET2027DelegateRegistrationForm() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-400 p-2 rounded">
-                    <h2 className="text-white text-lg font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-lg font-bold text-ink">
                       Contact Information
                     </h2>
                   </div>
@@ -1332,7 +1332,7 @@ export default function AINET2027DelegateRegistrationForm() {
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 items-end">
                       <div className="col-span-1 sm:col-span-1 flex flex-col">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700 leading-tight">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink leading-tight">
                           Country Code: <span className="text-red-500">*</span>
                         </label>
                         <CountryCodeSelector
@@ -1345,7 +1345,7 @@ export default function AINET2027DelegateRegistrationForm() {
                         />
                       </div>
                       <div className="col-span-1 sm:col-span-2 flex flex-col">
-                        <label className="block text-sm font-semibold mb-2 text-gray-700 leading-tight">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink leading-tight">
                           Mobile No: <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1355,7 +1355,7 @@ export default function AINET2027DelegateRegistrationForm() {
                           value={formData.mobile_no}
                           onChange={handleChange}
                           placeholder="Enter Your Mobile Number"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
                     </div>
@@ -1366,15 +1366,15 @@ export default function AINET2027DelegateRegistrationForm() {
               {/* Step 4: Professional Information */}
               {currentStep === 4 && (
                 <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                  <div className="bg-gray-400 p-2 rounded">
-                    <h2 className="text-white text-lg font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-lg font-bold text-ink">
                       Professional Information
                     </h2>
                   </div>
 
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Areas of your special interest: 
                       </label>
                       <textarea
@@ -1382,20 +1382,20 @@ export default function AINET2027DelegateRegistrationForm() {
                         value={formData.areas_of_interest}
                         onChange={handleChange}
                         placeholder="Enter your areas of interest"
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         rows="3"
                       ></textarea>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Area(s) of your work: <span className="text-red-500">*</span>
                       </label>
                       <div className="relative" ref={workAreaDropdownRef}>
                         <button
                           type="button"
                           onClick={toggleWorkAreaDropdown}
-                          className="w-full p-3 border border-gray-300 rounded text-sm bg-white text-left flex items-center justify-between"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 bg-white text-left flex items-center justify-between"
                         >
                           <span className={formData.area_of_work.length === 0 ? "text-gray-500" : "text-gray-900"}>
                             {getSelectedWorkAreasText()}
@@ -1436,7 +1436,7 @@ export default function AINET2027DelegateRegistrationForm() {
 
                     {formData.area_of_work.includes("Other") && (
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           Other - Please Specify: <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1445,13 +1445,13 @@ export default function AINET2027DelegateRegistrationForm() {
                           value={formData.other_work_area}
                           onChange={handleChange}
                           placeholder="Please specify your work area"
-                          className="w-full p-3 border border-gray-300 rounded text-sm"
+                          className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                         />
                       </div>
                     )}
 
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Teaching Experience (Years): <span className="text-red-500">*</span>
                       </label>
                       <select
@@ -1459,7 +1459,7 @@ export default function AINET2027DelegateRegistrationForm() {
                         value={formData.teaching_experience}
                         onChange={handleChange}
                         required
-                        className="w-full p-3 border border-gray-300 rounded text-sm"
+                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                       >
                         <option value="">Select Experience</option>
                         <option value="Less than 2 years">Less than 2 years</option>
@@ -1477,15 +1477,15 @@ export default function AINET2027DelegateRegistrationForm() {
               {/* Step 5: Conference Participation & Account Setup */}
               {currentStep === 5 && (
                 <div className="flex-1 flex flex-col space-y-4 overflow-y-auto">
-                  <div className="bg-gray-400 py-1 px-2 rounded">
-                    <h2 className="text-white text-lg font-semibold">
+                  <div className="rounded-2xl bg-sky-soft px-5 py-3">
+                    <h2 className="text-lg font-bold text-ink">
                       Conference Participation
                     </h2>
                   </div>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-gray-700">
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">
                         Are you presenting anything at the conference? <span className="text-red-500">*</span>
                       </label>
                       <div className="flex gap-6">
@@ -1516,7 +1516,7 @@ export default function AINET2027DelegateRegistrationForm() {
 
                     {formData.is_presenting === "YES" && (
                       <div>
-                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                        <label className="mb-1.5 block text-sm font-semibold text-ink">
                           If yes, what are you presenting?
                         </label>
                         <div className="grid grid-cols-2 gap-3">
@@ -1545,7 +1545,7 @@ export default function AINET2027DelegateRegistrationForm() {
 
                   {/* Delegate Fee Information */}
                   {formData.delegate_type && (
-                    <div className="bg-blue-50 p-4 rounded border border-blue-200">
+                    <div className="bg-sky-soft p-4 rounded-2xl border border-sky">
                       <h4 className="font-semibold mb-3 text-blue-800 text-sm">
                         Delegate Fee:
                       </h4>
@@ -1584,13 +1584,13 @@ export default function AINET2027DelegateRegistrationForm() {
               )}
 
               {/* Navigation Buttons - Inside Form */}
-              <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-gray-200">
+              <div className="flex relative justify-between items-center mt-4 pt-4 border-t border-ink/10">
                 {/* Back Button */}
                 {currentStep > 1 && (
                   <button
                     type="button"
                     onClick={handlePrevious}
-                    className="px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-full transition-all duration-300 flex items-center shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="px-6 py-3.5 bg-white ring-1 ring-ink/15 hover:bg-sky-soft text-ink font-bold rounded-full transition-all duration-300 flex items-center"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -1607,10 +1607,10 @@ export default function AINET2027DelegateRegistrationForm() {
                   type="button"
                   onClick={handleNext}
                   disabled={isValidatingMembership}
-                  className={`px-15 py-4 font-bold rounded-full transition-all duration-300 flex items-center shadow-lg ${
+                  className={`px-10 py-3.5 font-bold rounded-full transition-all duration-300 flex items-center shadow-lg shadow-ink/10 ${
                     isValidatingMembership
-                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-yellow-200 hover:bg-yellow-300 text-black hover:shadow-xl transform hover:scale-105"
+                      ? "bg-ink/30 text-white cursor-not-allowed"
+                      : "bg-ink hover:bg-ink/85 text-white"
                   } ${currentStep === 1 ? "absolute left-1/2 -translate-x-1/2" : "relative"}`}
                 >
                   <span className="text-lg">
@@ -1639,7 +1639,7 @@ export default function AINET2027DelegateRegistrationForm() {
       {/* Discount Popup Modal */}
       {showDiscountPopup && membershipDiscount && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-2xl">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
               <div className="mb-4">
                 <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100">
@@ -1661,11 +1661,11 @@ export default function AINET2027DelegateRegistrationForm() {
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 🎉 AINET Member Discount!
               </h3>
-              <p className="text-gray-700 mb-4">
+              <p className="text-ink/75 mb-4">
                 Your membership is valid and active. A <strong className="text-green-600">10% discount</strong> will be applied to your delegate registration fee.
               </p>
               {membershipDiscount.member_name && (
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-ink/60 mb-4">
                   Member: <strong>{membershipDiscount.member_name}</strong>
                 </p>
               )}

@@ -3,7 +3,24 @@ import { baseUrl } from "../../utils/constant";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "./Loader";
+import AuthLayout from "./AuthLayout";
+import { buttonPrimary, inputClass, labelClass } from "./sectionStyles";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+const passwordToggleClass =
+  "absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-ink/50 transition-colors hover:text-ink focus:outline-none";
+
+const Dialog = ({ title, message, actionLabel, onAction }) => (
+  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm">
+    <div role="dialog" aria-modal="true" aria-label={title} className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
+      <h3 className="text-2xl font-extrabold tracking-tight text-ink">{title}</h3>
+      <p className="mt-3 leading-relaxed text-ink/70">{message}</p>
+      <button onClick={onAction} className={`${buttonPrimary} mt-6 w-full`}>
+        {actionLabel}
+      </button>
+    </div>
+  </div>
+);
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -73,7 +90,7 @@ export default function ForgotPassword() {
   const handleOtpChange = (index, value) => {
     // Only allow numbers
     const numValue = value.replace(/\D/g, "");
-    
+
     if (numValue.length > 1) {
       // If pasting multiple digits, distribute them
       const digits = numValue.slice(0, 6).split("");
@@ -84,7 +101,7 @@ export default function ForgotPassword() {
         }
       });
       setOtp(newOtp);
-      
+
       // Focus the next empty input or the last one
       const nextIndex = Math.min(index + digits.length, 5);
       if (otpRefs.current[nextIndex]) {
@@ -95,7 +112,7 @@ export default function ForgotPassword() {
       const newOtp = [...otp];
       newOtp[index] = numValue;
       setOtp(newOtp);
-      
+
       // Auto-focus next input if digit entered
       if (numValue && index < 5 && otpRefs.current[index + 1]) {
         otpRefs.current[index + 1].focus();
@@ -108,7 +125,7 @@ export default function ForgotPassword() {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       otpRefs.current[index - 1].focus();
     }
-    
+
     // Handle arrow keys
     if (e.key === "ArrowLeft" && index > 0) {
       otpRefs.current[index - 1].focus();
@@ -200,239 +217,160 @@ export default function ForgotPassword() {
     }
   };
 
-  return (
-    <div className="min-h-screen p-4">
-      {loading && <Loader />}
-      <div className="max-w-7xl mx-auto">
-        {/* Header Logo */}
-        <div>
-          <img src="/loglogo.png" alt="Logo" className="w-1/6" />
-        </div>
+  const backToLogin = (
+    <p className="text-center">
+      <Link to="/login" className="text-sm font-semibold text-sage-deep hover:text-ink">
+        Back to Login
+      </Link>
+    </p>
+  );
 
-        {/* Main Content */}
-        <div
-          className="rounded-3xl shadow-2xl overflow-hidden bg-cover"
-          style={{ backgroundImage: "url('/bg5.png')" }}
-        >
-          <div className="flex flex-col lg:flex-row min-h-[600px] pt-8 lg:pt-0">
-            {/* Left Image */}
-            <div className="lg:w-1/2 relative overflow-hidden flex items-center justify-center">
-              <img
-                src="/LoginBg.jpg"
-                alt="Banner"
-                className="w-[85%] h-[85%] object-cover rounded-3xl"
+  return (
+    <>
+      {loading && <Loader />}
+
+      <AuthLayout
+        title={showResetForm ? "Reset Password" : "Forgot Password"}
+        subtitle={showResetForm ? "Enter OTP and new password" : "Enter your email to receive reset code"}
+      >
+        {!showResetForm ? (
+          /* Email Form */
+          <form onSubmit={handleEmailSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="reset-email" className={labelClass}>
+                Email
+              </label>
+              <input
+                required
+                id="reset-email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className={inputClass}
               />
             </div>
 
-            {/* Right Form */}
-            <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-              <div className="max-w-md mx-auto w-full">
-                <div className="mb-8">
-                  <img src="/loglogo.png" alt="Logo" className="w-1/2" />
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                    {showResetForm ? "Reset Password" : "Forgot Password"}
-                  </h3>
-                  <p className="text-gray-600">
-                    {showResetForm
-                      ? "Enter OTP and new password"
-                      : "Enter your email to receive reset code"}
-                  </p>
-                </div>
+            <button type="submit" disabled={loading} className={`${buttonPrimary} w-full py-3.5`}>
+              {loading ? "Sending..." : "Confirm Email"}
+            </button>
 
-                {!showResetForm ? (
-                  /* Email Form */
-                  <form onSubmit={handleEmailSubmit} className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email
-                      </label>
-                      <input
-                        required
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email"
-                        className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-transparent backdrop-blur-sm"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200 disabled:opacity-60"
-                    >
-                      {loading ? "Sending..." : "Confirm Email"}
-                    </button>
-
-                    <div className="text-center">
-                      <Link
-                        to="/login"
-                        className="text-sm text-black hover:text-gray-800"
-                      >
-                        Back to Login
-                      </Link>
-                    </div>
-                  </form>
-                ) : (
-                  /* Reset Password Form */
-                  <form onSubmit={handleResetPassword} className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Reset Token (6 digits)
-                      </label>
-                      <div className="flex flex-col items-center gap-3">
-                        <p className="text-sm text-gray-600 font-semibold text-center">Enter your OTP Code</p>
-                        <div className="flex gap-2 justify-center">
-                          {otp.map((digit, index) => (
-                            <input
-                              key={index}
-                              ref={(el) => (otpRefs.current[index] = el)}
-                              type="text"
-                              inputMode="numeric"
-                              maxLength={1}
-                              value={digit}
-                              onChange={(e) => handleOtpChange(index, e.target.value)}
-                              onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                              onPaste={handleOtpPaste}
-                              className="w-12 h-12 text-center text-xl font-semibold border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-all duration-300 bg-transparent backdrop-blur-sm"
-                              style={{
-                                backgroundColor: digit ? "#f3f4f6" : "transparent",
-                                color: digit ? "#000000" : "#000000",
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        value={email}
-                        disabled
-                        className="w-full px-4 py-3 border-2 border-gray-400 rounded-lg bg-gray-100 cursor-not-allowed"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        New Password
-                      </label>
-                      <div className="relative">
-                        <input
-                          required
-                          type={showPassword ? "text" : "password"}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Enter new password"
-                          className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-white backdrop-blur-sm"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
-                        >
-                          {showPassword ? (
-                            <FaEyeSlash size={18} />
-                          ) : (
-                            <FaEye size={18} />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Confirm Password
-                      </label>
-                      <div className="relative">
-                        <input
-                          required
-                          type={showConfirmPassword ? "text" : "password"}
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder="Confirm new password"
-                          className="w-full px-4 py-3 border-2 border-black rounded-lg focus:border-gray-500 focus:outline-none transition-colors bg-white backdrop-blur-sm"
-                        />  
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
-                          }
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
-                        >
-                          {showConfirmPassword ? (
-                            <FaEyeSlash size={18} />
-                          ) : (
-                            <FaEye size={18} />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200 disabled:opacity-60"
-                    >
-                      {loading ? "Resetting..." : "Reset Password"}
-                    </button>
-
-                    <div className="text-center">
-                      <Link
-                        to="/login"
-                        className="text-sm text-black hover:text-gray-800"
-                      >
-                        Back to Login
-                      </Link>
-                    </div>
-                  </form>
-                )}
+            {backToLogin}
+          </form>
+        ) : (
+          /* Reset Password Form */
+          <form onSubmit={handleResetPassword} className="space-y-5">
+            <div>
+              <p className={labelClass}>Reset Token (6 digits)</p>
+              <p className="text-sm text-ink/60">Enter your OTP Code</p>
+              <div className="mt-3 flex justify-between gap-2 sm:justify-start">
+                {otp.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={(el) => (otpRefs.current[index] = el)}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    aria-label={`Digit ${index + 1}`}
+                    onChange={(e) => handleOtpChange(index, e.target.value)}
+                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                    onPaste={handleOtpPaste}
+                    className={`size-12 rounded-xl border text-center text-xl font-bold text-ink transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 ${digit ? "border-ink/30 bg-sky-soft" : "border-ink/15 bg-white"}`}
+                  />
+                ))}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+
+            <div>
+              <label htmlFor="reset-email-locked" className={labelClass}>
+                Email
+              </label>
+              <input
+                id="reset-email-locked"
+                type="email"
+                value={email}
+                disabled
+                className={`${inputClass} cursor-not-allowed bg-sky-soft text-ink/60`}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="new-password" className={labelClass}>
+                New Password
+              </label>
+              <div className="relative">
+                <input
+                  required
+                  id="new-password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter new password"
+                  className={`${inputClass} pr-12`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className={passwordToggleClass}
+                >
+                  {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="confirm-password" className={labelClass}>
+                Confirm Password
+              </label>
+              <div className="relative">
+                <input
+                  required
+                  id="confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm new password"
+                  className={`${inputClass} pr-12`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  className={passwordToggleClass}
+                >
+                  {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading} className={`${buttonPrimary} w-full py-3.5`}>
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
+
+            {backToLogin}
+          </form>
+        )}
+      </AuthLayout>
 
       {/* Email Sent Popup Modal */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
-              Password Reset Code Sent
-            </h3>
-            <p className="text-gray-700 mb-6">{popupMessage}</p>
-            <button
-              onClick={handlePopupOk}
-              className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200"
-            >
-              OK
-            </button>
-          </div>
-        </div>
+        <Dialog title="Password Reset Code Sent" message={popupMessage} actionLabel="OK" onAction={handlePopupOk} />
       )}
 
       {/* Success Popup Modal */}
       {showSuccessPopup && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
-              Password Reset Successful
-            </h3>
-            <p className="text-gray-700 mb-6">{successMessage}</p>
-            <button
-              onClick={() => navigate("/login")}
-              className="w-full bg-amber-100 hover:bg-amber-200 text-black font-semibold py-3 px-4 rounded-full transition-colors duration-200 border border-amber-200"
-            >
-              Login
-            </button>
-          </div>
-        </div>
+        <Dialog
+          title="Password Reset Successful"
+          message={successMessage}
+          actionLabel="Login"
+          onAction={() => navigate("/login")}
+        />
       )}
-    </div>
+    </>
   );
 }
-

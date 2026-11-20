@@ -1,22 +1,27 @@
+import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { buttonPrimary } from "../Components/shared/sectionStyles";
 
 // Rendered for any path the router doesn't know. Without this an unknown
 // route rendered nothing at all, which made a stale-cache problem look like
 // a broken page.
 export default function NotFound() {
   return (
-    <div className="max-w-4xl mx-auto min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      <p className="text-6xl font-bold text-gray-300 mb-4">404</p>
-      <h1 className="text-2xl font-semibold text-gray-800 mb-2">Page not found</h1>
-      <p className="text-gray-600 mb-8">
-        The page you are looking for doesn&apos;t exist or has moved.
-      </p>
-      <Link
-        to="/"
-        className="px-6 py-3 rounded-full bg-black text-white font-semibold hover:bg-gray-800 transition-colors"
-      >
-        Go to Home
-      </Link>
-    </div>
+    <main className="relative overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-24 top-10 size-80 rounded-full bg-sage/40 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 bottom-0 size-80 rounded-full bg-sky/50 blur-3xl" />
+
+      <div className="relative mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-4 py-20 text-center">
+        <p className="text-8xl font-extrabold tracking-tight text-sage-deep/30 sm:text-9xl">404</p>
+        <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink">Page not found</h1>
+        <p className="mt-3 text-lg text-ink/60">
+          The page you are looking for doesn&apos;t exist or has moved.
+        </p>
+        <Link to="/" className={`${buttonPrimary} mt-8`}>
+          <FaArrowLeft className="text-sm" aria-hidden="true" />
+          Go to Home
+        </Link>
+      </div>
+    </main>
   );
 }

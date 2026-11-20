@@ -1,9 +1,6 @@
-import React from 'react';
-import Highlight from '../Components/shared/Highlight';
-import Breadcrumbs from '../Components/shared/Breadcrumbs';
+import InitiativePage from '../Components/shared/InitiativePage';
 
 const affiliateData = {
-    breadcrumb: ['Home', 'AINET Projects', 'AINET Affiliates'],
     title: 'About AINET Affiliates',
     subtitle: 'Developing Together – Affiliates’ Network for Community Empowerment',
     description: `Right from the beginning, it has been a conscious policy decision of AINET not to have any chapters spread over India, a common practice among national TAs. Instead, AINET firmly believes that supporting and promoting localised associations, groups or communities is a powerful and appropriate way of furthering them and also English teachers’ professional development. For this purpose, AINET develops a symbiotic relationship with such associations/ groups/ communities through an Affiliates’ Network.
@@ -25,91 +22,31 @@ Any English teachers’ association/ group/ community, whether formal or informa
     contactEmail: 'theainet@gmail.com'
 };
 
-const AboutAINETAffiliates = ({ data }) => {
-    const {
-        title,
-        subtitle,
-        description,
-        benefitsTitle,
-        benefits,
-        howToTitle,
-        howToSteps,
-        contactText,
-        contactEmail
-    } = data;
-
-    return (
-
-        <>
-            <Highlight />
-            <div className="px-4 py-10 md:px-8 lg:px-16 max-w-screen-xl mx-auto text-gray-700">
-                <div className='pb-10 flex items-center justify-between'>
-                    <Breadcrumbs
-                        links={[
-                            { label: "Home", to: "/" },
-                            { label: "AINET Projects", to: null },
-                            { label: "AINET Affiliates", to: null },
-                        ]}
-                    />
-                    {/* teacherResearchLogo */}
-                    <img
-                        src="/AAAffliates.png"
-                        alt="teacherResearchLogo"
-                        className="w-18 sm:w-24 md:w-25 lg:w-30"
-                    />
-                </div>
-                {/* Page Title */}
-                <h1 className="text-3xl md:text-4xl font-bold mb-10 ">{title}</h1>
-
-                {/* First Section: Image + Subtitle + Description */}
-                <div className="flex flex-col-reverse lg:flex-row items-center gap-10 mb-12">
-                    {/* Text */}
-                    <div className="lg:w-2/3">
-                        <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">{subtitle}</h2>
-                        <p className="whitespace-pre-line leading-relaxed">{description}</p>
-                    </div>
-
-                    {/* Image */}
-                    <div className="lg:w-1/2 w-full">
-                        <img
-                            src="/affilatesmain.png"
-                            alt="AINET Event"
-                            className="w-full rounded-lg shadow-lg"
-                        />
-                    </div>
-                </div>
-
-                {/* Benefits Section */}
-                <div className="mb-10">
-                    <h3 className="text-xl md:text-2xl font-semibold mb-4">{benefitsTitle}</h3>
-                    <ul className="list-disc list-inside space-y-2">
-                        {benefits.map((point, idx) => (
-                            <li key={idx}>{point}</li>
-                        ))}
-                    </ul>
-                </div>
-
-                {/* How to be an Affiliate Section */}
-                <div className="mb-10">
-                    <h3 className="text-xl md:text-2xl font-semibold mb-2">{howToTitle}</h3>
-                    <p className="whitespace-pre-line">{howToSteps}</p>
-                </div>
-
-                {/* Contact Section */}
-                <div>
-                    <p className="font-bold text-2xl">
-                        {contactText}{' '}
-                        <a href={`mailto:${contactEmail}`} className="text-blue-600 underline">
-                            {contactEmail}
-                        </a>
-                        .
-                    </p>
-                </div>
-            </div>
-        </>
-    );
-};
-
 export default function Page() {
-    return <AboutAINETAffiliates data={affiliateData} />;
+    const data = affiliateData;
+    return (
+        <InitiativePage
+            breadcrumbs={[
+                { label: "Home", to: "/" },
+                { label: "AINET Projects", to: null },
+                { label: "AINET Affiliates", to: null },
+            ]}
+            title={data.title}
+            subtitle={data.subtitle}
+            logo={{ src: "/AAAffliates.png", alt: "AINET Affiliates logo" }}
+            image={{ src: "/affilatesmain.png", alt: "AINET Event" }}
+            description={data.description}
+            listTitle={data.benefitsTitle}
+            listItems={data.benefits}
+            sections={[{ title: data.howToTitle, text: data.howToSteps }]}
+            contact={{
+                emails: [data.contactEmail],
+                message: (
+                    <>
+                        {data.contactText} <a href={`mailto:${data.contactEmail}`}>{data.contactEmail}</a>.
+                    </>
+                ),
+            }}
+        />
+    );
 }

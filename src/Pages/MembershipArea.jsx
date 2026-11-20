@@ -1,27 +1,103 @@
-import React from "react";
-import { FaUser, FaUniversity, FaCheck } from "react-icons/fa";
+import { FaArrowRight, FaCheck, FaUniversity, FaUser } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Highlight from "../Components/shared/Highlight";
+import PageHeader from "../Components/shared/PageHeader";
+import { containerClass } from "../Components/shared/sectionStyles";
 import {
   useMembershipPricing,
   PRICING_CONTEXT,
   formatPrice,
 } from "../utils/pricing";
 
+// Same forms the home page plans open.
+const PLAN_FORMS = {
+  Individual: {
+    Annual: "/MembershipFormforIndividualAnnual",
+    LongTerm: "/FormIndLongterm",
+    Overseas: "/MembershipFormforIndividualOverseas",
+  },
+  Institutional: {
+    Annual: "/MembershipFormforInstitutionalAnnual",
+    LongTerm: "/MembershipFormforInstitutionalLongTerm",
+    Overseas: "/MembershipFormforInstitutionalOverseas",
+  },
+};
+
+const membershipSections = [
+  {
+    title: "Membership privileges",
+    content: [
+      "Become part of large and impactful community in India and globally.",
+      "Get regular information about AINET events, activities and offerings.",
+      "Get membership rate to attend AINET events and other collaborative events.",
+      "Receive AINET publications, newsletters and other products free or at discounted prices.",
+      "Have access to the Member's Hub with special services and resources available for members only.",
+      "Be eligible to join AINET at heavily discounted rate under the Silver Membership scheme.",
+      "Be eligible to apply for various AINET scholarships, travel grants and other kinds of support."
+    ]
+  },
+  {
+    title: "Member Rights",
+    content: [
+      "Right to free admission to AINET bodies and committees (not applicable to overseas members).",
+      "Right to contest elections of AINET bodies and committees (not applicable to overseas members)."
+    ]
+  },
+  {
+    title: "Members' Responsibilities",
+    content: [
+      "Not do anything detrimental to the interest, goodwill and image of AINET.",
+      "To actively support AINET activities and mission.",
+      "To keep the AINET office informed about any changes in personal and professional details."
+    ]
+  },
+  {
+    title: "Membership Terms",
+    content: [
+      "Email id to be used for lifetime.",
+      "Unique membership number valid for lifetime.",
+      "Membership renewable using email ID and unique membership number."
+    ]
+  }
+];
+
+const membershipTypes = [
+  {
+    type: "Individual",
+    typeKey: "Individual",
+    Icon: FaUser,
+    plans: [
+      { name: "Individual Annual", planKey: "Annual", features: ["1-year Membership", "Indian Access only", "Membership Privileges", "Member Rights"] },
+      { name: "Individual Long Term", planKey: "LongTerm", features: ["3-year Membership", "Indian Access only", "Membership Privileges", "Member Rights"] },
+      { name: "Individual Overseas", planKey: "Overseas", features: ["1-year Membership", "Global Access", "Membership Privileges", "Member Rights"] },
+    ]
+  },
+  {
+    type: "Institutional",
+    typeKey: "Institutional",
+    Icon: FaUniversity,
+    plans: [
+      { name: "Institutional Annual", planKey: "Annual", features: ["1-year Membership", "Indian Access only", "Discounted Rates", "Member Rights"] },
+      { name: "Institutional Long Term", planKey: "LongTerm", features: ["3-year Membership", "Indian Access only", "Discounted Rates", "Member Rights"] },
+      { name: "Institutional Overseas", planKey: "Overseas", features: ["1-year Membership", "Global Access only", "Discounted Rates", "Member Rights"] },
+    ]
+  }
+];
+
 const PriceTag = ({ priced, loading, promoLabel }) => {
   if (loading || !priced) {
-    return <div className="h-10 w-32 mx-auto mb-4 bg-gray-200 rounded animate-pulse" />;
+    return <div className="h-11 w-36 animate-pulse rounded-xl bg-sky-soft" />;
   }
 
   const discounted = Number(priced.discount_percentage) > 0;
 
   return (
-    <div className="mb-4">
-      <p className="text-4xl font-extrabold text-gray-800">
-        \u20b9{formatPrice(priced.price)}
-      </p>
+    <div>
+      <p className="text-4xl font-extrabold tracking-tight text-ink">₹{formatPrice(priced.price)}</p>
       {discounted && (
-        <p className="mt-1 text-sm text-gray-500">
-          <span className="line-through mr-2">\u20b9{formatPrice(priced.base_price)}</span>
-          <span className="font-semibold text-green-700">
+        <p className="mt-1 text-sm text-ink/50">
+          <span className="mr-2 line-through">₹{formatPrice(priced.base_price)}</span>
+          <span className="font-semibold text-sage-deep">
             {Math.round(priced.discount_percentage)}% off
             {promoLabel ? ` - ${promoLabel}` : ""}
           </span>
@@ -32,216 +108,104 @@ const PriceTag = ({ priced, loading, promoLabel }) => {
 };
 
 const MembershipArea = () => {
+  const navigate = useNavigate();
   const { plans: pricing, promo, loading: pricingLoading } = useMembershipPricing(
     PRICING_CONTEXT.NEW
   );
-  const membershipSections = [
-    {
-      title: "Membership privileges",
-      content: [
-        "Become part of large and impactful community in India and globally.",
-        "Get regular information about AINET events, activities and offerings.",
-        "Get membership rate to attend AINET events and other collaborative events.",
-        "Receive AINET publications, newsletters and other products free or at discounted prices.",
-        "Have access to the Member's Hub with special services and resources available for members only.",
-        "Be eligible to join AINET at heavily discounted rate under the Silver Membership scheme.",
-        "Be eligible to apply for various AINET scholarships, travel grants and other kinds of support."
-      ]
-    },
-    {
-      title: "Member Rights",
-      content: [
-        "Right to free admission to AINET bodies and committees (not applicable to overseas members).",
-        "Right to contest elections of AINET bodies and committees (not applicable to overseas members)."
-      ]
-    },
-    {
-      title: "Members' Responsibilities",
-      content: [
-        "Not do anything detrimental to the interest, goodwill and image of AINET.",
-        "To actively support AINET activities and mission.",
-        "To keep the AINET office informed about any changes in personal and professional details."
-      ]
-    },
-    {
-      title: "Membership Terms",
-      content: [
-        "Email id to be used for lifetime.",
-        "Unique membership number valid for lifetime.",
-        "Membership renewable using email ID and unique membership number."
-      ]
-    }
-  ];
-
-  const membershipTypes = [
-    {
-      type: "Individual",
-      typeKey: "Individual",
-      icon: <FaUser className="mr-2 text-lg" />,
-      iconForCard: <FaUser className="inline-block text-xl mr-2" />,
-      plans: [
-        {
-          name: "Individual Annual",
-          planKey: "Annual",
-          features: [
-            "1-year Membership",
-            "Indian Access only",
-            "Membership Privileges",
-            "Member Rights"
-          ]
-        },
-        {
-          name: "Individual Long Term",
-          planKey: "LongTerm",
-          features: [
-            "3-year Membership",
-            "Indian Access only",
-            "Membership Privileges",
-            "Member Rights"
-          ]
-        },
-        {
-          name: "Individual Overseas",
-          planKey: "Overseas",
-          features: [
-            "1-year Membership",
-            "Global Access",
-            "Membership Privileges",
-            "Member Rights"
-          ]
-        }
-      ]
-    },
-    {
-      type: "Institutional",
-      typeKey: "Institutional",
-      icon: <FaUniversity className="mr-2 text-lg" />,
-      iconForCard: <FaUniversity className="inline-block text-xl mr-2" />,
-      plans: [
-        {
-          name: "Institutional Annual",
-          planKey: "Annual",
-          features: [
-            "1-year Membership",
-            "Indian Access only",
-            "Discounted Rates",
-            "Member Rights"
-          ]
-        },
-        {
-          name: "Institutional Long Term",
-          planKey: "LongTerm",
-          features: [
-            "3-year Membership",
-            "Indian Access only",
-            "Discounted Rates",
-            "Member Rights"
-          ]
-        },
-        {
-          name: "Institutional Overseas",
-          planKey: "Overseas",
-          features: [
-            "1-year Membership",
-            "Global Access only",
-            "Discounted Rates",
-            "Member Rights"
-          ]
-        }
-      ]
-    }
-  ];
-
-  // 🔔 Handle individual Pay Now button
-  const handlePayNow = (plan, type) => {
-    console.log("Initiating payment for:", {
-      membershipType: type,
-      planName: plan.name,
-      features: plan.features
-    });
-
-  };
 
   return (
-    <div className="max-w-[1300px] mx-auto my-20 px-4 md:px-10 bg-white rounded-3xl border border-gray-300 overflow-hidden">
-      {/* Header with logo and title */}
-      <div className="p-6 text-center">
-        <img src="./footlogo.png" alt="AINET Logo" className="h-45 mx-auto mb-4" />
-        <h1 className="text-3xl font-bold">Membership Information Document</h1>
-      </div>
+    <>
+      <Highlight />
 
-      {/* Membership Info Sections */}
-      {membershipSections.map((section, index) => (
-        <div key={index} className="mb-8">
-          <div className="bg-[#A6AEBF] text-white px-4 py-2">
-            <h2 className="text-lg md:text-xl font-medium">{section.title}</h2>
+      <main>
+        <PageHeader
+          breadcrumbs={[
+            { label: "Home", to: "/" },
+            { label: "AINET Membership Area", to: null },
+          ]}
+          eyebrow="Membership"
+          title="Membership Information Document"
+        />
+
+        {/* What membership means */}
+        <section className="py-12 sm:py-16">
+          <div className={`${containerClass} grid gap-6 md:grid-cols-2`}>
+            {membershipSections.map((section) => (
+              <div key={section.title} className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-ink/10 sm:p-8">
+                <h2 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">{section.title}</h2>
+                <p className="mt-2 text-sm font-semibold text-sage-deep">As an AINET member, you will</p>
+                <ul className="mt-4 space-y-3">
+                  {section.content.map((item) => (
+                    <li key={item} className="flex gap-3 text-[15px] leading-relaxed text-ink/80">
+                      <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-sage text-sage-deep">
+                        <FaCheck className="text-[10px]" aria-hidden="true" />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-          <div className="p-4">
-            <p className="font-semibold mb-2">As an AINET member, you will</p>
-            <ul className="space-y-2 text-sm md:text-base">
-              {section.content.map((item, idx) => (
-                <li key={idx} className="flex items-start">
-                  <span className="mr-2 mt-1 text-base">•</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      ))}
+        </section>
 
-      {/* Membership Types */}
-      <div className="mb-10">
-        <div className="bg-gray-400 text-white px-4 py-2">
-          <h2 className="text-lg font-medium">Membership Types</h2>
-        </div>
+        {/* Membership types */}
+        <section className="bg-cream-soft py-12 sm:py-16">
+          <div className={containerClass}>
+            <h2 className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">Membership Types</h2>
 
-        {membershipTypes.map((type, idx) => (
-          <div key={idx} className="mb-12">
-            <div className="flex items-center px-4 pt-8 pb-4 text-xl font-semibold">
-              {type.icon}
-              <span>{type.type}</span>
-            </div>
+            {membershipTypes.map((type) => {
+              const { Icon } = type;
+              return (
+                <div key={type.type} className="mt-10">
+                  <h3 className="flex items-center gap-3 text-xl font-bold text-ink">
+                    <span className="grid size-10 place-items-center rounded-2xl bg-sky text-ink">
+                      <Icon aria-hidden="true" />
+                    </span>
+                    {type.type}
+                  </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
-              {type.plans.map((plan, planIdx) => (
-                <div key={planIdx} className="bg-[#FFF8DE] rounded-xl shadow-md py-6 px-4 flex flex-col justify-between">
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold mb-8">
-                      {type.iconForCard}
-                      {plan.name}
-                    </h3>
-                    <PriceTag
-                      priced={pricing?.[type.typeKey]?.[plan.planKey]}
-                      loading={pricingLoading}
-                      promoLabel={promo?.active ? promo?.label : null}
-                    />
-                  </div>
-                  <ul className="mt-4 mb-4 space-y-2 text-base">
-                    {plan.features.map((feature, fIdx) => (
-                      <li key={fIdx} className="flex items-center">
-                        <span className="bg-black w-4 h-4 rounded-full flex items-center justify-center mr-2">
-                          <FaCheck className="text-white text-[10px]" />
-                        </span>
-                        {feature}
-                      </li>
+                  <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {type.plans.map((plan) => (
+                      <div key={plan.name} className="flex flex-col rounded-3xl bg-white p-6 shadow-sm ring-1 ring-ink/10 sm:p-8">
+                        <h4 className="text-xl font-bold text-ink">{plan.name}</h4>
+                        <div className="mt-4">
+                          <PriceTag
+                            priced={pricing?.[type.typeKey]?.[plan.planKey]}
+                            loading={pricingLoading}
+                            promoLabel={promo?.active ? promo?.label : null}
+                          />
+                        </div>
+                        <ul className="mt-6 space-y-3 border-t border-ink/10 pt-6">
+                          {plan.features.map((feature) => (
+                            <li key={feature} className="flex items-center gap-3 text-[15px] text-ink/80">
+                              <span className="grid size-5 shrink-0 place-items-center rounded-full bg-ink text-white">
+                                <FaCheck className="text-[10px]" aria-hidden="true" />
+                              </span>
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="mt-auto pt-8">
+                          <button
+                            type="button"
+                            onClick={() => navigate(PLAN_FORMS[type.typeKey][plan.planKey])}
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink py-3.5 font-bold text-white transition-colors hover:bg-ink/85"
+                          >
+                            PAY NOW
+                            <FaArrowRight className="text-sm" aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
                     ))}
-                  </ul>
-                  <div className="text-center mt-auto">
-                    <button
-                      onClick={() => handlePayNow(plan, type.type)}
-                      className="bg-[#D0E8C5] hover:bg-green-200 text-black px-10 py-2 rounded-full font-semibold"
-                    >
-                      PAY NOW
-                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        ))}
-      </div>
-    </div>
+        </section>
+      </main>
+    </>
   );
 };
 

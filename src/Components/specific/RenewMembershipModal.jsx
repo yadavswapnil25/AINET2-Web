@@ -118,10 +118,10 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl relative overflow-hidden">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/60 p-4 backdrop-blur-sm">
+      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5 text-white">
+        <div className="bg-ink px-6 py-6 text-white">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white/80 hover:text-white text-3xl font-bold leading-none"
@@ -132,7 +132,7 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
           <h2 className="text-xl font-bold">
             {isUpgrade ? "Upgrade Membership" : "Renew Membership"}
           </h2>
-          <p className="text-blue-100 text-sm mt-1">
+          <p className="text-white/70 text-sm mt-1">
             Current plan:{" "}
             <span className="font-semibold text-white">
               {currentType} — {PLAN_DISPLAY_NAMES[currentPlan] || currentPlan}
@@ -151,10 +151,10 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
                 <button
                   key={plan.title}
                   onClick={() => setSelectedPlan(plan.title)}
-                  className={`relative rounded-xl border-2 p-4 text-left transition-all ${
+                  className={`relative rounded-2xl border-2 p-4 text-left transition-all ${
                     isSelected
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 bg-white hover:border-blue-300"
+                      ? "border-ink bg-sky-soft"
+                      : "border-ink/10 bg-white hover:border-ink/40"
                   }`}
                 >
                   {isCurrent && (
@@ -168,22 +168,22 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
                     </span>
                   )}
 
-                  <p className="font-bold text-gray-800 text-base mb-0.5">
+                  <p className="font-bold text-ink text-base mb-0.5">
                     {PLAN_DISPLAY_NAMES[plan.title]}
                   </p>
-                  <p className="text-gray-500 text-xs mb-2">{plan.label}</p>
+                  <p className="text-ink/50 text-xs mb-2">{plan.label}</p>
                   {pricingLoading || !plan.price ? (
-                    <div className="h-6 w-24 bg-gray-200 rounded animate-pulse" />
+                    <div className="h-6 w-24 bg-sky-soft rounded animate-pulse" />
                   ) : (
                     <>
-                      <p className="text-blue-700 font-bold text-lg">
+                      <p className="text-ink font-extrabold text-lg">
                         ₹{formatPrice(plan.price)}
-                        <span className="text-gray-400 text-xs font-normal ml-1">
+                        <span className="text-ink/40 text-xs font-normal ml-1">
                           / {currentType === "Individual" ? "person" : "institution"}
                         </span>
                       </p>
                       {plan.discountPercentage > 0 && (
-                        <p className="text-xs text-gray-500 line-through">
+                        <p className="text-xs text-ink/50 line-through">
                           ₹{formatPrice(plan.basePrice)}
                         </p>
                       )}
@@ -191,7 +191,7 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
                   )}
 
                   {isSelected && (
-                    <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center">
+                    <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-ink flex items-center justify-center">
                       <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           fillRule="evenodd"
@@ -208,27 +208,27 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
 
           {/* Summary box */}
           {chosenPlan && (
-            <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 mb-5">
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Payment Summary</h4>
-              <div className="flex justify-between text-sm text-gray-600 mb-1">
+            <div className="bg-sky-soft rounded-2xl p-4 mb-5">
+              <h4 className="text-sm font-semibold text-ink/75 mb-2">Payment Summary</h4>
+              <div className="flex justify-between text-sm text-ink/60 mb-1">
                 <span>Plan</span>
-                <span className="font-medium text-gray-900">
+                <span className="font-medium text-ink">
                   {currentType} — {PLAN_DISPLAY_NAMES[chosenPlan.title]}
                 </span>
               </div>
-              <div className="flex justify-between text-sm text-gray-600 mb-1">
+              <div className="flex justify-between text-sm text-ink/60 mb-1">
                 <span>Duration</span>
-                <span className="font-medium text-gray-900">{chosenPlan.label}</span>
+                <span className="font-medium text-ink">{chosenPlan.label}</span>
               </div>
-              <div className="flex justify-between text-sm text-gray-600 mb-1">
+              <div className="flex justify-between text-sm text-ink/60 mb-1">
                 <span>Valid for</span>
-                <span className="font-medium text-gray-900">{chosenPlan.months} months</span>
+                <span className="font-medium text-ink">{chosenPlan.months} months</span>
               </div>
-              <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between text-sm">
-                <span className="font-semibold text-gray-800">Total Amount</span>
-                <span className="font-bold text-blue-700 text-base">
+              <div className="border-t border-ink/10 mt-2 pt-2 flex justify-between text-sm">
+                <span className="font-semibold text-ink">Total Amount</span>
+                <span className="font-bold text-ink text-base">
                   {chosenPlan.discountPercentage > 0 && (
-                    <span className="text-gray-400 font-normal line-through mr-2">
+                    <span className="text-ink/40 font-normal line-through mr-2">
                       ₹{formatPrice(chosenPlan.basePrice)}
                     </span>
                   )}
@@ -258,14 +258,14 @@ export default function RenewMembershipModal({ profile, onClose, onSuccess }) {
             <button
               onClick={onClose}
               disabled={isProcessing}
-              className="flex-1 py-3 rounded-xl border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition disabled:opacity-50"
+              className="flex-1 py-3 rounded-full bg-white text-ink ring-1 ring-ink/15 font-semibold hover:bg-sky-soft transition disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleProceed}
               disabled={isProcessing || pricingLoading || !chosenPlan?.price}
-              className="flex-1 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex-1 py-3 rounded-full bg-ink text-white font-semibold hover:bg-ink/85 transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isProcessing
                 ? "Processing..."

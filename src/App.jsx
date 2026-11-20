@@ -48,7 +48,6 @@ const Resources = lazy(() => import("./Pages/Resources"));
 const AINETConnect = lazy(() => import("./Pages/AINETConnect"));
 const Profile = lazy(() => import("./Pages/Profile"));
 const PageUnderConstruct = lazy(() => import("./Pages/PageUnderConstruct"));
-const AinetOccasionalPapersList = lazy(() => import("./Components/specific/Publication/AinetOccasionalPapersList"));
 const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy"));
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -105,7 +104,7 @@ const App = () => {
           <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/pageunderconstruct" element={<PageUnderConstruct />} />
-          <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPapersList />} />
+          <Route path="/ainet-occasional-papers-list" element={<AinetOccasionalPaperDetailed />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/TermsAndConditions" element={<TermsAndConditions />} />

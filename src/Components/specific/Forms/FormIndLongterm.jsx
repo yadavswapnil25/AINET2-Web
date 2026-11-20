@@ -48,7 +48,7 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
                         selected?.map((item, index) => (
                             <span
                                 key={index}
-                                className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs"
+                                className="bg-sage text-sage-deep px-2.5 py-1 rounded-full text-xs font-semibold"
                             >
                                 {item}
                             </span>
@@ -72,7 +72,7 @@ const MultiSelectDropdown = ({ options, selected, onChange, placeholder, name })
                     {options.map((option, index) => (
                         <div
                             key={index}
-                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selected?.includes(option) ? 'bg-blue-50 text-blue-600' : ''
+                            className={`p-2 cursor-pointer hover:bg-gray-100 ${selected?.includes(option) ? 'bg-sky-soft text-ink font-semibold' : ''
                                 }`}
                             onClick={() => handleToggle(option)}
                         >
@@ -611,9 +611,9 @@ export default function FormIndLongterm() {
                 loading && <Loader />
             }
 
-            <div className="max-w-5xl my-8 border border-blue-500 rounded-lg mx-auto p-6 relative bg-white">
+            <div className="relative mx-auto my-8 max-w-5xl rounded-[2rem] bg-white p-5 shadow-xl shadow-ink/5 ring-1 ring-ink/10 sm:my-12 sm:p-8 lg:p-10">
                 {/* Close button */}
-                <button className="absolute top-2 right-2 bg-black rounded-full p-1">
+                <button className="absolute right-4 top-4 rounded-full bg-ink p-2 transition hover:bg-ink/80">
                     <Link to={{ pathname: '/', hash: '#membershipplan' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="white">
                             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
@@ -621,26 +621,26 @@ export default function FormIndLongterm() {
                     </Link>
                 </button>
 
-                <h1 className="text-4xl font-bold mb-4 text-center">Membership Form for Individual LongTerm</h1>
+                <h1 className="mb-2 px-10 text-center text-2xl font-extrabold tracking-tight text-ink sm:text-3xl lg:text-4xl">Membership Form for Individual LongTerm</h1>
 
                 <form onSubmit={handleSubmit}>
                     {/* Personal Information Section */}
                     <div className="mb-6">
-                        <div className="bg-[#A6AEBF] p-2 my-8">
-                            <h2 className="text-white text-xl">Personal Information</h2>
+                        <div className="mt-10 mb-6 rounded-2xl bg-sky-soft px-5 py-3">
+                            <h2 className="text-lg font-bold text-ink sm:text-xl">Personal Information</h2>
                         </div>
 
                         {/* Row 1: Title | Email */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Title : <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="title"
                                     value={formData.title}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                                     required
                                 >
                                     <option value="" disabled>Select Title</option>
@@ -652,7 +652,7 @@ export default function FormIndLongterm() {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Email : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -662,7 +662,7 @@ export default function FormIndLongterm() {
                                     value={formData.email}
                                     onChange={handleChange}
                                     onBlur={checkEmailExists}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     required
                                 />
                             </div>
@@ -671,7 +671,7 @@ export default function FormIndLongterm() {
                         {/* Row 2: First Name | Last Name */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     First Name : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -680,12 +680,12 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Your First Name"
                                     value={formData.first_name}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Last Name : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -694,7 +694,7 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Your Last Name"
                                     value={formData.last_name}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     required
                                 />
                             </div>
@@ -703,14 +703,14 @@ export default function FormIndLongterm() {
                         {/* Row 3: Gender | Age Group */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Gender : <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="gender"
                                     value={formData.gender}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                                     required
                                 >
                                     <option value="">Select Your Gender</option>
@@ -721,14 +721,14 @@ export default function FormIndLongterm() {
                             </div>
 
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Age Group : <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="age_group"
                                     value={formData.age_group}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                                     required
                                 >
                                     <option value="" disabled>Select Your Age Group</option>
@@ -746,7 +746,7 @@ export default function FormIndLongterm() {
                         {/* Row 4: Contact No. | WhatsApp No. */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Contact No. : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -755,14 +755,14 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Your Number"
                                     value={formData.mobile}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     maxLength={10}
                                     required
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     WhatsApp No. : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -771,7 +771,7 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Your Number"
                                     value={formData.whatsapp_no}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     maxLength={10}
                                     required
                                 />
@@ -781,14 +781,14 @@ export default function FormIndLongterm() {
                         {/* Row 5: State | District */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     State : <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="state"
                                     value={formData.state}
                                     onChange={handleStateChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                                     required
                                     disabled={loading}
                                 >
@@ -804,14 +804,14 @@ export default function FormIndLongterm() {
                             </div>
 
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     District : <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     name="district"
                                     value={formData.district}
                                     onChange={handleDistrictChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                                     required
                                     disabled={!formData.state || loadingDistricts}
                                 >
@@ -830,7 +830,7 @@ export default function FormIndLongterm() {
 
                         {/* Row 6: Address (Correspondence) */}
                         <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">
+                            <label className="mb-1.5 block text-sm font-semibold text-ink">
                                 Address (Correspondence) : <span className="text-red-500">*</span>
                             </label>
                             <textarea
@@ -838,7 +838,7 @@ export default function FormIndLongterm() {
                                 placeholder="Enter Your Correspondence Address"
                                 value={formData.address}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                 rows="3"
                                 required
                             ></textarea>
@@ -847,7 +847,7 @@ export default function FormIndLongterm() {
                         {/* Row 7: Address (Institutional) | Pincode */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Address (Institutional) :
                                 </label>
                                 <textarea
@@ -855,13 +855,13 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Institutional Address"
                                     value={formData.address_institution}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     rows="3"
                                 ></textarea>
                             </div>
 
                             <div className="flex flex-col">
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Pincode : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -870,7 +870,7 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Your PIN Code"
                                     value={formData.pin}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     maxLength={6}
                                     required
                                 />
@@ -880,13 +880,13 @@ export default function FormIndLongterm() {
 
                     {/* Other Information Section */}
                     <div>
-                        <div className="bg-[#A6AEBF] p-2 my-8">
-                            <h2 className="text-white text-xl">Other Information</h2>
+                        <div className="mt-10 mb-6 rounded-2xl bg-sky-soft px-5 py-3">
+                            <h2 className="text-lg font-bold text-ink sm:text-xl">Other Information</h2>
                         </div>
 
                         <div>
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Teaching Experience (In Years) : <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -895,7 +895,7 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Your Experience"
                                     value={formData.teaching_exp}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     required
                                 />
                             </div>
@@ -903,7 +903,7 @@ export default function FormIndLongterm() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Area(s) of your work : <span className="text-red-500">*</span>
                                 </label>
                                 <MultiSelectDropdown
@@ -924,7 +924,7 @@ export default function FormIndLongterm() {
                                             placeholder="Enter other area of work"
                                             value={formData.other_area_of_work}
                                             onChange={handleChange}
-                                            className="w-full p-2 bg-white rounded border border-gray-300"
+                                            className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                             required
                                         />
                                     </div>
@@ -932,7 +932,7 @@ export default function FormIndLongterm() {
                             </div>
 
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Added Qualification : 
                                 </label>
                                 <MultiSelectDropdown
@@ -947,14 +947,14 @@ export default function FormIndLongterm() {
 
 
                         <div className='mt-4'>
-                            <label className="block text-base font-semibold mb-1">
+                            <label className="mb-1.5 block text-sm font-semibold text-ink">
                                 Are you member of any other English Teacher Association(s) : <span className="text-red-500">*</span>
                             </label>
                             <select
                                 name="has_member_any"
                                 value={formData.has_member_any === '' ? '' : formData.has_member_any === true ? 'true' : 'false'}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                                 required
                             >
                                 <option value="">Select Option</option>
@@ -966,7 +966,7 @@ export default function FormIndLongterm() {
 
                         {formData.has_member_any === true && (
                             <div className="mt-4">
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Name of the Association(s) : <span className="text-red-500">*</span>
                                 </label>
                                 <textarea
@@ -974,7 +974,7 @@ export default function FormIndLongterm() {
                                     placeholder="Enter Association Name(s)"
                                     value={formData.name_association}
                                     onChange={handleChange}
-                                    className="w-full p-2 bg-white rounded border border-gray-300"
+                                    className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                     rows="2"
                                     required={formData.has_member_any === true}
                                 />
@@ -984,7 +984,7 @@ export default function FormIndLongterm() {
 
 
                         <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">
+                            <label className="mb-1.5 block text-sm font-semibold text-ink">
                                 Your expectations from AINET :
                             </label>
                             <textarea
@@ -992,18 +992,18 @@ export default function FormIndLongterm() {
                                 placeholder="Enter your expectations"
                                 value={formData.expectation}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-white rounded border border-gray-300"
+                                className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60"
                                 rows="3"
                             />
                         </div>
 
                         <div className="mt-4">
-                            <label className="block text-base font-semibold mb-1">Like to receive our newsletter ?</label>
+                            <label className="mb-1.5 block text-sm font-semibold text-ink">Like to receive our newsletter ?</label>
                             <select
                                 name="has_newsletter"
                                 value={formData.has_newsletter}
                                 onChange={handleChange}
-                                className="w-full p-2 bg-white rounded border border-gray-300 appearance-none"
+                                className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 appearance-none"
                             >
                                 <option value={true}>YES</option>
                                 <option value={false}>NO</option>
@@ -1012,7 +1012,7 @@ export default function FormIndLongterm() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Password : <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
@@ -1022,7 +1022,7 @@ export default function FormIndLongterm() {
                                         placeholder="Enter Your Password"
                                         value={formData.password}
                                         onChange={e => { handleChange(e); setPasswordTouched(true); }}
-                                        className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
+                                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 pr-10"
                                         required
                                     />
                                     <button
@@ -1072,7 +1072,7 @@ export default function FormIndLongterm() {
                             </div>
 
                             <div>
-                                <label className="block text-base font-semibold mb-1">
+                                <label className="mb-1.5 block text-sm font-semibold text-ink">
                                     Re-Enter Password : <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
@@ -1082,7 +1082,7 @@ export default function FormIndLongterm() {
                                         placeholder="Enter Your Password"
                                         value={formData.password_confirmation}
                                         onChange={handleChange}
-                                        className="w-full p-2 bg-white rounded border border-gray-300 pr-10"
+                                        className="w-full rounded-xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink placeholder:text-ink/40 transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-sage/60 pr-10"
                                         required
                                     />
                                     <button
@@ -1119,7 +1119,7 @@ export default function FormIndLongterm() {
                                     checked={formData.agree}
                                     onChange={handleChange}
                                     required
-                                    className="accent-green-600 w-5 h-5 rounded border-2 border-gray-400 checked:border-green-600 focus:ring-2 focus:ring-green-300 transition-all duration-200 shadow-sm hover:shadow-md bg-white"
+                                    className="accent-sage-deep w-5 h-5 rounded border-2 border-gray-400 checked:border-green-600 focus:ring-2 focus:ring-green-300 transition-all duration-200 shadow-sm hover:shadow-md bg-white"
                                 />
                                 <span className="text-sm">
                                     I agree to the terms and conditions of the membership. <span className="text-red-500">*</span>
@@ -1130,9 +1130,9 @@ export default function FormIndLongterm() {
                             <button
                                 type="submit"
                                 disabled={isSubmitting || !isFormValid()}
-                                className={`px-6 py-2 rounded-full text-sm font-bold ${isSubmitting || !isFormValid()
-                                    ? 'bg-amber-100 cursor-not-allowed disabled:cursor-not-allowed'
-                                    : 'bg-amber-200 hover:bg-amber-300 cursor-pointer'
+                                className={`rounded-full px-8 py-3.5 text-sm font-bold ${isSubmitting || !isFormValid()
+                                    ? 'bg-ink/30 text-white cursor-not-allowed disabled:cursor-not-allowed'
+                                    : 'bg-ink text-white hover:bg-ink/85 cursor-pointer'
                                     }`}
                                 style={{
                                     cursor: isSubmitting || !isFormValid() ? 'not-allowed' : 'pointer'
