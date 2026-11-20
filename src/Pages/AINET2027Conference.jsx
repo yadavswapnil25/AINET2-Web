@@ -84,8 +84,8 @@ export default function AINET2027Conference() {
             theainet@gmail.com
           </a>{" "}
           or WhatsApp/call{" "}
-          <a href="https://wa.me/919579652856" target="_blank" rel="noopener noreferrer" className="text-[#1BA9D6] font-semibold italic hover:underline">
-            9579652856
+          <a href="https://wa.me/919322890031" target="_blank" rel="noopener noreferrer" className="text-[#1BA9D6] font-semibold italic hover:underline">
+            9322890031
           </a>
           .
         </p>
