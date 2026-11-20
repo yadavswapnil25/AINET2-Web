@@ -31,6 +31,7 @@ const MembershipFormforInstitutionalAnnual = lazy(() => import("./Components/spe
 const MembershipFormforInstitutionalLongTerm = lazy(() => import("./Components/specific/Forms/MembershipFormforInstitutionalLongTerm"));
 const MembershipFormforInstitutionalOverseas = lazy(() => import("./Components/specific/Forms/MembershipFormforInstitutionalOverseas"));
 const Conference = lazy(() => import("./Pages/Conference"));
+const AINET2027Conference = lazy(() => import("./Pages/AINET2027Conference"));
 const Webinar = lazy(() => import("./Pages/Webinar"));
 const Author = lazy(() => import("./Pages/Author"));
 const News = lazy(() => import("./Pages/News"));
@@ -112,7 +113,8 @@ const App = () => {
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
           <Route path="/FormIndLongterm" element={<FormIndLongterm />} />
-          <Route path="/ainet2027drf" element={<AINET2027DelegateRegistrationForm />} />
+          <Route path="/ainet2027" element={<AINET2027Conference />} />
+          <Route path="/ainet2027drf"element={<AINET2027DelegateRegistrationForm />} />
           <Route path="/ainet2027ppf" element={<AINET2027PresentationProposalForm />} />
           <Route path="/form-submission-confirmation" element={<FormSubmissionConfirmation />} />
           <Route path="*" element={<NotFound />} />

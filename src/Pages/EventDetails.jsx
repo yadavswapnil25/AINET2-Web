@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaCalendar, FaRegClock } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { baseUrl } from "../utils/constant";
+import { sanitizeHtml } from "../utils/sanitizeHtml";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -93,9 +94,12 @@ export default function EventDetails() {
           )}
         </div>
 
-        <div className="prose max-w-none text-gray-700">
-          <p>{event.topic_description || event.description || "Details will be announced soon."}</p>
-        </div>
+        <div
+          className="prose max-w-none text-gray-700 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-blue-600 [&_a]:underline [&_a:hover]:text-blue-800"
+          dangerouslySetInnerHTML={{
+            __html: sanitizeHtml(event.topic_description || event.description || "Details will be announced soon."),
+          }}
+        />
       </div>
     </div>
   );

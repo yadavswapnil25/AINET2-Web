@@ -5,7 +5,7 @@ import bg2 from "/bg2.png";
 import newh1 from "/newh11.jpg";
 import newh2 from "/newh22.jpg";
 
-import { FaCalendar, FaRegClock } from "react-icons/fa";
+import { FaCalendar } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import MembershipPlans from "../Components/shared/MembershipPlans";
@@ -16,6 +16,7 @@ import NewsletterSignup from "../Components/specific/Home/NewsletterSignup";
 import Partners from "../Components/specific/Home/Partners";
 import upcoming from "/upcoming.png";
 import { baseUrl } from "../utils/constant";
+import { sanitizeHtml } from "../utils/sanitizeHtml";
 
 const Home = () => {
   const location = useLocation();
@@ -254,13 +255,14 @@ const Home = () => {
                       <FaCalendar className="mr-2 text-xl" />
                       {event.date}
                     </p>
-                    {event.time && (
-                      <p className="flex items-center text-black text-xl font-medium">
-                        <FaRegClock className="mr-2 text-xl" />
-                        {event.time}
-                      </p>
-                    )}
                   </div>
+
+                  {event.description && (
+                    <div
+                      className="text-gray-800 text-base leading-relaxed mb-10 pr-12 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-blue-600 [&_a]:underline [&_a:hover]:text-blue-800"
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(event.description) }}
+                    />
+                  )}
 
                   <button className="absolute right-[5%] bottom-[5%] h-[40px] w-[40px] bg-black grid place-items-center rounded-full cursor-pointer hover:bg-gray-800 transition-colors" onClick={() => handleEventClick(event)}>
                     <img src="./arrowright.svg" alt="arrowright" />

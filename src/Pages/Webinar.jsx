@@ -6,6 +6,7 @@ import { PiClockDuotone } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
 import { baseUrl } from "../utils/constant";
+import { sanitizeHtml } from "../utils/sanitizeHtml";
 
 const Webinar = () => {
   const navRef = useRef(null);
@@ -346,7 +347,10 @@ const Webinar = () => {
               <div className="mb-4">
                 <div className="flex items-start">
                   <span className="font-medium min-w-[110px]">Description : </span>
-                  <span className="text-gray-800">{webinar.description}</span>
+                  <div
+                    className="text-gray-800 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-blue-600 [&_a]:underline [&_a:hover]:text-blue-800"
+                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(webinar.description) }}
+                  />
                 </div>
               </div>
             )}
