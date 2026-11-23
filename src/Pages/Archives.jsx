@@ -15,13 +15,13 @@ const categories = [
       {
         id: 1,
         image: "/archives1.png",
-        title: "7th AIMT INTERNATIONAL ELT CONFERENCE GUWAHATI, FEBRUARY 24, 2022",
+        title: "7th AINET INTERNATIONAL ELT CONFERENCE GUWAHATI, FEBRUARY 24, 2022",
         date: "Feb 24",
       },
       {
         id: 2,
         image: "/archives2.png",
-        title: "6th AIMT INTERNATIONAL ELT CONFERENCE NEW DELHI, DECEMBER 1-8, 2022",
+        title: "6th AINET INTERNATIONAL ELT CONFERENCE NEW DELHI, DECEMBER 1-8, 2022",
         date: "Dec 1-8",
       },
     ],
@@ -60,13 +60,13 @@ const categories = [
       {
         id: 1,
         image: "/archives7.png",
-        title: "7th AIMT INTERNATIONAL ELT CONFERENCE GUWAHATI, FEBRUARY 24, 2022",
+        title: "7th AINET INTERNATIONAL ELT CONFERENCE GUWAHATI, FEBRUARY 24, 2022",
         date: "Feb 24",
       },
       {
         id: 2,
         image: "/archives8.png",
-        title: "6th AIMT INTERNATIONAL ELT CONFERENCE NEW DELHI, DECEMBER 1-8, 2022",
+        title: "6th AINET INTERNATIONAL ELT CONFERENCE NEW DELHI, DECEMBER 1-8, 2022",
         date: "Dec 1-8",
       },
     ],
