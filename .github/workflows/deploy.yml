@@ -51,10 +51,19 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # The new build is copied over the old one instead of replacing it.
+          # Old files in assets/ stay for 7 days, so a page someone opened
+          # before the deploy can still load the files it asks for. New
+          # assets go in first and index.html last, so a visitor never gets
+          # a new index.html that points at files not copied yet.
           script: |
-            rm -rf /var/www/ainet2-web-build/*
             unzip -o /root/react/react-build.zip -d /root/react/
-            mv /root/react/dist/*  /var/www/ainet2-web-build/
+            mkdir -p /var/www/ainet2-web-build/assets
+            cp -a /root/react/dist/assets/. /var/www/ainet2-web-build/assets/
+            find /root/react/dist -maxdepth 1 -type f ! -name index.html -exec cp -a {} /var/www/ainet2-web-build/ \;
+            find /root/react/dist -mindepth 1 -maxdepth 1 -type d ! -name assets -exec cp -a {} /var/www/ainet2-web-build/ \;
+            cp -a /root/react/dist/index.html /var/www/ainet2-web-build/index.html
+            find /var/www/ainet2-web-build/assets -type f -mtime +7 -delete
             rm -rf /root/react/
             find /var/www/ainet2-web-build -type d -exec chmod 755 {} \;
             find /var/www/ainet2-web-build -type f -exec chmod 644 {} \;

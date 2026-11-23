@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
+import AppErrorBoundary from "./Components/AppErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./Components/ScrollToTop";
 import Footer from "./Components/shared/Footer";
@@ -61,12 +62,16 @@ import FormSubmissionConfirmation from "./Pages/FormSubmissionConfirmation";
 import NotFound from "./Pages/NotFound";
 
 const App = () => {
+  const location = useLocation();
+
   return (
     <>
       <GoogleAnalytics />
       <ToastContainer />
       <Navbar />
       <ScrollToTop />
+      {/* Keyed by path so an error on one page doesn't stick after navigating away. */}
+      <AppErrorBoundary key={location.pathname}>
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -119,6 +124,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+      </AppErrorBoundary>
       <Footer />
     </>
   );

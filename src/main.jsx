@@ -6,6 +6,7 @@ import "./index.css";
 import { AuthContext, AuthProvider } from "./context/AuthContext.jsx";
 import { initGA } from "./utils/analytics.js";
 import { registerSW } from "virtual:pwa-register";
+import { reloadForNewBuild } from "./Components/AppErrorBoundary.jsx";
 
 // Initialize Google Analytics
 const GA_MEASUREMENT_ID = "G-0D9M13RY6R";
@@ -51,6 +52,13 @@ if (GA_MEASUREMENT_ID && typeof window !== 'undefined') {
 // deployed worker takes control, so nobody is left running an old bundle
 // that doesn't know about routes added since their last visit.
 registerSW({ immediate: true });
+
+// A tab opened before a deploy may ask for a page file that the new deploy
+// replaced. Vite reports that here; reload once to pick up the new build
+// instead of failing.
+window.addEventListener("vite:preloadError", (event) => {
+  if (reloadForNewBuild()) event.preventDefault();
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
