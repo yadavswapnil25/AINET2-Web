@@ -9,19 +9,19 @@ const archiveGroups = [
     links: [
       {
         text: "7th AINET Conference, 2024",
-        link: "https://store.pothi.com/book/krishna-dixit-english-language-education-global-south-innovation-inclusion-empowerment/",
+        link: "/",
       },
       {
         text: "6th AINET Conference, 2022",
-        link: "https://store.pothi.com/book/krishna-dixit-changing-learners-changing-teachers-ele-new-world/",
+        link: "/",
       },
       {
         text: "5th AINET Conference, 2020",
-        link: "https://store.pothi.com/book/krishna-dixit-teaching-english-multilingual-contexts/",
+        link: "/",
       },
       {
         text: "3rd AINET Conference, 2016",
-        link: "https://store.pothi.com/book/krishna-dixit-exploring-learners-and-learning-english/",
+        link: "/",
       },
     ],
   },
