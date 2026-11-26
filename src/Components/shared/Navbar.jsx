@@ -35,7 +35,7 @@ const NAV_ITEMS = [
     ],
   },
   { label: "Publications", to: "/publications" },
-  { label: "AINET Adda", to: "/BlogsSection1" },
+  { label: "AINET Adda", to: "/ainet-adda" },
   { label: "Resources", to: "/resources" },
   {
     label: "Event",

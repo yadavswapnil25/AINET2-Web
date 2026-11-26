@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AppErrorBoundary from "./Components/AppErrorBoundary";
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./Components/ScrollToTop";
@@ -17,8 +17,8 @@ import GoogleAnalytics from "./Components/GoogleAnalytics";
 const Home = lazy(() => import("./Pages/Home"));
 const About = lazy(() => import("./Pages/About"));
 const MembershipArea = lazy(() => import("./Pages/MembershipArea"));
-const BlogsSection1 = lazy(() => import("./Components/specific/Blogs/BlogsSection1"));
-const BlogsSection2 = lazy(() => import("./Components/specific/Blogs/BlogsSection2"));
+const AinetAdda = lazy(() => import("./Pages/AinetAdda"));
+const AinetAddaPost = lazy(() => import("./Pages/AinetAddaPost"));
 const ContactUs = lazy(() => import("./Pages/ContactUs"));
 const MembershipFormforIndividualAnnual = lazy(() => import("./Components/specific/Forms/MembershipFormforIndividualAnnual"));
 const GalleryPage = lazy(() => import("./Pages/Gallery"));
@@ -77,8 +77,11 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/MembershipArea" element={<MembershipArea />} />
-          <Route path="/BlogsSection1" element={<BlogsSection1 />} />
-          <Route path="/BlogsSection2" element={<BlogsSection2 />} />
+          <Route path="/ainet-adda" element={<AinetAdda />} />
+          <Route path="/ainet-adda/:slug" element={<AinetAddaPost />} />
+          {/* Old addresses of the AINET Adda page */}
+          <Route path="/BlogsSection1" element={<Navigate to="/ainet-adda" replace />} />
+          <Route path="/BlogsSection2" element={<Navigate to="/ainet-adda" replace />} />
           <Route path="/ContactUs" element={<ContactUs />} />
           <Route path="/MembershipFormforIndividualAnnual" element={<MembershipFormforIndividualAnnual />} />
           <Route path="/gallery" element={<GalleryPage />} />

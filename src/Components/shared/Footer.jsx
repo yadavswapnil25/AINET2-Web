@@ -27,7 +27,7 @@ const footerColumns = [
         links: [
             { label: "About Us", to: "/about" },
             { label: "Publications", to: "/publications" },
-            { label: "AINET Adda", to: "/BlogsSection1" },
+            { label: "AINET Adda", to: "/ainet-adda" },
             { label: "Resources", to: "/resources" },
             { label: "Terms & Conditions", to: "/TermsAndConditions" },
         ],
